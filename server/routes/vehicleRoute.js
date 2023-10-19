@@ -1,5 +1,7 @@
 const router = require('express').Router()
 
+const VehicleController = require('../controllers/vehicleController')
+
 router.get('/')
 router.get('/:id')
 router.post('/')
