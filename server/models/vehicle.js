@@ -88,7 +88,7 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       overViewImage: {
-        type: STRING,
+        type: TEXT,
         allowNull: false,
         validate: {
           notEmpty: {
@@ -100,7 +100,7 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       interiorImage: {
-        type: STRING,
+        type: TEXT,
         allowNull: false,
         validate: {
           notEmpty: {
@@ -112,7 +112,7 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       sideImage: {
-        type: STRING,
+        type: TEXT,
         allowNull: false,
         validate: {
           notEmpty: {

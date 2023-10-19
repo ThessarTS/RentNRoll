@@ -19,9 +19,25 @@ module.exports = {
       return el;
     });
     await queryInterface.bulkInsert("UserProfiles", dataProfiles, {});
+
+    const categories = require("../data/category.json");
+    const dataCategories = categories.map((el) => {
+      el.createdAt = el.updatedAt = new Date();
+      return el;
+    });
+    await queryInterface.bulkInsert("Categories", dataCategories, {});
+
+    const vehicles = require("../data/vehicle.json");
+    const dataVehicles = vehicles.map((el) => {
+      el.createdAt = el.updatedAt = new Date();
+      return el;
+    });
+    await queryInterface.bulkInsert("Vehicles", dataVehicles, {});
   },
 
   async down(queryInterface, Sequelize) {
+    await queryInterface.bulkDelete("Vehicles", null, {});
+    await queryInterface.bulkDelete("Categories", null, {});
     await queryInterface.bulkDelete("UserProfiles", null, {});
     await queryInterface.bulkDelete("Users", null, {});
   },
