@@ -1,0 +1,32 @@
+[
+  {
+    "fullName": "Pablo Escobar",
+    "email": "pablo@mail.com",
+    "password": "Pablo123",
+    "phone": "081362192211"
+  },
+  {
+    "fullName": "The Rok",
+    "email": "rock@mail.com",
+    "password": "deRock123",
+    "phone": "08211231231"
+  },
+  {
+    "fullName": "Jokowi Didi",
+    "email": "wididi@mail.com",
+    "password": "wididi123",
+    "phone": "08212112123"
+  },
+  {
+    "fullName": "Ajay Kumur Rajesh",
+    "email": "ajay@mail.com",
+    "password": "singh123",
+    "phone": "08112312321"
+  },
+  {
+    "fullName": "Jarjit",
+    "email": "jarjit@mail.com",
+    "password": "jarjit123",
+    "phone": "081313123212"
+  }
+]
