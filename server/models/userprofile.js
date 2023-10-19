@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       UserId: DataTypes.INTEGER,
       ktp: {
-        type: STRING,
+        type: DataTypes.STRING,
         allowNull: false,
         validate: {
           notEmpty: {
