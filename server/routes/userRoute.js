@@ -1,15 +1,15 @@
-const router = require('express').Router()
+const router = require("express").Router();
 
-const UserController = require('../controllers/userController')
+const UserController = require("../controllers/userController");
 
-router.post('/login')
-router.post('/register')
-router.post('/google-login')
-router.get('/profiles/:id')
-router.post('/profiles')
-router.put('/profiles/:id')
-router.delete('/profiles/:id')
-router.post('/midtrans-token')
+router.post("/register", UserController.register);
+router.patch("/userOTP", UserController.getOTP);
+router.post("/login", UserController.login);
+router.post("/google-login", UserController.gLogin);
+router.get("/user", UserController.getUser);
+router.delete("/user", UserController.deleteUser);
+router.post("/profiles", UserController.createProfile);
+router.put("/profiles", UserController.editProfile);
+router.post("/midtrans-token");
 
-
-module.exports = router
+module.exports = router;
