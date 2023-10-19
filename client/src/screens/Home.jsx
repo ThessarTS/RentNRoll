@@ -8,6 +8,7 @@ import bicycleIcon from "../../assets/vector/bicycle.png";
 import scooterIcon from "../../assets/vector/scooter.png";
 import CardCategory from "../components/CardCategory";
 import CardVehicle from "../components/CardVehicle";
+import { FontAwesome } from "@expo/vector-icons";
 
 function Home() {
   const categories = [
@@ -56,6 +57,8 @@ function Home() {
     },
   ];
 
+  const order = [];
+
   function getCategoryBackgroundColor(name) {
     if (name === "Car") return "#30336B";
     else if (name === "Motorcycle") return "#22A6B3";
@@ -99,9 +102,26 @@ function Home() {
             </View>
             {/* end category */}
             {/* Trending */}
-            <View style={styles.trendingContainer}>
-              <Text style={styles.trendingTitle}>Trending</Text>
-              <FlatList style={{ marginTop: 10 }} data={trending} renderItem={(vehicle) => <RenderTrending vehicle={vehicle} />} keyExtractor={(vehicle) => vehicle.id} horizontal={true} />
+            <View style={styles.itemsContainer}>
+              <Text style={styles.itemTitle}>Trending</Text>
+              <FlatList style={{ marginTop: 10 }} data={trending} renderItem={(vehicle) => <RenderTrending vehicle={vehicle} />} keyExtractor={(vehicle) => vehicle.id} horizontal={true} showsHorizontalScrollIndicator={false} />
+            </View>
+            {/* end Trending */}
+            {/* Trending */}
+            <View style={styles.itemsContainer}>
+              <Text style={styles.itemTitle}>History</Text>
+              {order.length ? (
+                <FlatList style={{ marginTop: 10 }} data={order} renderItem={(vehicle) => <RenderTrending vehicle={vehicle} />} keyExtractor={(vehicle) => vehicle.id} horizontal={true} showsHorizontalScrollIndicator={false} />
+              ) : (
+                <View style={{ paddingVertical: 40, alignItems: "center", justifyContent: "center", backgroundColor: "#f6f4f1", marginTop: 10, borderRadius: 10 }}>
+                  <FontAwesome name="history" size={24} color="black" />
+                  <Text style={{ fontWeight: 500, fontSize: 18 }}>Your History is empty</Text>
+                  <Text style={{ fontWeight: 500, fontSize: 14, marginTop: 10 }}>Looks like you've never done a rental before</Text>
+                  <Pressable style={{ backgroundColor: "#17799A", padding: 10, paddingHorizontal: 20, borderRadius: 10, marginTop: 10 }}>
+                    <Text style={{ color: "white" }}>Rent Now</Text>
+                  </Pressable>
+                </View>
+              )}
             </View>
             {/* end Trending */}
           </View>
@@ -113,6 +133,7 @@ function Home() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "whitesmoke",
   },
   categoryContainer: {
     backgroundColor: "white",
@@ -121,11 +142,14 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
     paddingHorizontal: 15,
+    marginHorizontal: 20,
+    marginBottom: 20,
   },
-  trendingContainer: {
-    marginTop: 40,
+  itemsContainer: {
+    padding: 20,
+    backgroundColor: "white",
   },
-  trendingTitle: {
+  itemTitle: {
     fontSize: 25,
     fontWeight: "bold",
     alignSelf: "flex-start",
@@ -178,8 +202,8 @@ const styles = StyleSheet.create({
     backgroundColor: "whitesmoke",
   },
   itemContainer: {
-    paddingHorizontal: 20,
     paddingTop: 10,
+    gap: 10,
     zIndex: 1,
   },
   categoryTitle: {
