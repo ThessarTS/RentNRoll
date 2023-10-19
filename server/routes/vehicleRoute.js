@@ -1,13 +1,13 @@
-const router = require('express').Router()
+const router = require("express").Router();
 
-const VehicleController = require('../controllers/vehicleController')
+const VehicleController = require("../controllers/vehicleController");
 
-router.get('/')
-router.get('/:id')
-router.post('/')
-router.put('/:id')
-router.patch('/:id')
-router.delete('/:id')
+router.get("/", VehicleController.fetchVehicle);
+router.get("/:id/", VehicleController.detailVehicle);
 
+router.post("/", VehicleController.addVehicle);
+router.put("/:id", VehicleController.editVehicle);
+// router.patch("/:id");
+router.delete("/:id", VehicleController.removeVehicle);
 
-module.exports = router
+module.exports = router;

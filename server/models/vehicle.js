@@ -3,7 +3,7 @@ const { Model, INTEGER } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Vehicle extends Model {
     static associate(models) {
-      Vehicle.hasMany(models.Category);
+      Vehicle.belongsTo(models.Category);
       Vehicle.hasMany(models.Order);
       Vehicle.belongsTo(models.User);
       Vehicle.hasMany(models.Review);
@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
   Vehicle.init(
     {
       name: {
-        type: STRING,
+        type: DataTypes.STRING,
         allowNull: false,
         validate: {
           notEmpty: {
@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       CategoryId: DataTypes.INTEGER,
       price: {
-        type: INTEGER,
+        type: DataTypes.INTEGER,
         allowNull: false,
         validate: {
           notEmpty: {
@@ -40,7 +40,7 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       color: {
-        type: STRING,
+        type: DataTypes.STRING,
         allowNull: false,
         validate: {
           notEmpty: {
@@ -52,7 +52,7 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       year: {
-        type: STRING,
+        type: DataTypes.STRING,
         allowNull: false,
         validate: {
           notEmpty: {
@@ -64,31 +64,13 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       transmission: {
-        type: STRING,
-        allowNull: false,
-        validate: {
-          notEmpty: {
-            msg: "Transmission is required!",
-          },
-          notNull: {
-            msg: "Transmission is required!",
-          },
-        },
+        type: DataTypes.STRING,
       },
       seats: {
-        type: INTEGER,
-        allowNull: false,
-        validate: {
-          notEmpty: {
-            msg: "Seats is required!",
-          },
-          notNull: {
-            msg: "Seats is required!",
-          },
-        },
+        type: DataTypes.INTEGER,
       },
       overViewImage: {
-        type: TEXT,
+        type: DataTypes.TEXT,
         allowNull: false,
         validate: {
           notEmpty: {
@@ -100,28 +82,10 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       interiorImage: {
-        type: TEXT,
-        allowNull: false,
-        validate: {
-          notEmpty: {
-            msg: "Interior image is required!",
-          },
-          notNull: {
-            msg: "Interior image is required!",
-          },
-        },
+        type: DataTypes.TEXT,
       },
       sideImage: {
-        type: TEXT,
-        allowNull: false,
-        validate: {
-          notEmpty: {
-            msg: "Side image is required!",
-          },
-          notNull: {
-            msg: "Side image is required!",
-          },
-        },
+        type: DataTypes.TEXT,
       },
       UserId: DataTypes.INTEGER,
     },

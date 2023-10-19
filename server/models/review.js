@@ -1,5 +1,5 @@
 "use strict";
-const { Model, FLOAT } = require("sequelize");
+const { Model, FLOAT, TEXT } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Review extends Model {
     static associate(models) {
