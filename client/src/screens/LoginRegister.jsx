@@ -1,20 +1,50 @@
-import React, { useState } from "react";
-import { ImageBackground, Pressable, StyleSheet, Text, TextInput, View, Image } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { ImageBackground, Pressable, StyleSheet, Text, TextInput, View, Image, ScrollView, Platform, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard } from "react-native";
 import Checkbox from "expo-checkbox";
 import banner from "../../assets/image/banner.jpg";
 import { Ionicons } from "@expo/vector-icons";
 import googleIcon from "../../assets/vector/google.png";
 import Modal from "react-native-modal";
+import { MaterialIcons } from "@expo/vector-icons";
 
 function Login({ navigation }) {
   const [isChecked, setChecked] = useState(false);
   const [formRegister, setFormRegister] = useState(false);
+  const [formOtp, setFormOtp] = useState(false);
+  const [otp, setOtp] = useState(["", "", "", ""]);
+  const [userOtp, setUserOtp] = useState(null);
+
+  const handleOtpChange = (index, value) => {
+    if (/^[0-9]$/.test(value) || value === "") {
+      let updatedOtp = [...otp];
+      updatedOtp[index] = value;
+      setOtp(updatedOtp);
+
+      if (index > 0 && value === "") {
+        otpInputs[index - 1].focus();
+      } else if (index < 3 && value !== "") {
+        otpInputs[index + 1].focus();
+      }
+    }
+  };
+  useEffect(() => {
+    setUserOtp(otp.join(""));
+  }, [otp]);
+
+  const submitOtp = () => {
+    console.log(userOtp);
+  };
+
+  const otpInputs = [];
 
   const toggleRememberMe = () => {
     setChecked(!isChecked);
   };
 
-  const toggleBottomSheet = () => {
+  const toggleOtp = () => {
+    setFormOtp(!formOtp);
+  };
+  const toggleRegister = () => {
     setFormRegister(!formRegister);
   };
 
@@ -46,11 +76,11 @@ function Login({ navigation }) {
         <View style={{ marginTop: 15 }}>
           <View style={styles.actionContainer}>
             <Text style={{ textAlign: "center" }}>Dont have account? </Text>
-            <Pressable onPress={toggleBottomSheet}>
+            <Pressable onPress={toggleRegister}>
               <Text style={{ textDecorationLine: "underline", color: "#17799A" }}>Register Now</Text>
             </Pressable>
           </View>
-          <Pressable style={styles.buttonAction}>
+          <Pressable style={styles.buttonAction} onPress={toggleOtp}>
             <Text style={styles.textAction}>Log In</Text>
           </Pressable>
         </View>
@@ -71,42 +101,103 @@ function Login({ navigation }) {
       {/* register */}
       <Modal
         isVisible={formRegister}
-        onBackdropPress={toggleBottomSheet}
+        onBackdropPress={toggleRegister}
         style={{
           justifyContent: "flex-end",
           margin: 0,
         }}
       >
-        <View style={styles.registerContainer}>
-          <View style={styles.formContainer}>
-            <View style={{ gap: 5 }}>
-              <Text style={styles.label}>Username</Text>
-              <TextInput placeholder="username" style={styles.textInput} />
-            </View>
-            <View style={{ gap: 5 }}>
-              <Text style={styles.label}>Email</Text>
-              <TextInput placeholder="email" style={styles.textInput} />
-            </View>
-            <View style={{ gap: 5 }}>
-              <Text style={styles.label}>Password</Text>
-              <TextInput placeholder="password" secureTextEntry={true} style={styles.textInput} />
-            </View>
+        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.registerContainer}>
+          <ScrollView>
+            <View style={[styles.formContainer, { justifyContent: "space-around" }]}>
+              <Pressable style={{ position: "absolute", top: 10, right: 20 }} onPress={toggleRegister}>
+                <MaterialIcons name="cancel" size={30} color="red" />
+              </Pressable>
+              <View style={{ gap: 10 }}>
+                <View style={{ gap: 5 }}>
+                  <Text style={styles.label}>Username</Text>
+                  <TextInput placeholder="username" style={styles.textInput} />
+                </View>
+                <View style={{ gap: 5 }}>
+                  <Text style={styles.label}>Email</Text>
+                  <TextInput placeholder="email" style={styles.textInput} />
+                </View>
+                <View style={{ gap: 5 }}>
+                  <Text style={styles.label}>Password</Text>
+                  <TextInput placeholder="password" secureTextEntry={true} style={styles.textInput} returnKeyType="done" />
+                </View>
 
-            <View style={{ marginTop: 15 }}>
-              <View style={styles.actionContainer}>
-                <Text style={{ textAlign: "center" }}>Already have account? </Text>
-                <Pressable onPress={toggleBottomSheet}>
-                  <Text style={{ textDecorationLine: "underline", color: "#17799A" }}>Log in</Text>
+                <View style={{ gap: 5 }}>
+                  <Text style={styles.label}>Phone Number</Text>
+                  <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                    <TextInput placeholder="081233623XXX" keyboardType="numeric" style={styles.textInput} returnKeyType="done" />
+                  </TouchableWithoutFeedback>
+                </View>
+              </View>
+
+              <View
+                style={{
+                  marginTop: 15,
+                }}
+              >
+                <View style={styles.actionContainer}>
+                  <Text
+                    style={{
+                      textAlign: "center",
+                    }}
+                  >
+                    Already have account?{" "}
+                  </Text>
+                  <Pressable onPress={toggleRegister}>
+                    <Text
+                      style={{
+                        textDecorationLine: "underline",
+                        color: "#17799A",
+                      }}
+                    >
+                      Log in
+                    </Text>
+                  </Pressable>
+                </View>
+                <Pressable style={styles.buttonAction}>
+                  <Text style={styles.textAction}>Register</Text>
                 </Pressable>
               </View>
-              <Pressable style={styles.buttonAction}>
-                <Text style={styles.textAction}>Register</Text>
-              </Pressable>
             </View>
-          </View>
-        </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
       </Modal>
       {/* end register */}
+
+      {/* modalotp */}
+      <Modal
+        isVisible={formOtp}
+        onBackdropPress={toggleOtp}
+        style={{
+          justifyContent: "flex-end",
+          margin: 0,
+        }}
+      >
+        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.otpContainer}>
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <View style={styles.otpField}>
+              <Text style={styles.otpText}>Enter the OTP you received via email</Text>
+              <View style={styles.otpView}>
+                {otp.map((digit, index) => (
+                  <TextInput key={index} style={styles.otpInput} value={digit} onChangeText={(value) => handleOtpChange(index, value)} keyboardType="numeric" maxLength={1} ref={(ref) => (otpInputs[index] = ref)} returnKeyType="done" />
+                ))}
+              </View>
+            </View>
+          </TouchableWithoutFeedback>
+          <Pressable style={[styles.buttonAction, { paddingHorizontal: 90 }]} onPress={submitOtp}>
+            <Text style={styles.textAction}>Submit</Text>
+          </Pressable>
+          <Pressable style={{ position: "absolute", top: 20, right: 20 }} onPress={toggleOtp}>
+            <MaterialIcons name="cancel" size={30} color="red" />
+          </Pressable>
+        </KeyboardAvoidingView>
+      </Modal>
+      {/* end modal otp */}
     </View>
   );
 }
@@ -126,10 +217,12 @@ const styles = StyleSheet.create({
     borderColor: "black",
     elevation: 2,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
     shadowOpacity: 0.2,
     shadowRadius: 3,
-    zIndex: -1,
   },
 
   backgroundImage: {
@@ -144,7 +237,10 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: "white",
     textShadowColor: "black",
-    textShadowOffset: { width: 2, height: 2 },
+    textShadowOffset: {
+      width: 2,
+      height: 2,
+    },
     textShadowRadius: 5,
   },
 
@@ -194,7 +290,6 @@ const styles = StyleSheet.create({
   registerContainer: {
     backgroundColor: "white",
     height: "72%",
-    padding: 16,
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
   },
@@ -256,6 +351,40 @@ const styles = StyleSheet.create({
   textAction: {
     color: "white",
     fontWeight: "bold",
+  },
+  otpInput: {
+    width: 50,
+    height: 50,
+    borderWidth: 1,
+    borderRadius: 10,
+    textAlign: "center",
+    fontSize: 20,
+  },
+
+  otpContainer: {
+    height: "72%",
+    backgroundColor: "white",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 20,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+  },
+
+  otpField: {
+    gap: 20,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  otpText: {
+    fontSize: 15,
+    fontWeight: "700",
+  },
+
+  otpView: {
+    flexDirection: "row",
+    gap: 10,
   },
 });
 export default Login;
