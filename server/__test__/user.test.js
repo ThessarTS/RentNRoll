@@ -447,3 +447,144 @@ describe('GET users profile /profiles', function () {
         expect(response.body).toHaveProperty('message', 'Invalid Token');
     });
 });
+
+
+describe('POST users profile /profiles', function () {
+
+    it('should responds with 201 and body message', async function () {
+        const response = await request(app).post('/profiles')
+            .set("access_token", access_token).send({
+                ktp: 'url_ktp',
+                simA: 'url_sim_A',
+                simC: 'url_sim_C'
+            })
+        expect(response.status).toEqual(201);
+        expect(response.body).toBeInstanceOf(Object)
+        expect(response.body).toHaveProperty('message', expect.any(String));
+    });
+
+    it('should responds with 401 and body object with message', async function () {
+        const response = await request(app).post('/profiles')
+
+        expect(response.status).toEqual(401);
+        expect(response.body).toBeInstanceOf(Object)
+        expect(response.body).toHaveProperty('message', 'Invalid Token');
+    });
+
+    it('should responds with 401 and body object with message', async function () {
+        const response = await request(app).post('/profiles')
+            .set("access_token", 'randomstring')
+
+        expect(response.status).toEqual(401);
+        expect(response.body).toBeInstanceOf(Object)
+        expect(response.body).toHaveProperty('message', 'Invalid Token');
+    });
+
+    it('should responds with 401 and body object with message', async function () {
+        const response = await request(app).post('/profiles')
+            .set("access_token", access_token).send({
+                simA: 'url_sim_A'
+            })
+
+        expect(response.status).toEqual(401);
+        expect(response.body).toBeInstanceOf(Object)
+        expect(response.body).toHaveProperty('message', 'KTP is required!');
+    });
+
+    it('should responds with 401 and body object with message', async function () {
+        const response = await request(app).post('/profiles')
+            .set("access_token", access_token).send({
+                ktp: '',
+                simA: 'url_sim_A'
+            })
+
+        expect(response.status).toEqual(401);
+        expect(response.body).toBeInstanceOf(Object)
+        expect(response.body).toHaveProperty('message', 'KTP is required!');
+    });
+});
+
+
+describe('PUT users profile /profiles', function () {
+
+    it('should responds with 200 and body message', async function () {
+        const response = await request(app).put('/profiles')
+            .set("access_token", access_token).send({
+                ktp: 'url_ktp',
+                simA: 'url_sim_A',
+                simC: 'url_sim_C'
+            })
+        expect(response.status).toEqual(200);
+        expect(response.body).toBeInstanceOf(Object)
+        expect(response.body).toHaveProperty('message', expect.any(String));
+    });
+
+    it('should responds with 401 and body object with message', async function () {
+        const response = await request(app).put('/profiles')
+
+        expect(response.status).toEqual(401);
+        expect(response.body).toBeInstanceOf(Object)
+        expect(response.body).toHaveProperty('message', 'Invalid Token');
+    });
+
+    it('should responds with 401 and body object with message', async function () {
+        const response = await request(app).put('/profiles')
+            .set("access_token", 'randomstring')
+
+        expect(response.status).toEqual(401);
+        expect(response.body).toBeInstanceOf(Object)
+        expect(response.body).toHaveProperty('message', 'Invalid Token');
+    });
+
+    it('should responds with 401 and body object with message', async function () {
+        const response = await request(app).put('/profiles')
+            .set("access_token", access_token).send({
+                simA: 'url_sim_A'
+            })
+
+        expect(response.status).toEqual(401);
+        expect(response.body).toBeInstanceOf(Object)
+        expect(response.body).toHaveProperty('message', 'KTP is required!');
+    });
+
+    it('should responds with 401 and body object with message', async function () {
+        const response = await request(app).put('/profiles')
+            .set("access_token", access_token).send({
+                ktp: '',
+                simA: 'url_sim_A'
+            })
+
+        expect(response.status).toEqual(401);
+        expect(response.body).toBeInstanceOf(Object)
+        expect(response.body).toHaveProperty('message', 'KTP is required!');
+    });
+});
+
+describe('DELETE users profile /profiles', function () {
+
+    it('should responds with 200 and body message', async function () {
+        const response = await request(app).put('/profiles')
+            .set("access_token", access_token)
+        expect(response.status).toEqual(200);
+        expect(response.body).toBeInstanceOf(Object)
+        expect(response.body).toHaveProperty('message', expect.any(String));
+    });
+
+    it('should responds with 401 and body object with message', async function () {
+        const response = await request(app).put('/profiles')
+
+        expect(response.status).toEqual(401);
+        expect(response.body).toBeInstanceOf(Object)
+        expect(response.body).toHaveProperty('message', 'Invalid Token');
+    });
+
+    it('should responds with 401 and body object with message', async function () {
+        const response = await request(app).put('/profiles')
+            .set("access_token", 'randomstring')
+
+        expect(response.status).toEqual(401);
+        expect(response.body).toBeInstanceOf(Object)
+        expect(response.body).toHaveProperty('message', 'Invalid Token');
+    });
+
+});
