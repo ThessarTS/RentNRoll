@@ -3,7 +3,7 @@ const { Model, INTEGER } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Vehicle extends Model {
     static associate(models) {
-      Vehicle.hasMany(models.Category);
+      Vehicle.belongsTo(models.Category);
       Vehicle.hasMany(models.Order);
       Vehicle.belongsTo(models.User);
       Vehicle.hasMany(models.Review);
@@ -65,6 +65,11 @@ module.exports = (sequelize, DataTypes) => {
       },
       transmission: {
         type: DataTypes.STRING,
+
+      },
+      seats: {
+        type: DataTypes.INTEGER,
+
         allowNull: false,
         validate: {
           notEmpty: {
@@ -86,6 +91,7 @@ module.exports = (sequelize, DataTypes) => {
             msg: "Seats is required!",
           },
         },
+
       },
       overViewImage: {
         type: DataTypes.TEXT,
@@ -101,6 +107,11 @@ module.exports = (sequelize, DataTypes) => {
       },
       interiorImage: {
         type: DataTypes.TEXT,
+
+      },
+      sideImage: {
+        type: DataTypes.TEXT,
+
         allowNull: false,
         validate: {
           notEmpty: {
@@ -122,6 +133,7 @@ module.exports = (sequelize, DataTypes) => {
             msg: "Side image is required!",
           },
         },
+
       },
       UserId: DataTypes.INTEGER,
     },
