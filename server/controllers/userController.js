@@ -102,6 +102,9 @@ class UserController {
   static async editProfile(req, res, next) {
     try {
       const { ktp, simA, simC } = req.body;
+      if (!ktp) {
+        throw { message: "KTP is required!" };
+      }
       await UserProfile.update({ ktp, simA, simC }, { where: { UserId: req.user.id } });
       res.json({ message: "Successfully updated!" });
     } catch (error) {
