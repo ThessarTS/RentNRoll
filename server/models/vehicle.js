@@ -7,7 +7,7 @@ module.exports = (sequelize, DataTypes) => {
       Vehicle.hasMany(models.Order);
       Vehicle.belongsTo(models.User);
       Vehicle.hasMany(models.Review);
-      Vehicle.hasMany(models.Specification)
+      Vehicle.hasMany(models.Specification);
     }
   }
   Vehicle.init(
@@ -51,7 +51,6 @@ module.exports = (sequelize, DataTypes) => {
             msg: "Image is required!",
           },
         },
-
       },
       UserId: DataTypes.INTEGER,
     },
