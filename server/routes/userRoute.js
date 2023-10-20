@@ -7,6 +7,4 @@ router.post("/", authentication, UserController.createProfile);
 router.delete("/", authentication, UserController.deleteUser);
 router.put("/", authentication, UserController.editProfile);
 
-
-
 module.exports = router;

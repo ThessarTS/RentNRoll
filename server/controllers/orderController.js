@@ -1,4 +1,4 @@
-const { Order, Vehicle, User } = require('../models/index')
+const { Order, Vehicle, User } = require("../models/index");
 class OrderController {
     static async findAllOrder(req, res, next) {
         try {
@@ -19,6 +19,7 @@ class OrderController {
             next(error)
         }
     }
+  }
 
     static async findOrderById(req, res, next) {
         try {
@@ -33,10 +34,11 @@ class OrderController {
             next(error)
         }
     }
+  }
 
-    static async createOrder(req, res, next) {
-        try {
-            const { VehicleId, startDate, endDate } = req.body
+  static async createOrder(req, res, next) {
+    try {
+      const { VehicleId, startDate, endDate } = req.body;
 
             let vehicle = await Vehicle.findByPk(VehicleId)
             if (!vehicle) {
@@ -48,19 +50,23 @@ class OrderController {
             next(error)
         }
     }
+  }
 
-    static async updateOrderStatus(req, res, next) {
-        try {
-            const id = req.params.id
-            const { status } = req.body
-            await Order.update({ status }, {
-                where: { id }
-            })
-            res.json({ message: `Order status updated to ${status}` })
-        } catch (error) {
-            next(error)
+  static async updateOrderStatus(req, res, next) {
+    try {
+      const id = req.params.id;
+      const { status } = req.body;
+      await Order.update(
+        { status },
+        {
+          where: { id },
         }
+      );
+      res.json({ message: `Order status updated to ${status}` });
+    } catch (error) {
+      next(error);
     }
+  }
 
     static async findAllOrderByVehicle(req, res, next) {
         try {
@@ -89,4 +95,4 @@ class OrderController {
     }
 }
 
-module.exports = OrderController
+module.exports = OrderController;
