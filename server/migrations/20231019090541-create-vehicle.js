@@ -17,8 +17,8 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: {
           model: "Categories",
-          key: 'id'
-        }
+          key: "id",
+        },
       },
       price: {
         type: Sequelize.INTEGER,
@@ -32,10 +32,10 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: {
           model: "Users",
-          key: 'id'
+          key: "id",
         },
-        onDelete: 'CASCADE',
-        onUpdate: 'CASCADE',
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
       },
       createdAt: {
         allowNull: false,

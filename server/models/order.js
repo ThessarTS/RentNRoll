@@ -5,7 +5,6 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Order.belongsTo(models.Vehicle);
       Order.belongsTo(models.User);
-      Order.hasOne(models.User);
     }
   }
   Order.init(

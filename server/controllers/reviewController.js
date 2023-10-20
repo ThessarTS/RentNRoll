@@ -1,4 +1,4 @@
-const { Review, Order, Vehicle } = require("../models");
+const { Review, Vehicle } = require("../models");
 class ReviewController {
   static async getReviewUser(req, res, next) {
     try {
@@ -10,20 +10,10 @@ class ReviewController {
   }
   static async getReviewVehicle(req, res, next) {
     try {
-      const { OrderId } = req.params;
+      const { VehicleId } = req.params;
       const data = await Review.findAll({
-        where: { OrderId: OrderId },
-        include: [
-          Order,
-          {
-            model: Order,
-            include: [
-              {
-                model: Vehicle,
-              },
-            ],
-          },
-        ],
+        where: { VehicleId },
+        include: [Vehicle],
       });
       res.json(data);
     } catch (error) {
@@ -32,10 +22,9 @@ class ReviewController {
   }
   static async postReview(req, res, next) {
     try {
-      const { OrderId } = req.params;
+      const { VehicleId } = req.params;
       const { message, rating } = req.body;
-      const order = await Order.findByPk(OrderId);
-      await Review.create({ OrderId, message, rating, UserId: req.user.id, VehicleId: order.VehicleId });
+      await Review.create({ message, rating, UserId: req.user.id, VehicleId: VehicleId });
       res.status(201).json({ message: "Review success!" });
     } catch (error) {
       next(error);
