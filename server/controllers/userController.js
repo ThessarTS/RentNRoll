@@ -40,7 +40,7 @@ class UserController {
       if (!user) throw { name: "invalid_email_password" };
       const passValid = comparePassword(password, user.password);
       if (!passValid) throw { name: "invalid_email_password" };
-
+      console.log(user, '===', otp);
       if (user.otp !== otp) throw { name: "invalid_otp" };
       const access_token = signToken({ id: user.id });
       res.status(200).json({ access_token });

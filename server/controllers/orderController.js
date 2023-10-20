@@ -6,7 +6,13 @@ class OrderController {
                 where: {
                     UserId: req.user.id
                 },
-                include: [Vehicle, User]
+                include: [
+                    {
+                        model: Vehicle,
+                        include: [User]
+                    },
+                    User
+                ]
             })
             res.json(orders)
         } catch (error) {
@@ -20,7 +26,7 @@ class OrderController {
                 where: {
                     id: req.params.id
                 },
-                include: [Vehicle, User]
+                include: [{ model: Vehicle, include: [User] }, User]
             })
             res.json(order)
         } catch (error) {
@@ -33,7 +39,9 @@ class OrderController {
             const { VehicleId, startDate, endDate } = req.body
 
             let vehicle = await Vehicle.findByPk(VehicleId)
-
+            if (!vehicle) {
+                throw { name: 'not_found' }
+            }
             await Order.create({ VehicleId, startDate, endDate, UserId: req.user.id, ownerId: vehicle.UserId })
             res.status(201).json({ message: 'Success create new order' })
         } catch (error) {
@@ -49,6 +57,32 @@ class OrderController {
                 where: { id }
             })
             res.json({ message: `Order status updated to ${status}` })
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    static async findAllOrderByVehicle(req, res, next) {
+        try {
+            let vehicle = await Vehicle.findByPk(VehicleId)
+
+            if (!vehicle) {
+                throw { name: 'not_found' }
+            }
+
+            let orders = await Order.findAll({
+                where: {
+                    VehicleId: req.params.vehicleid
+                },
+                include: [
+                    {
+                        model: Vehicle,
+                        include: [User]
+                    },
+                    User
+                ]
+            })
+            res.json(orders)
         } catch (error) {
             next(error)
         }
