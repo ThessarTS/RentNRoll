@@ -15,6 +15,7 @@ async function authentication(req, res, next) {
       id: findUser.id,
       email: findUser.email,
     };
+    console.log("auth");
     next();
   } catch (error) {
     next(error);

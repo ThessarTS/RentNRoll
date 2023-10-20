@@ -10,6 +10,7 @@ class UserController {
       await User.create({ fullName, email, password, phone });
       res.status(201).json({ message: `Account succesfully created!` });
     } catch (error) {
+      console.log(error);
       next(error);
     }
   }
@@ -82,36 +83,26 @@ class UserController {
   static async createProfile(req, res, next) {
     try {
       const { ktp, simA, simC } = req.body;
-      if (simA) {
-        await User.create({ ktp, simA });
-      } else if (simC) {
-        await User.create({ ktp, simC });
-      } else {
-        await User.create({ ktp, simC, simA });
-      }
+      await UserProfile.create({ ktp, simA, simC, UserId: req.user.id });
       res.status(201).json({ message: `Account profile succesfully created!` });
     } catch (error) {
+      console.log(error);
       next(error);
     }
   }
-  static async getUser(req, res, next) {
+  static async getProfile(req, res, next) {
     try {
-      const data = User.findOne({ where: { email: req.user.email }, attributes: { exclude: ["password"] }, include: [UserProfile] });
+      const data = await User.findOne({ where: { email: req.user.email }, attributes: { exclude: ["password"] }, include: [UserProfile] });
       res.json(data);
     } catch (error) {
+      console.log(error);
       next(error);
     }
   }
   static async editProfile(req, res, next) {
     try {
       const { ktp, simA, simC } = req.body;
-      if (simA) {
-        await UserProfile.update({ ktp, simA }, { where: { UserId: req.user.id } });
-      } else if (simC) {
-        await UserProfile.update({ ktp, simC }, { where: { UserId: req.user.id } });
-      } else {
-        await UserProfile.update({ ktp, simA, simC }, { where: { UserId: req.user.id } });
-      }
+      await UserProfile.update({ ktp, simA, simC }, { where: { UserId: req.user.id } });
       res.json({ message: "Successfully updated!" });
     } catch (error) {
       next(error);

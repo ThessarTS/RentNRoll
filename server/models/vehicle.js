@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
   Vehicle.init(
     {
       name: {
-        type: STRING,
+        type: DataTypes.STRING,
         allowNull: false,
         validate: {
           notEmpty: {
@@ -40,7 +40,7 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       color: {
-        type: STRING,
+        type: DataTypes.STRING,
         allowNull: false,
         validate: {
           notEmpty: {
@@ -52,7 +52,7 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       year: {
-        type: STRING,
+        type: DataTypes.STRING,
         allowNull: false,
         validate: {
           notEmpty: {
@@ -64,7 +64,7 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       transmission: {
-        type: STRING,
+        type: DataTypes.STRING,
         allowNull: false,
         validate: {
           notEmpty: {
@@ -88,7 +88,7 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       overViewImage: {
-        type: STRING,
+        type: DataTypes.STRING,
         allowNull: false,
         validate: {
           notEmpty: {
@@ -100,7 +100,7 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       interiorImage: {
-        type: STRING,
+        type: DataTypes.STRING,
         allowNull: false,
         validate: {
           notEmpty: {
@@ -112,7 +112,7 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       sideImage: {
-        type: STRING,
+        type: DataTypes.STRING,
         allowNull: false,
         validate: {
           notEmpty: {

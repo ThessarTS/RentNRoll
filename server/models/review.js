@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       message: {
-        type: TEXT,
+        type: DataTypes.TEXT,
         allowNull: false,
         validate: {
           notNull: {

@@ -1,13 +1,12 @@
-const router = require('express').Router()
+const router = require("express").Router();
 
-const VehicleController = require('../controllers/vehicleController')
+const VehicleController = require("../controllers/vehicleController");
 
-router.get('/')
-router.get('/:id')
-router.post('/')
-router.put('/:id')
-router.patch('/:id')
-router.delete('/:id')
+// router.get('/')
+// router.get('/:id')
+// router.post('/')
+// router.put('/:id')
+// router.patch('/:id')
+// router.delete('/:id')
 
-
-module.exports = router
+module.exports = router;
