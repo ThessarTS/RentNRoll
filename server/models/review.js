@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
   Review.init(
     {
       rating: {
-        type: FLOAT,
+        type: DataTypes.FLOAT,
         allowNull: false,
         validate: {
           notNull: {
@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       message: {
-        type: TEXT,
+        type: DataTypes.TEXT,
         allowNull: false,
         validate: {
           notNull: {

@@ -65,9 +65,33 @@ module.exports = (sequelize, DataTypes) => {
       },
       transmission: {
         type: DataTypes.STRING,
+
       },
       seats: {
         type: DataTypes.INTEGER,
+
+        allowNull: false,
+        validate: {
+          notEmpty: {
+            msg: "Transmission is required!",
+          },
+          notNull: {
+            msg: "Transmission is required!",
+          },
+        },
+      },
+      seats: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        validate: {
+          notEmpty: {
+            msg: "Seats is required!",
+          },
+          notNull: {
+            msg: "Seats is required!",
+          },
+        },
+
       },
       overViewImage: {
         type: DataTypes.TEXT,
@@ -83,9 +107,33 @@ module.exports = (sequelize, DataTypes) => {
       },
       interiorImage: {
         type: DataTypes.TEXT,
+
       },
       sideImage: {
         type: DataTypes.TEXT,
+
+        allowNull: false,
+        validate: {
+          notEmpty: {
+            msg: "Interior image is required!",
+          },
+          notNull: {
+            msg: "Interior image is required!",
+          },
+        },
+      },
+      sideImage: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+        validate: {
+          notEmpty: {
+            msg: "Side image is required!",
+          },
+          notNull: {
+            msg: "Side image is required!",
+          },
+        },
+
       },
       UserId: DataTypes.INTEGER,
     },
