@@ -14,7 +14,7 @@ router.get("/trending")
 router.get("/categories")
 router.post("/midtrans-token/:orderId", authentication);
 
-router.use("/", user);
+router.use("/profiles", user);
 router.use('/vehicles', vehicle)
 router.use('/orders', order)
 router.use('/reviews', review)

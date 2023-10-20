@@ -9,7 +9,10 @@ module.exports = (sequelize, DataTypes) => {
   }
   Order.init(
     {
-      status: DataTypes.ENUM,
+      status: {
+        type: DataTypes.ENUM,
+        values: ['accepted', 'ongoing', 'available', 'returned']
+      },
       VehicleId: DataTypes.INTEGER,
       UserId: DataTypes.INTEGER,
       startDate: {
