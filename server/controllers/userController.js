@@ -35,11 +35,11 @@ class UserController {
   static async login(req, res, next) {
     const { email, password, otp } = req.body;
     try {
-      if (!email || !password) throw { name: "login_empty_field" };
+      if (!email || !password) throw { name: "empty_field" };
       const user = await User.findOne({ where: { email } });
-      if (!user) throw { name: "email_is_not_registered" };
+      if (!user) throw { name: "invalid_email_password" };
       const passValid = comparePassword(password, user.password);
-      if (!passValid) throw { name: "invalid_password" };
+      if (!passValid) throw { name: "invalid_email_password" };
 
       if (user.otp !== otp) throw { name: "invalid_otp" };
       const access_token = signToken({ id: user.id });
@@ -103,7 +103,7 @@ class UserController {
     try {
       const { ktp, simA, simC } = req.body;
       if (!ktp) {
-        throw { message: "KTP is required!" };
+        throw { name: "KTP is required!" };
       }
       await UserProfile.update({ ktp, simA, simC }, { where: { UserId: req.user.id } });
       res.json({ message: "Successfully updated!" });

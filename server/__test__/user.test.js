@@ -2,7 +2,7 @@ const request = require('supertest')
 const app = require('../app')
 const { sequelize } = require('../models')
 const { describe, expect, test, beforeAll, afterAll, it } = require('@jest/globals')
-const { hashPassword } = require('../helpers/bcryptjs')
+const { hashPassword } = require('../helpers/bcrypt')
 const { User } = require('../models/index')
 const { signToken } = require('../helpers/jwt')
 
@@ -331,25 +331,25 @@ describe('POST match otp code /login', function () {
         expect(response.body).toHaveProperty('message', 'Invalid Email / Password');
     })
 
-    it('should responds with 400 and body with message', async function () {
+    it('should responds with 401 and body with message', async function () {
         const response = await request(app).post('/login')
             .send({
                 email: 'test1@mail.com',
                 password: '123123123',
             })
-        expect(response.status).toEqual(400);
+        expect(response.status).toEqual(401);
         expect(response.body).toBeInstanceOf(Object)
         expect(response.body).toHaveProperty('message', 'Please input your otp code');
     });
 
-    it('should responds with 400 and body with message', async function () {
+    it('should responds with 401 and body with message', async function () {
         const response = await request(app).post('/login')
             .send({
                 email: 'test1@mail.com',
                 password: '123123123',
                 otp: ''
             })
-        expect(response.status).toEqual(400);
+        expect(response.status).toEqual(401);
         expect(response.body).toBeInstanceOf(Object)
         expect(response.body).toHaveProperty('message', 'Please input your otp code');
     });
@@ -361,9 +361,9 @@ describe('POST match otp code /login', function () {
                 password: '123123123',
                 otp: 'wrong'
             })
-        expect(response.status).toEqual(400);
+        expect(response.status).toEqual(401);
         expect(response.body).toBeInstanceOf(Object)
-        expect(response.body).toHaveProperty('message', 'Invalid otp code');
+        expect(response.body).toHaveProperty('message', 'Invalid otp code!');
     });
 
     it('should responds with 400 and body with message', async function () {
@@ -375,7 +375,7 @@ describe('POST match otp code /login', function () {
             })
         expect(response.status).toEqual(400);
         expect(response.body).toBeInstanceOf(Object)
-        expect(response.body).toHaveProperty('message', 'Password is required!');
+        expect(response.body).toHaveProperty('message', 'Email and Password required');
     });
 
     it('should responds with 400 and body with message', async function () {
@@ -386,7 +386,7 @@ describe('POST match otp code /login', function () {
             })
         expect(response.status).toEqual(400);
         expect(response.body).toBeInstanceOf(Object)
-        expect(response.body).toHaveProperty('message', 'Email is required!');
+        expect(response.body).toHaveProperty('message', 'Email and Password required');
     });
 
     it('should responds with 400 and body with message', async function () {
@@ -399,7 +399,7 @@ describe('POST match otp code /login', function () {
             })
         expect(response.status).toEqual(400);
         expect(response.body).toBeInstanceOf(Object)
-        expect(response.body).toHaveProperty('message', 'Password is required!');
+        expect(response.body).toHaveProperty('message', 'Email and Password required');
     });
 
     it('should responds with 400 and body with message', async function () {
@@ -412,7 +412,7 @@ describe('POST match otp code /login', function () {
             })
         expect(response.status).toEqual(400);
         expect(response.body).toBeInstanceOf(Object)
-        expect(response.body).toHaveProperty('message', 'Password is required!');
+        expect(response.body).toHaveProperty('message', 'Email and Password required');
     });
 });
 
@@ -480,25 +480,25 @@ describe('POST users profile /profiles', function () {
         expect(response.body).toHaveProperty('message', 'Invalid Token');
     });
 
-    it('should responds with 401 and body object with message', async function () {
+    it('should responds with 400 and body object with message', async function () {
         const response = await request(app).post('/profiles')
             .set("access_token", access_token).send({
                 simA: 'url_sim_A'
             })
 
-        expect(response.status).toEqual(401);
+        expect(response.status).toEqual(400);
         expect(response.body).toBeInstanceOf(Object)
         expect(response.body).toHaveProperty('message', 'KTP is required!');
     });
 
-    it('should responds with 401 and body object with message', async function () {
+    it('should responds with 400 and body object with message', async function () {
         const response = await request(app).post('/profiles')
             .set("access_token", access_token).send({
                 ktp: '',
                 simA: 'url_sim_A'
             })
 
-        expect(response.status).toEqual(401);
+        expect(response.status).toEqual(400);
         expect(response.body).toBeInstanceOf(Object)
         expect(response.body).toHaveProperty('message', 'KTP is required!');
     });
@@ -536,25 +536,25 @@ describe('PUT users profile /profiles', function () {
         expect(response.body).toHaveProperty('message', 'Invalid Token');
     });
 
-    it('should responds with 401 and body object with message', async function () {
+    it('should responds with 400 and body object with message', async function () {
         const response = await request(app).put('/profiles')
             .set("access_token", access_token).send({
                 simA: 'url_sim_A'
             })
 
-        expect(response.status).toEqual(401);
+        expect(response.status).toEqual(400);
         expect(response.body).toBeInstanceOf(Object)
         expect(response.body).toHaveProperty('message', 'KTP is required!');
     });
 
-    it('should responds with 401 and body object with message', async function () {
+    it('should responds with 400 and body object with message', async function () {
         const response = await request(app).put('/profiles')
             .set("access_token", access_token).send({
                 ktp: '',
                 simA: 'url_sim_A'
             })
 
-        expect(response.status).toEqual(401);
+        expect(response.status).toEqual(400);
         expect(response.body).toBeInstanceOf(Object)
         expect(response.body).toHaveProperty('message', 'KTP is required!');
     });
@@ -563,7 +563,7 @@ describe('PUT users profile /profiles', function () {
 describe('DELETE users profile /profiles', function () {
 
     it('should responds with 200 and body message', async function () {
-        const response = await request(app).put('/profiles')
+        const response = await request(app).delete('/profiles')
             .set("access_token", access_token)
         expect(response.status).toEqual(200);
         expect(response.body).toBeInstanceOf(Object)
@@ -571,7 +571,7 @@ describe('DELETE users profile /profiles', function () {
     });
 
     it('should responds with 401 and body object with message', async function () {
-        const response = await request(app).put('/profiles')
+        const response = await request(app).delete('/profiles')
 
         expect(response.status).toEqual(401);
         expect(response.body).toBeInstanceOf(Object)
@@ -579,7 +579,7 @@ describe('DELETE users profile /profiles', function () {
     });
 
     it('should responds with 401 and body object with message', async function () {
-        const response = await request(app).put('/profiles')
+        const response = await request(app).delete('/profiles')
             .set("access_token", 'randomstring')
 
         expect(response.status).toEqual(401);

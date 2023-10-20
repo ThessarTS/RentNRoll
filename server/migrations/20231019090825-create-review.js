@@ -20,18 +20,14 @@ module.exports = {
       VehicleId: {
         type: Sequelize.INTEGER,
         references: {
-          model: {
-            tableName: "Vehicles",
-          },
+          model: "Vehicles",
           key: "id",
         },
       },
       UserId: {
         type: Sequelize.INTEGER,
         references: {
-          model: {
-            tableName: "Users",
-          },
+          model: "Users",
           key: "id",
         },
       },
