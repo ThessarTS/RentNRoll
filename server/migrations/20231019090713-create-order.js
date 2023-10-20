@@ -11,7 +11,7 @@ module.exports = {
       },
       status: {
         type: Sequelize.ENUM,
-        values: ['accepted', 'ongoing', 'available', 'returned'],
+        values: ["accepted", "ongoing", "available", "returned"],
       },
       VehicleId: {
         type: Sequelize.INTEGER,
@@ -29,15 +29,15 @@ module.exports = {
       },
       startDate: {
         type: Sequelize.DATE,
-        allowNull: false
+        allowNull: false,
       },
       endDate: {
         type: Sequelize.DATE,
-        allowNull: false
+        allowNull: false,
       },
       ownerId: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,
