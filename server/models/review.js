@@ -5,6 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Review.belongsTo(models.User);
       Review.belongsTo(models.Vehicle);
+      Review.belongsTo(models.Order);
     }
   }
   Review.init(
@@ -46,6 +47,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       VehicleId: DataTypes.INTEGER,
       UserId: DataTypes.INTEGER,
+      OrderId: DataTypes.INTEGER,
     },
     {
       sequelize,

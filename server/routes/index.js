@@ -10,13 +10,13 @@ router.post("/register", UserController.register);
 router.post("/otp", UserController.getOTP);
 router.post("/login", UserController.login);
 router.post("/google-login", UserController.gLogin);
-router.get("/trending")
-router.get("/categories")
+router.get("/trending");
+router.get("/categories");
 router.post("/midtrans-token/:orderId", authentication);
 
-router.use("/", user);
-router.use('/vehicles', vehicle)
-router.use('/orders', order)
-router.use('/reviews', review)
+router.use("/profiles", user);
+router.use("/vehicles", vehicle);
+router.use("/orders", order);
+router.use("/reviews", review);
 
 module.exports = router;

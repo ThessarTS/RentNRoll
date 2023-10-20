@@ -5,36 +5,40 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Order.belongsTo(models.Vehicle);
       Order.belongsTo(models.User);
+      Order.hasOne(models.User);
     }
   }
   Order.init(
     {
-      status: DataTypes.ENUM,
+      status: {
+        type: DataTypes.ENUM,
+        values: ["accepted", "ongoing", "available", "returned"],
+      },
       VehicleId: DataTypes.INTEGER,
       UserId: DataTypes.INTEGER,
       startDate: {
         type: DataTypes.DATE,
         allowNull: false,
         validate: {
-          notNull: { msg: 'Start date required' },
-          notEmpty: { msg: 'Start date required' },
-        }
+          notNull: { msg: "Start date required" },
+          notEmpty: { msg: "Start date required" },
+        },
       },
       endDate: {
         type: DataTypes.DATE,
         allowNull: false,
         validate: {
-          notNull: { msg: 'End date required' },
-          notEmpty: { msg: 'End date required' },
-        }
+          notNull: { msg: "End date required" },
+          notEmpty: { msg: "End date required" },
+        },
       },
       ownerId: {
         type: DataTypes.INTEGER,
         allowNull: false,
         validate: {
-          notNull: { msg: 'Owner Id required' },
-          notEmpty: { msg: 'Owner Id required' },
-        }
+          notNull: { msg: "Owner Id required" },
+          notEmpty: { msg: "Owner Id required" },
+        },
       },
     },
     {
