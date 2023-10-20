@@ -1,11 +1,8 @@
-const router = require('express').Router()
+const router = require("express").Router();
 
-const ReviewController = require('../controllers/reviewController')
+const ReviewController = require("../controllers/reviewController");
 
-router.get('/:vehicleid')
-router.post('/')
+// router.get('/:vehicleid')
+// router.post('/')
 
-
-
-
-module.exports = router
+module.exports = router;

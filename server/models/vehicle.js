@@ -65,11 +65,9 @@ module.exports = (sequelize, DataTypes) => {
       },
       transmission: {
         type: DataTypes.STRING,
-
       },
       seats: {
         type: DataTypes.INTEGER,
-
         allowNull: false,
         validate: {
           notEmpty: {
@@ -107,11 +105,9 @@ module.exports = (sequelize, DataTypes) => {
       },
       interiorImage: {
         type: DataTypes.TEXT,
-
       },
       sideImage: {
         type: DataTypes.TEXT,
-
         allowNull: false,
         validate: {
           notEmpty: {
