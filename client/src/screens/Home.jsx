@@ -1,5 +1,5 @@
 import React from "react";
-import { SafeAreaView, StyleSheet, View, Text, Image, Pressable, TextInput, FlatList, ScrollView } from "react-native";
+import { SafeAreaView, StyleSheet, View, Text, Pressable, TextInput, FlatList, ScrollView } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import carIcon from "../../assets/vector/car.png";
@@ -91,10 +91,11 @@ function Home() {
           <Icon name="bell-badge" size={25} color="white" />
         </Pressable>
       </View>
-      <SafeAreaView style={{ flex: 1 }}>
+      <SafeAreaView>
         <ScrollView style={styles.scrollViewContainer}>
-          <View style={styles.top}></View>
           <View style={styles.itemContainer}>
+            <View style={styles.top}></View>
+
             {/* category */}
             <View style={[styles.categoryContainer, styles.shadowProp]}>
               <Text style={styles.categoryTitle}>Categories</Text>
@@ -144,7 +145,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     marginHorizontal: 20,
     marginBottom: 20,
+    zIndex: 2,
   },
+  itemContainer: {
+    paddingTop: 10,
+    gap: 10,
+    zIndex: 0,
+    backgroundColor: "whitesmoke",
+  },
+
   itemsContainer: {
     padding: 20,
     backgroundColor: "white",
@@ -167,7 +176,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     borderBottomLeftRadius: 10,
     borderBottomRightRadius: 10,
-    zIndex: 0,
+    zIndex: 1,
   },
   mastheadContainer: {
     flexDirection: "row",
@@ -199,13 +208,9 @@ const styles = StyleSheet.create({
   },
   scrollViewContainer: {
     position: "relative",
-    backgroundColor: "whitesmoke",
+    backgroundColor: "#17799A",
   },
-  itemContainer: {
-    paddingTop: 10,
-    gap: 10,
-    zIndex: 1,
-  },
+
   categoryTitle: {
     fontSize: 20,
     fontWeight: 500,

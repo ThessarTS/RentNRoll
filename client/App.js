@@ -1,14 +1,16 @@
-import { useEffect, useState } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Home from "./src/screens/Home";
 import Splash from "./src/screens/Splash";
+import LoginRegister from "./src/screens/LoginRegister";
+import Account from "./src/screens/Account";
+
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
-const TabNav = () => {
+const HomeTab = () => {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -46,20 +48,12 @@ const TabNav = () => {
       <Tab.Screen name="Home" component={Home} />
       <Tab.Screen name="Rent Now" component={Home} />
       <Tab.Screen name="Your Order" component={Home} />
-      <Tab.Screen name="You" component={Home} />
+      <Tab.Screen name="You" component={Account} />
     </Tab.Navigator>
   );
 };
 
 export default function App() {
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000);
-  }, []);
-
   return (
     <NavigationContainer>
       <Stack.Navigator
@@ -80,11 +74,12 @@ export default function App() {
         />
         <Stack.Screen
           name="home"
-          component={TabNav}
+          component={HomeTab}
           options={{
             headerShown: false,
           }}
         />
+        <Stack.Screen name="loginRegister" component={LoginRegister} options={{ headerShown: false, tabBarStyle: { display: "none" } }} />
       </Stack.Navigator>
     </NavigationContainer>
   );
