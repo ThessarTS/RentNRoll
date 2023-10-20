@@ -28,6 +28,9 @@ module.exports = {
       otp: {
         type: Sequelize.STRING,
       },
+      expoToken: {
+        type: Sequelize.STRING,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

@@ -2,6 +2,7 @@ const errorHandler = (error, req, res, next) => {
   let code = 500;
   let message = "Internal server error";
 
+  console.log(error);
   if (
     error.name == "SequelizeValidationError" ||
     error.name == "SequelizeUniqueConstraintError"
@@ -23,6 +24,12 @@ const errorHandler = (error, req, res, next) => {
   } else if (error.name === "not_found") {
     code = 404;
     message = "Not Found";
+  } else if (error.name == 'KTP is required!') {
+    code = 400
+    message = error.name
+  } else if (error.name == 'invalid_otp') {
+    code = 401
+    message = 'Invalid otp code!'
   }
 
   res.status(code).json({ message });

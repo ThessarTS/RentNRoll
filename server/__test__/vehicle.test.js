@@ -110,27 +110,7 @@ describe("Test add vehicle endpoint /vehicles method POST", () => {
     expect(response.body).toBeInstanceOf(Object);
     expect(response.body).toHaveProperty("message", "Success Add New Vehicle");
   });
-  //   it("Failed added a vehicle without access_token", async function () {
-  //     const response = await request(app).post("/vehicles").send({
-  //       name: "Toyota Rush",
-  //       CategoryId: 1,
-  //       price: 270000,
-  //       color: "white",
-  //       year: "2020",
-  //       transmission: "manual",
-  //       seats: 8,
-  //       overViewImage:
-  //         "https://1.bp.blogspot.com/-KCkEiJcf-gc/XdQxSkkgvfI/AAAAAAAAad0/O1OkNdU7lyEU13I7ydL5uyARYA5lVs69wCLcBGAsYHQ/w1200-h630-p-k-no-nu/spesifikasi-grand-new-avanza.jpg",
-  //       interiorImage:
-  //         "https://imgcdn.oto.com/large/gallery/interior/38/1654/toyota-avanza-dashboard-view-493195.jpg",
-  //       sideImage:
-  //         "https://imgcdnblog.carbay.com/wp-content/uploads/2015/07/24051728/2016-Toyota-Avanza-1.jpg",
-  //       UserId: 1,
-  //     });
-  //     expect(response.status).toBe(201);
-  //     expect(response.body).toBeInstanceOf(Object);
-  //     expect(response.body).toHaveProperty("message", "Success Add New Vehicle");
-  //   });
+
   it("Faild added a vehicle with empty name feild", async function () {
     const response = await request(app)
       .post("/vehicles")

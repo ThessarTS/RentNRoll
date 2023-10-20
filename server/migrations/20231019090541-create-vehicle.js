@@ -16,52 +16,26 @@ module.exports = {
       CategoryId: {
         type: Sequelize.INTEGER,
         references: {
-          model: {
-            tableName: "Categories",
-          },
-          key: "id",
-        },
+          model: "Categories",
+          key: 'id'
+        }
       },
       price: {
         type: Sequelize.INTEGER,
         allowNull: false,
       },
-      color: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      year: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      transmission: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
-      seats: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-      },
-      overViewImage: {
-        type: Sequelize.TEXT,
-        allowNull: false,
-      },
-      interiorImage: {
-        type: Sequelize.TEXT,
-        allowNull: false,
-      },
-      sideImage: {
+      image: {
         type: Sequelize.TEXT,
         allowNull: false,
       },
       UserId: {
         type: Sequelize.INTEGER,
         references: {
-          model: {
-            tableName: "Users",
-          },
-          key: "id",
+          model: "Users",
+          key: 'id'
         },
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
       },
       createdAt: {
         allowNull: false,

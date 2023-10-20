@@ -9,37 +9,35 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      isPaid: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: false,
+      status: {
+        type: Sequelize.ENUM,
+        values: ['accepted', 'ongoing', 'available', 'returned'],
       },
       VehicleId: {
         type: Sequelize.INTEGER,
         references: {
-          model: {
-            tableName: "Vehicles",
-          },
+          model: "Vehicles",
           key: "id",
         },
       },
       UserId: {
         type: Sequelize.INTEGER,
         references: {
-          model: {
-            tableName: "Users",
-          },
+          model: "Users",
           key: "id",
         },
       },
       startDate: {
         type: Sequelize.DATE,
+        allowNull: false
       },
       endDate: {
         type: Sequelize.DATE,
+        allowNull: false
       },
-      isAccepted: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: false,
+      ownerId: {
+        type: Sequelize.INTEGER,
+        allowNull: false
       },
       createdAt: {
         allowNull: false,
