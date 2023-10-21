@@ -1,4 +1,5 @@
 const { Order, Vehicle, User } = require("../models/index");
+const midtransClient = require('midtrans-client');
 class OrderController {
     static async findAllOrder(req, res, next) {
         try {
@@ -67,7 +68,7 @@ class OrderController {
 
     static async findAllOrderByVehicle(req, res, next) {
         try {
-            let vehicle = await Vehicle.findByPk(VehicleId)
+            let vehicle = await Vehicle.findByPk(req.params.vehicleid)
 
             if (!vehicle) {
                 throw { name: 'not_found' }
@@ -86,6 +87,33 @@ class OrderController {
                 ]
             })
             res.json(orders)
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    static async midtransToken(req, res, next) {
+        try {
+            let snap = new midtransClient.Snap({
+                isProduction: false,
+                serverKey: process.env.MIDTRANS_SERVER_KEY
+            });
+            let parameter = {
+                "transaction_details": {
+                    "order_id": req.params.orderId,
+                    "gross_amount": req.body.amount
+                },
+                "credit_card": {
+                    "secure": true
+                },
+                "customer_details": {
+                    "first_name": req.user.username,
+                    "email": req.user.email,
+                }
+            };
+
+            const midtransToken = await snap.createTransaction(parameter)
+            res.status(201).json(midtransToken)
         } catch (error) {
             next(error)
         }
