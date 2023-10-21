@@ -60,6 +60,7 @@ function Login({ navigation }) {
     const user = JSON.stringify(inputLogin);
     await AsyncStorage.setItem("user", user);
     navigation.navigate("You");
+    toggleOtp;
   };
 
   const otpInputs = [];
@@ -79,7 +80,7 @@ function Login({ navigation }) {
     <View style={styles.container}>
       <ImageBackground source={banner} style={styles.backgroundImage} resizeMode="cover">
         <Text style={styles.textWithShadow}>{formRegister ? "Register" : "Log in"}</Text>
-        <Pressable style={styles.buttonBack} onPress={() => navigation.goBack()}>
+        <Pressable style={styles.buttonBack} onPress={() => navigation.push("home")}>
           <Ionicons name="arrow-back-sharp" size={20} color="white" />
         </Pressable>
       </ImageBackground>
