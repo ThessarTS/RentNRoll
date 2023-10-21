@@ -1,0 +1,42 @@
+[
+  {
+    "VehicleId": 1,
+    "UserId": 2,
+    "startDate": "2023-10-20T15:55:00.375Z",
+    "endDate": "2024-10-20T15:55:00.375Z",
+    "ownerId": 1,
+    "status": "returned"
+  },
+  {
+    "VehicleId": 2,
+    "UserId": 1,
+    "startDate": "2023-09-20T15:55:00.375Z",
+    "endDate": "2024-12-20T15:55:00.375Z",
+    "ownerId": 1,
+    "status": "returned"
+  },
+  {
+    "VehicleId": 3,
+    "UserId": 3,
+    "startDate": "2023-08-20T15:55:00.375Z",
+    "endDate": "2024-11-20T15:55:00.375Z",
+    "ownerId": 2,
+    "status": "ongoing"
+  },
+  {
+    "VehicleId": 3,
+    "UserId": 3,
+    "startDate": "2023-08-20T15:55:00.375Z",
+    "endDate": "2024-11-20T15:55:00.375Z",
+    "ownerId": 2,
+    "status": "returned"
+  },
+  {
+    "VehicleId": 4,
+    "UserId": 3,
+    "startDate": "2023-10-20T15:55:00.375Z",
+    "endDate": "2024-10-20T15:55:00.375Z",
+    "ownerId": 3,
+    "status": "returned"
+  }
+]

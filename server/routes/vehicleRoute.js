@@ -1,12 +1,13 @@
-const router = require('express').Router()
+const router = require("express").Router();
 
-const VehicleController = require('../controllers/vehicleController')
+const VehicleController = require("../controllers/vehicleController");
+const authentication = require("../middlewares/loginAuthentication");
+const uploadImage = require("../middlewares/uploadImage");
 
-router.get('/')
-router.get('/:id')
-router.post('/')
-router.put('/:id')
-router.delete('/:id')
+router.get("/", VehicleController.fetchVehicle);
+router.get("/:id/", VehicleController.detailVehicle);
+router.post("/", authentication, uploadImage, VehicleController.addVehicle);
+// router.put("/:id",authentication, VehicleController.editVehicle);
+router.delete("/:id", authentication, VehicleController.removeVehicle);
 
-
-module.exports = router
+module.exports = router;

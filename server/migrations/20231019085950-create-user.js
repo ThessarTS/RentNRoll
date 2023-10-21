@@ -16,6 +16,7 @@ module.exports = {
       email: {
         type: Sequelize.STRING,
         allowNull: false,
+        unique: true,
       },
       password: {
         type: Sequelize.STRING,
@@ -26,6 +27,9 @@ module.exports = {
         allowNull: false,
       },
       otp: {
+        type: Sequelize.STRING,
+      },
+      expoToken: {
         type: Sequelize.STRING,
       },
       createdAt: {

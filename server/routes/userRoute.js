@@ -1,16 +1,10 @@
-const router = require('express').Router()
+const router = require("express").Router();
+const UserController = require("../controllers/userController");
+const authentication = require("../middlewares/loginAuthentication");
 
-const UserController = require('../controllers/userController')
+router.get("/", authentication, UserController.getProfile);
+router.post("/", authentication, UserController.createProfile);
+router.delete("/", authentication, UserController.deleteUser);
+router.put("/", authentication, UserController.editProfile);
 
-router.post('/otp')
-router.post('/login')
-router.post('/register')
-router.post('/google-login')
-router.get('/profiles')
-router.post('/profiles')
-router.put('/profiles/:id')
-router.delete('/profiles/:id')
-router.post('/midtrans-token')
-
-
-module.exports = router
+module.exports = router;

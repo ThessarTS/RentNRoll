@@ -3,10 +3,11 @@ const { Model, INTEGER } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Vehicle extends Model {
     static associate(models) {
-      Vehicle.hasMany(models.Category);
+      Vehicle.belongsTo(models.Category);
       Vehicle.hasMany(models.Order);
       Vehicle.belongsTo(models.User);
       Vehicle.hasMany(models.Review);
+      Vehicle.hasMany(models.Specification);
     }
   }
   Vehicle.init(
@@ -39,87 +40,15 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
       },
-      color: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          notEmpty: {
-            msg: "Color is required!",
-          },
-          notNull: {
-            msg: "Color is required!",
-          },
-        },
-      },
-      year: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          notEmpty: {
-            msg: "Year is required!",
-          },
-          notNull: {
-            msg: "Year is required!",
-          },
-        },
-      },
-      transmission: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: {
-          notEmpty: {
-            msg: "Transmission is required!",
-          },
-          notNull: {
-            msg: "Transmission is required!",
-          },
-        },
-      },
-      seats: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        validate: {
-          notEmpty: {
-            msg: "Seats is required!",
-          },
-          notNull: {
-            msg: "Seats is required!",
-          },
-        },
-      },
-      overViewImage: {
+      image: {
         type: DataTypes.TEXT,
         allowNull: false,
         validate: {
           notEmpty: {
-            msg: "Overview image is required!",
+            msg: "Image is required!",
           },
           notNull: {
-            msg: "Overview image is required!",
-          },
-        },
-      },
-      interiorImage: {
-        type: DataTypes.TEXT,
-        allowNull: false,
-        validate: {
-          notEmpty: {
-            msg: "Interior image is required!",
-          },
-          notNull: {
-            msg: "Interior image is required!",
-          },
-        },
-      },
-      sideImage: {
-        type: DataTypes.TEXT,
-        allowNull: false,
-        validate: {
-          notEmpty: {
-            msg: "Side image is required!",
-          },
-          notNull: {
-            msg: "Side image is required!",
+            msg: "Image is required!",
           },
         },
       },
