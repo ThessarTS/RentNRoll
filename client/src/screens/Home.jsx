@@ -10,7 +10,7 @@ import CardCategory from "../components/CardCategory";
 import CardVehicle from "../components/CardVehicle";
 import { FontAwesome } from "@expo/vector-icons";
 
-function Home() {
+function Home({ navigation }) {
   const categories = [
     {
       id: 1,
@@ -74,7 +74,7 @@ function Home() {
   };
   const RenderTrending = ({ vehicle }) => {
     const { name, image, price, rating } = vehicle.item;
-    return <CardVehicle name={name} image={image} price={price} rating={rating} />;
+    return <CardVehicle name={name} image={image} price={price} rating={rating} navigation={navigation} />;
   };
 
   return (
