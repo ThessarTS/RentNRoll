@@ -45,6 +45,7 @@ class UserController {
       const access_token = signToken({ id: user.id });
       res.status(200).json({ access_token });
     } catch (err) {
+      console.log(err);
       next(err);
     }
   }
@@ -92,7 +93,11 @@ class UserController {
   }
   static async getProfile(req, res, next) {
     try {
-      const data = await User.findOne({ where: { email: req.user.email }, attributes: { exclude: ["password"] }, include: [UserProfile] });
+      const data = await User.findOne({
+        where: { email: req.user.email },
+        attributes: { exclude: ["password"] },
+        include: [UserProfile],
+      });
       res.json(data);
     } catch (error) {
       console.log(error);
@@ -105,7 +110,10 @@ class UserController {
       if (!ktp) {
         throw { name: "KTP is required!" };
       }
-      await UserProfile.update({ ktp, simA, simC }, { where: { UserId: req.user.id } });
+      await UserProfile.update(
+        { ktp, simA, simC },
+        { where: { UserId: req.user.id } }
+      );
       res.json({ message: "Successfully updated!" });
     } catch (error) {
       next(error);

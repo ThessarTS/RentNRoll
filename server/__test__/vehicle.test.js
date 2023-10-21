@@ -29,7 +29,7 @@ beforeAll(async () => {
   await sequelize.queryInterface.bulkInsert("Users", dataUsers);
   await sequelize.queryInterface.bulkInsert("Categories", dataCategories);
   await sequelize.queryInterface.bulkInsert("Vehicles", dataVehicle);
-  userToken = await User.findOne({
+  const userToken = await User.findOne({
     where: {
       email: "pablo@mail.com",
     },
@@ -56,13 +56,13 @@ afterAll(async () => {
 });
 
 describe("Test get data Vehicle endpoint /vehicles", () => {
-  it("Successfully got Products (without access_token) without using query filter parameters /pub/products", async function () {
+  it("Successfully get Products (without access_token) without using query filter parameters /pub/products", async function () {
     const response = await request(app).get("/vehicles");
 
     expect(response.status).toBe(200);
     expect(response.body).toBeInstanceOf(Array);
   });
-  it("Successfully got Products (with access_token) without using query filter parameters /pub/products", async function () {
+  it("Successfully get Products (with access_token) without using query filter parameters /pub/products", async function () {
     const response = await request(app)
       .get("/vehicles")
       .set("access_token", access_token);
@@ -81,7 +81,7 @@ describe("Test get data detail vehicle endpoint /vehicles/:id", () => {
   it("Failed to get Main Entity because the given id params does not exist in the database / is invalid", async function () {
     const response = await request(app).get("/vehicles/200");
     expect(response.status).toBe(404);
-    expect(response.body).toHaveProperty("message");
+    expect(response.body).toHaveProperty("message", expect.any(String)));
   });
 });
 
@@ -94,16 +94,8 @@ describe("Test add vehicle endpoint /vehicles method POST", () => {
         name: "Toyota Rush",
         CategoryId: 1,
         price: 270000,
-        color: "white",
-        year: "2020",
-        transmission: "manual",
-        seats: 8,
-        overViewImage:
+        image:
           "https://1.bp.blogspot.com/-KCkEiJcf-gc/XdQxSkkgvfI/AAAAAAAAad0/O1OkNdU7lyEU13I7ydL5uyARYA5lVs69wCLcBGAsYHQ/w1200-h630-p-k-no-nu/spesifikasi-grand-new-avanza.jpg",
-        interiorImage:
-          "https://imgcdn.oto.com/large/gallery/interior/38/1654/toyota-avanza-dashboard-view-493195.jpg",
-        sideImage:
-          "https://imgcdnblog.carbay.com/wp-content/uploads/2015/07/24051728/2016-Toyota-Avanza-1.jpg",
         UserId: 1,
       });
     expect(response.status).toBe(201);
@@ -119,16 +111,8 @@ describe("Test add vehicle endpoint /vehicles method POST", () => {
         name: "",
         CategoryId: 1,
         price: 270000,
-        color: "white",
-        year: "2020",
-        transmission: "manual",
-        seats: 8,
-        overViewImage:
+        image:
           "https://1.bp.blogspot.com/-KCkEiJcf-gc/XdQxSkkgvfI/AAAAAAAAad0/O1OkNdU7lyEU13I7ydL5uyARYA5lVs69wCLcBGAsYHQ/w1200-h630-p-k-no-nu/spesifikasi-grand-new-avanza.jpg",
-        interiorImage:
-          "https://imgcdn.oto.com/large/gallery/interior/38/1654/toyota-avanza-dashboard-view-493195.jpg",
-        sideImage:
-          "https://imgcdnblog.carbay.com/wp-content/uploads/2015/07/24051728/2016-Toyota-Avanza-1.jpg",
         UserId: 1,
       });
     expect(response.status).toBe(400);
@@ -142,23 +126,16 @@ describe("Test add vehicle endpoint /vehicles method POST", () => {
       .send({
         name: "Toyota",
         CategoryId: 1,
-        color: "white",
-        year: "2020",
-        transmission: "manual",
-        seats: 8,
-        overViewImage:
+        image:
           "https://1.bp.blogspot.com/-KCkEiJcf-gc/XdQxSkkgvfI/AAAAAAAAad0/O1OkNdU7lyEU13I7ydL5uyARYA5lVs69wCLcBGAsYHQ/w1200-h630-p-k-no-nu/spesifikasi-grand-new-avanza.jpg",
-        interiorImage:
-          "https://imgcdn.oto.com/large/gallery/interior/38/1654/toyota-avanza-dashboard-view-493195.jpg",
-        sideImage:
-          "https://imgcdnblog.carbay.com/wp-content/uploads/2015/07/24051728/2016-Toyota-Avanza-1.jpg",
         UserId: 1,
       });
     expect(response.status).toBe(400);
     expect(response.body).toBeInstanceOf(Object);
     expect(response.body).toHaveProperty("message", "Price is required!");
   });
-  it("Faild added a vehicle with empty color feild", async function () {
+
+  it("Faild added a vehicle with empty image feild", async function () {
     const response = await request(app)
       .post("/vehicles")
       .set("access_token", access_token)
@@ -166,71 +143,12 @@ describe("Test add vehicle endpoint /vehicles method POST", () => {
         name: "Toyota Rush",
         CategoryId: 1,
         price: 270000,
-        color: "",
-        year: "2020",
-        transmission: "manual",
-        seats: 8,
-        overViewImage:
-          "https://1.bp.blogspot.com/-KCkEiJcf-gc/XdQxSkkgvfI/AAAAAAAAad0/O1OkNdU7lyEU13I7ydL5uyARYA5lVs69wCLcBGAsYHQ/w1200-h630-p-k-no-nu/spesifikasi-grand-new-avanza.jpg",
-        interiorImage:
-          "https://imgcdn.oto.com/large/gallery/interior/38/1654/toyota-avanza-dashboard-view-493195.jpg",
-        sideImage:
-          "https://imgcdnblog.carbay.com/wp-content/uploads/2015/07/24051728/2016-Toyota-Avanza-1.jpg",
+        image: "",
         UserId: 1,
       });
     expect(response.status).toBe(400);
     expect(response.body).toBeInstanceOf(Object);
-    expect(response.body).toHaveProperty("message", "Color is required!");
-  });
-  it("Faild added a vehicle with empty year feild", async function () {
-    const response = await request(app)
-      .post("/vehicles")
-      .set("access_token", access_token)
-      .send({
-        name: "Toyota Rush",
-        CategoryId: 1,
-        price: 270000,
-        color: "white",
-        year: "",
-        transmission: "manual",
-        seats: 8,
-        overViewImage:
-          "https://1.bp.blogspot.com/-KCkEiJcf-gc/XdQxSkkgvfI/AAAAAAAAad0/O1OkNdU7lyEU13I7ydL5uyARYA5lVs69wCLcBGAsYHQ/w1200-h630-p-k-no-nu/spesifikasi-grand-new-avanza.jpg",
-        interiorImage:
-          "https://imgcdn.oto.com/large/gallery/interior/38/1654/toyota-avanza-dashboard-view-493195.jpg",
-        sideImage:
-          "https://imgcdnblog.carbay.com/wp-content/uploads/2015/07/24051728/2016-Toyota-Avanza-1.jpg",
-        UserId: 1,
-      });
-    expect(response.status).toBe(400);
-    expect(response.body).toBeInstanceOf(Object);
-    expect(response.body).toHaveProperty("message", "Year is required!");
-  });
-  it("Faild added a vehicle with empty Overview image feild", async function () {
-    const response = await request(app)
-      .post("/vehicles")
-      .set("access_token", access_token)
-      .send({
-        name: "Toyota Rush",
-        CategoryId: 1,
-        price: 270000,
-        color: "white",
-        year: "2021",
-        transmission: "manual",
-        seats: 8,
-        overViewImage: "",
-        interiorImage:
-          "https://imgcdn.oto.com/large/gallery/interior/38/1654/toyota-avanza-dashboard-view-493195.jpg",
-        sideImage:
-          "https://imgcdnblog.carbay.com/wp-content/uploads/2015/07/24051728/2016-Toyota-Avanza-1.jpg",
-        UserId: 1,
-      });
-    expect(response.status).toBe(400);
-    expect(response.body).toBeInstanceOf(Object);
-    expect(response.body).toHaveProperty(
-      "message",
-      "Overview image is required!"
-    );
+    expect(response.body).toHaveProperty("message", "Image is required!");
   });
 });
 

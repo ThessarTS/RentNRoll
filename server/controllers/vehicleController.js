@@ -24,7 +24,7 @@ class VehicleController {
   }
   static async detailVehicle(req, res, next) {
     try {
-      console.log(req.params);
+      // console.log(req.params);
       const { id } = req.params;
       const vehicle = await Vehicle.findOne({
         where: {
@@ -52,19 +52,16 @@ class VehicleController {
   }
   static async addVehicle(req, res, next) {
     try {
-      const { name, CategoryId, price, color, year, transmission, seats, overViewImage, interiorImage, sideImage, UserId } = req.body;
+
+      const { name, CategoryId, price, seats, image } = req.body;
+
       const newVehicle = await Vehicle.create({
         name,
         CategoryId,
         price,
-        color,
-        year,
-        transmission,
         seats,
-        overViewImage,
-        interiorImage,
-        sideImage,
-        UserId,
+        image,
+        UserId: req.user.id,
       });
       res.status(201).json({ message: "Success Add New Vehicle" });
     } catch (err) {
@@ -75,7 +72,6 @@ class VehicleController {
     try {
       const { id } = req.params;
       const findVehicle = await Vehicle.findByPk(id);
-      //   console.log(findVehicle);
       if (!findVehicle) {
         throw { name: "not_found" };
       }
@@ -92,7 +88,9 @@ class VehicleController {
   static async editVehicle(req, res, next) {
     try {
       const { id } = req.params;
-      const { name, CategoryId, price, color, year, transmission, seats, overViewImage, interiorImage, sideImage, UserId } = req.body;
+
+      const { name, CategoryId, price, seats, image } = req.body;
+
       const findVehicle = await Vehicle.findByPk(id);
       if (!findVehicle) {
         throw { name: "not_found" };
@@ -102,14 +100,9 @@ class VehicleController {
           name,
           CategoryId,
           price,
-          color,
-          year,
-          transmission,
           seats,
-          overViewImage,
-          interiorImage,
-          sideImage,
-          UserId,
+          image,
+          UserId: req.user.id,
         },
         { where: { id } }
       );
