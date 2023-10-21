@@ -27,7 +27,6 @@ const uploadImage = (req, res, next) => {
 
     upload(req, res, async (err) => {
         if (err) {
-            console.error('Error uploading image:', err);
             return res.status(500).json({ error: 'Failed to upload image' });
         }
         const { buffer, originalname } = req.file;

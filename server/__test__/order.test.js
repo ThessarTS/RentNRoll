@@ -14,7 +14,7 @@ const { hashPassword } = require("../helpers/bcrypt");
 const { signToken } = require("../helpers/jwt");
 
 let access_token;
-let userId = "";
+let invalidId = signToken({ id: 200 });
 beforeAll(async () => {
   let dataReview = [
     {
@@ -202,18 +202,31 @@ describe("Test add orders endpoint /orders", () => {
     expect(response.body).toBeInstanceOf(Object);
     expect(response.body).toHaveProperty("message", expect.any(String));
   });
-  it("Failed to add order because ownerId empty and without access token", async function () {
+  it("Failed to add order because vehicleid empty", async function () {
     const response = await request(app).post("/orders").send({
-      VehicleId: 2,
+      VehicleId: 200,
       UserId: 3,
       startDate: "2023-08-20T15:55:00.375Z",
       endDate: "2024-11-20T15:55:00.375Z",
       status: "returned",
-    });
-    //   .set("access_token", access_token);
-    expect(response.status).toBe(401);
+    })
+      .set("access_token", access_token);
+    expect(response.status).toBe(404);
     expect(response.body).toBeInstanceOf(Object);
     expect(response.body).toHaveProperty("message", expect.any(String));
+  });
+  it("Failed to add order because order self-own vehicle", async function () {
+    const response = await request(app).post("/orders").send({
+      VehicleId: 5,
+      UserId: 3,
+      startDate: "2023-08-20T15:55:00.375Z",
+      endDate: "2024-11-20T15:55:00.375Z",
+      status: "returned",
+    })
+      .set("access_token", access_token);
+    expect(response.status).toBe(403);
+    expect(response.body).toBeInstanceOf(Object);
+    expect(response.body).toHaveProperty("message", 'Cannot order your own vehicle');
   });
 });
 
