@@ -52,7 +52,9 @@ class VehicleController {
   }
   static async addVehicle(req, res, next) {
     try {
+
       const { name, CategoryId, price, seats, image } = req.body;
+
       const newVehicle = await Vehicle.create({
         name,
         CategoryId,
@@ -86,7 +88,9 @@ class VehicleController {
   static async editVehicle(req, res, next) {
     try {
       const { id } = req.params;
+
       const { name, CategoryId, price, seats, image } = req.body;
+
       const findVehicle = await Vehicle.findByPk(id);
       if (!findVehicle) {
         throw { name: "not_found" };
