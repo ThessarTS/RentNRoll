@@ -29,9 +29,12 @@ const errorHandler = (error, req, res, next) => {
   } else if (error.name == "login_empty_field") {
     code = 400;
     message = "Email/Password is required!";
-  } else if (error.anme === "No vehicle with status returned") {
+  } else if (error.name === "No vehicle with status returned") {
     code = 404;
     message = "No vehicle with status returned";
+  } else if (error.name === "same-user") {
+    code = 403;
+    message = "Cannot order your own vehicle";
   }
 
   res.status(code).json({ message });
