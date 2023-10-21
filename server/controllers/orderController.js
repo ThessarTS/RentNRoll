@@ -1,5 +1,5 @@
 const { Order, Vehicle, User } = require("../models/index");
-const midtransClient = require('midtrans-client');
+const midtransClient = require("midtrans-client");
 const { Sequelize } = require("sequelize");
 
 class OrderController {
@@ -31,6 +31,9 @@ class OrderController {
         },
         include: [{ model: Vehicle, include: [User] }, User],
       });
+      if (!order) {
+        throw { name: "not_found" };
+      }
       res.json(order);
     } catch (error) {
       next(error);
@@ -45,9 +48,16 @@ class OrderController {
       if (!vehicle) {
         throw { name: "not_found" };
       }
-      await Order.create({ VehicleId, startDate, endDate, UserId: req.user.id, ownerId: vehicle.UserId });
+      await Order.create({
+        VehicleId,
+        startDate,
+        endDate,
+        UserId: req.user.id,
+        ownerId: vehicle.UserId,
+      });
       res.status(201).json({ message: "Success create new order" });
     } catch (error) {
+      console.log(error);
       next(error);
     }
   }
@@ -56,6 +66,10 @@ class OrderController {
     try {
       const id = req.params.id;
       const { status } = req.body;
+      const findOrder = await Order.findByPk(id);
+      if (!findOrder) {
+        throw { name: "not_found" };
+      }
       await Order.update(
         { status },
         {
@@ -68,9 +82,9 @@ class OrderController {
     }
   }
 
-    static async findAllOrderByVehicle(req, res, next) {
-        try {
-            let vehicle = await Vehicle.findByPk(req.params.vehicleid)
+  static async findAllOrderByVehicle(req, res, next) {
+    try {
+      let vehicle = await Vehicle.findByPk(req.params.vehicleid);
 
       if (!vehicle) {
         throw { name: "not_found" };
@@ -96,7 +110,10 @@ class OrderController {
   static async fetchTrending(req, res, next) {
     try {
       const results = await Order.findAll({
-        attributes: ["VehicleId", [Sequelize.fn("COUNT", "VehicleId"), "orderCount"]],
+        attributes: [
+          "VehicleId",
+          [Sequelize.fn("COUNT", "VehicleId"), "orderCount"],
+        ],
         where: { status: "returned" },
         group: ["VehicleId"],
         order: [[Sequelize.fn("COUNT", "VehicleId"), "DESC"]],
@@ -104,7 +121,9 @@ class OrderController {
       });
 
       if (results.length > 0) {
-        const mostOrderedVehicleIds = results.map((result) => result.getDataValue("VehicleId"));
+        const mostOrderedVehicleIds = results.map((result) =>
+          result.getDataValue("VehicleId")
+        );
         const mostOrderedVehicles = await Vehicle.findAll({
           where: { id: mostOrderedVehicleIds },
         });
@@ -116,33 +135,33 @@ class OrderController {
     } catch (error) {
       next(error);
     }
+  }
+  static async midtransToken(req, res, next) {
+    try {
+      let snap = new midtransClient.Snap({
+        isProduction: false,
+        serverKey: process.env.MIDTRANS_SERVER_KEY,
+      });
+      let parameter = {
+        transaction_details: {
+          order_id: req.params.orderId,
+          gross_amount: req.body.amount,
+        },
+        credit_card: {
+          secure: true,
+        },
+        customer_details: {
+          first_name: req.user.username,
+          email: req.user.email,
+        },
+      };
 
-    static async midtransToken(req, res, next) {
-        try {
-            let snap = new midtransClient.Snap({
-                isProduction: false,
-                serverKey: process.env.MIDTRANS_SERVER_KEY
-            });
-            let parameter = {
-                "transaction_details": {
-                    "order_id": req.params.orderId,
-                    "gross_amount": req.body.amount
-                },
-                "credit_card": {
-                    "secure": true
-                },
-                "customer_details": {
-                    "first_name": req.user.username,
-                    "email": req.user.email,
-                }
-            };
-
-            const midtransToken = await snap.createTransaction(parameter)
-            res.status(201).json(midtransToken)
-        } catch (error) {
-            next(error)
-        }
+      const midtransToken = await snap.createTransaction(parameter);
+      res.status(201).json(midtransToken);
+    } catch (error) {
+      next(error);
     }
+  }
 }
 
 module.exports = OrderController;
