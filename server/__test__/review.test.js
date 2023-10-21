@@ -18,18 +18,18 @@ let userId = "";
 beforeAll(async () => {
   let dataReview = [
     {
-      rating: 4,
+      rating: '4,4',
       message: "Memuaskan",
-      VehicleId: 10,
-      customerId: 1,
+      VehicleId: 1,
+      UserId: 1,
       createdAt: new Date(),
       updatedAt: new Date(),
     },
     {
-      rating: 3,
+      rating: '3,3',
       message: "Biasa aja",
-      VehicleId: 10,
-      customerId: 2,
+      VehicleId: 1,
+      UserId: 1,
       createdAt: new Date(),
       updatedAt: new Date(),
     },
@@ -43,9 +43,9 @@ beforeAll(async () => {
     el.createdAt = el.updatedAt = new Date();
     el.password = hashPassword(el.password);
   });
-  await sequelize.queryInterface.bulkInsert("Vehicles", dataVehicle);
-  await sequelize.queryInterface.bulkInsert("Users", dataUser);
-  await sequelize.queryInterface.bulkInsert("Reviews", dataReview);
+  await sequelize.queryInterface.bulkInsert("Users", dataUser)
+  await sequelize.queryInterface.bulkInsert("Vehicles", dataVehicle)
+  await sequelize.queryInterface.bulkInsert("Reviews", dataReview)
   const userToken = await User.findOne({
     where: {
       email: "pablo@mail.com",
@@ -60,12 +60,12 @@ afterAll(async () => {
     cascade: true,
     restartIdentity: true,
   });
-  await sequelize.queryInterface.bulkDelete("Users", null, {
+  await sequelize.queryInterface.bulkDelete("Vehicles", null, {
     truncate: true,
     cascade: true,
     restartIdentity: true,
   });
-  await sequelize.queryInterface.bulkDelete("Vehicles", null, {
+  await sequelize.queryInterface.bulkDelete("Users", null, {
     truncate: true,
     cascade: true,
     restartIdentity: true,

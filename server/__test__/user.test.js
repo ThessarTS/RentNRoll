@@ -72,10 +72,9 @@ beforeAll(async () => {
   await sequelize.queryInterface.bulkInsert("UserProfiles", dataProfile);
 
   let user = await User.findOne({ where: { email: "test1@mail.com" } });
-  console.log(user, "<<<<<<amsdaksdAAA");
-  //   userId = user.id;
+
   access_token = signToken({ id: user.id });
-  //   console.log(access_token);
+
 });
 
 afterAll(async () => {
