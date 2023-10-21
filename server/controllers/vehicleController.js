@@ -52,7 +52,6 @@ class VehicleController {
   }
   static async addVehicle(req, res, next) {
     try {
-
       const { name, CategoryId, price, seats, image } = req.body;
 
       const newVehicle = await Vehicle.create({
@@ -109,6 +108,14 @@ class VehicleController {
       res.status(200).json({ message: "Succes Edit Vehicle" });
     } catch (err) {
       next(err);
+    }
+  }
+  static async getCategories(req, res, next) {
+    try {
+      const data = await Category.findAll();
+      res.json(data);
+    } catch (error) {
+      next(error);
     }
   }
 }

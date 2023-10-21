@@ -23,15 +23,15 @@ const errorHandler = (error, req, res, next) => {
   } else if (error.name == "invalid_otp") {
     code = 401;
     message = "Invalid otp code!";
-  } else if (
-    error.name == "email_is_not_registered" ||
-    error.name == "invalid_password"
-  ) {
+  } else if (error.name == "email_is_not_registered" || error.name == "invalid_password") {
     code = 401;
     message = "Invalid Email / Password";
   } else if (error.name == "login_empty_field") {
     code = 400;
     message = "Email/Password is required!";
+  } else if (error.anme === "No vehicle with status returned") {
+    code = 404;
+    message = "No vehicle with status returned";
   }
 
   res.status(code).json({ message });
