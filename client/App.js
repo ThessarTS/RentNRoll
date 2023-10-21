@@ -6,6 +6,7 @@ import Home from "./src/screens/Home";
 import Splash from "./src/screens/Splash";
 import LoginRegister from "./src/screens/LoginRegister";
 import Account from "./src/screens/Account";
+import Detail from "./src/screens/Detail";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -80,6 +81,19 @@ export default function App() {
           }}
         />
         <Stack.Screen name="loginRegister" component={LoginRegister} options={{ headerShown: false, tabBarStyle: { display: "none" } }} />
+        <Stack.Screen
+          name="detail"
+          component={Detail}
+          options={({ route }) => ({
+            headerShown: true,
+            headerTintColor: "white",
+            headerStyle: {
+              backgroundColor: "#17799A",
+            },
+            tabBarStyle: { display: "none" },
+            title: route.params.name,
+          })}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

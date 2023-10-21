@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ImageBackground, Pressable, StyleSheet, Text, TextInput, View, Image, ScrollView, Platform, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard } from "react-native";
 import Checkbox from "expo-checkbox";
 import banner from "../../assets/image/banner.jpg";
@@ -6,9 +6,14 @@ import { Ionicons } from "@expo/vector-icons";
 import googleIcon from "../../assets/vector/google.png";
 import Modal from "react-native-modal";
 import { MaterialIcons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 function Login({ navigation }) {
   const [isChecked, setChecked] = useState(false);
+  const [inputLogin, setInputLogin] = useState({
+    email: "",
+    password: "",
+  });
   const [formRegister, setFormRegister] = useState(false);
   const [formOtp, setFormOtp] = useState(false);
   const [otp, setOtp] = useState(["", "", "", ""]);
@@ -27,12 +32,36 @@ function Login({ navigation }) {
       }
     }
   };
+
   useEffect(() => {
     setUserOtp(otp.join(""));
   }, [otp]);
 
-  const submitOtp = () => {
-    console.log(userOtp);
+  const handleChangeLogin = (name, text) => {
+    setInputLogin((input) => ({
+      ...input,
+      [name]: text,
+    }));
+  };
+
+  const getOtp = async () => {
+    try {
+      if (!inputLogin.email || !inputLogin.password) {
+        throw { name: "err" };
+      }
+      toggleOtp();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const submitOtp = async () => {
+    inputLogin.otp = userOtp;
+    const user = JSON.stringify(inputLogin);
+    await AsyncStorage.setItem("user", user);
+    let newUser = await AsyncStorage.getItem("user");
+    newUser = JSON.parse(newUser);
+    console.log(newUser, ">>>>");
   };
 
   const otpInputs = [];
@@ -60,12 +89,12 @@ function Login({ navigation }) {
       {/* login */}
       <View style={styles.formContainer}>
         <View style={{ gap: 5 }}>
-          <Text style={styles.label}>Username</Text>
-          <TextInput placeholder="username" style={styles.textInput} />
+          <Text style={styles.label}>Fullname</Text>
+          <TextInput placeholder="email" keyboardType="email-address" value={inputLogin.email} onChangeText={(text) => handleChangeLogin("email", text)} style={styles.textInput} />
         </View>
         <View style={{ gap: 5 }}>
           <Text style={styles.label}>Password</Text>
-          <TextInput placeholder="password" secureTextEntry={true} style={styles.textInput} />
+          <TextInput placeholder="password" secureTextEntry={true} name="password" value={inputLogin.password} onChangeText={(text) => handleChangeLogin("password", text)} style={styles.textInput} />
         </View>
         <View style={styles.checkboxContainer}>
           <View style={styles.checkBoxView}>
@@ -80,7 +109,7 @@ function Login({ navigation }) {
               <Text style={{ textDecorationLine: "underline", color: "#17799A" }}>Register Now</Text>
             </Pressable>
           </View>
-          <Pressable style={styles.buttonAction} onPress={toggleOtp}>
+          <Pressable style={styles.buttonAction} onPress={getOtp}>
             <Text style={styles.textAction}>Log In</Text>
           </Pressable>
         </View>

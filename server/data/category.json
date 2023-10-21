@@ -1,14 +1,18 @@
 [
   {
-    "name": "car"
+    "name": "car",
+    "specifications": "['color','transmission','seat','year']"
   },
   {
-    "name": "motorcycle"
+    "name": "motorcycle",
+    "specifications": "['color','transmission','year']"
   },
   {
-    "name": "bicycle"
+    "name": "bicycle",
+    "specifications": "['color']"
   },
   {
-    "name": "scooter"
+    "name": "scooter",
+    "specifications": "['color']"
   }
 ]

@@ -1,8 +1,8 @@
 import React from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 
-function CardVehicle({ image, name, price, rating }) {
+function CardVehicle({ id, image, name, price, rating, navigation }) {
   const maxLength = 18;
 
   const truncateName = (name) => {
@@ -16,8 +16,14 @@ function CardVehicle({ image, name, price, rating }) {
     return price.toLocaleString("id-ID", { style: "currency", currency: "IDR" });
   };
 
+  const goDetail = () => {
+    navigation.navigate("detail", {
+      name: name,
+    });
+  };
+
   return (
-    <View style={styles.container}>
+    <Pressable style={styles.container} onPress={goDetail}>
       <View style={styles.innerContainer}>
         <Image source={{ uri: `${image}` }} style={styles.image} resizeMode="contain" />
         <View style={styles.cardContainer}>
@@ -28,7 +34,7 @@ function CardVehicle({ image, name, price, rating }) {
           </Text>
         </View>
       </View>
-    </View>
+    </Pressable>
   );
 }
 

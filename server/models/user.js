@@ -27,15 +27,16 @@ module.exports = (sequelize, DataTypes) => {
       email: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: { msg: "Email has already registered" },
         validate: {
-          isEmail: {
-            msg: "Invalid email format!",
-          },
           notEmpty: {
             msg: "Email is required!",
           },
           notNull: {
             msg: "Email is required!",
+          },
+          isEmail: {
+            msg: "Invalid email format!",
           },
         },
       },
@@ -68,6 +69,7 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       otp: DataTypes.STRING,
+      expoToken: DataTypes.STRING,
     },
     {
       sequelize,
