@@ -80,7 +80,16 @@ export default function App() {
             headerShown: false,
           }}
         />
-        <Stack.Screen name="loginRegister" component={LoginRegister} options={{ headerShown: false, tabBarStyle: { display: "none" } }} />
+        <Stack.Screen
+          name="loginRegister"
+          component={LoginRegister}
+          options={{
+            headerShown: false,
+            tabBarStyle: {
+              display: "none",
+            },
+          }}
+        />
         <Stack.Screen
           name="detail"
           component={Detail}

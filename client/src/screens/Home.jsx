@@ -1,5 +1,5 @@
 import React from "react";
-import { SafeAreaView, StyleSheet, View, Text, Pressable, TextInput, FlatList, ScrollView } from "react-native";
+import { SafeAreaView, StyleSheet, View, Text, Pressable, TextInput, FlatList, ScrollView, ImageBackground } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import carIcon from "../../assets/vector/car.png";
@@ -9,6 +9,8 @@ import scooterIcon from "../../assets/vector/scooter.png";
 import CardCategory from "../components/CardCategory";
 import CardVehicle from "../components/CardVehicle";
 import { FontAwesome } from "@expo/vector-icons";
+import { Entypo } from "@expo/vector-icons";
+import bg from "../../assets/image/bg-home.png";
 
 function Home({ navigation }) {
   const categories = [
@@ -85,48 +87,50 @@ function Home({ navigation }) {
           <TextInput placeholder="Search" />
         </View>
         <Pressable style={styles.filterContainer}>
-          <Ionicons name="filter-sharp" size={25} color="white" />
+          <Entypo name="chat" size={25} color="white" />
         </Pressable>
         <Pressable style={styles.notifContainer}>
           <Icon name="bell-badge" size={25} color="white" />
         </Pressable>
       </View>
       <SafeAreaView>
-        <ScrollView style={styles.scrollViewContainer}>
-          <View style={styles.itemContainer}>
-            <View style={styles.top}></View>
+        <ImageBackground source={bg} style={{ width: "100%" }}>
+          <ScrollView style={styles.scrollViewContainer}>
+            <View style={styles.itemContainer}>
+              <View style={styles.top}></View>
 
-            {/* category */}
-            <View style={[styles.categoryContainer, styles.shadowProp]}>
-              <Text style={styles.categoryTitle}>Categories</Text>
-              <FlatList style={{ marginTop: 10 }} data={categories} renderItem={(category) => <RenderCategories category={category} />} keyExtractor={(category) => category.id} horizontal={true} />
+              {/* category */}
+              <View style={[styles.categoryContainer, styles.shadowProp]}>
+                <Text style={styles.categoryTitle}>Categories</Text>
+                <FlatList style={{ marginTop: 10 }} data={categories} renderItem={(category) => <RenderCategories category={category} />} keyExtractor={(category) => category.id} horizontal={true} />
+              </View>
+              {/* end category */}
+              {/* Trending */}
+              <View style={styles.itemsContainer}>
+                <Text style={styles.itemTitle}>Trending</Text>
+                <FlatList style={{ marginTop: 10 }} data={trending} renderItem={(vehicle) => <RenderTrending vehicle={vehicle} />} keyExtractor={(vehicle) => vehicle.id} horizontal={true} showsHorizontalScrollIndicator={false} />
+              </View>
+              {/* end Trending */}
+              {/* Trending */}
+              <View style={styles.itemsContainer}>
+                <Text style={styles.itemTitle}>History</Text>
+                {order.length ? (
+                  <FlatList style={{ marginTop: 10 }} data={order} renderItem={(vehicle) => <RenderTrending vehicle={vehicle} />} keyExtractor={(vehicle) => vehicle.id} horizontal={true} showsHorizontalScrollIndicator={false} />
+                ) : (
+                  <View style={{ paddingVertical: 40, alignItems: "center", justifyContent: "center", backgroundColor: "#f6f4f1", marginTop: 10, borderRadius: 10 }}>
+                    <FontAwesome name="history" size={24} color="black" />
+                    <Text style={{ fontWeight: 500, fontSize: 18 }}>Your History is empty</Text>
+                    <Text style={{ fontWeight: 500, fontSize: 14, marginTop: 10 }}>Looks like you've never done a rental before</Text>
+                    <Pressable style={{ backgroundColor: "#17799A", padding: 10, paddingHorizontal: 20, borderRadius: 10, marginTop: 10 }}>
+                      <Text style={{ color: "white" }}>Rent Now</Text>
+                    </Pressable>
+                  </View>
+                )}
+              </View>
+              {/* end Trending */}
             </View>
-            {/* end category */}
-            {/* Trending */}
-            <View style={styles.itemsContainer}>
-              <Text style={styles.itemTitle}>Trending</Text>
-              <FlatList style={{ marginTop: 10 }} data={trending} renderItem={(vehicle) => <RenderTrending vehicle={vehicle} />} keyExtractor={(vehicle) => vehicle.id} horizontal={true} showsHorizontalScrollIndicator={false} />
-            </View>
-            {/* end Trending */}
-            {/* Trending */}
-            <View style={styles.itemsContainer}>
-              <Text style={styles.itemTitle}>History</Text>
-              {order.length ? (
-                <FlatList style={{ marginTop: 10 }} data={order} renderItem={(vehicle) => <RenderTrending vehicle={vehicle} />} keyExtractor={(vehicle) => vehicle.id} horizontal={true} showsHorizontalScrollIndicator={false} />
-              ) : (
-                <View style={{ paddingVertical: 40, alignItems: "center", justifyContent: "center", backgroundColor: "#f6f4f1", marginTop: 10, borderRadius: 10 }}>
-                  <FontAwesome name="history" size={24} color="black" />
-                  <Text style={{ fontWeight: 500, fontSize: 18 }}>Your History is empty</Text>
-                  <Text style={{ fontWeight: 500, fontSize: 14, marginTop: 10 }}>Looks like you've never done a rental before</Text>
-                  <Pressable style={{ backgroundColor: "#17799A", padding: 10, paddingHorizontal: 20, borderRadius: 10, marginTop: 10 }}>
-                    <Text style={{ color: "white" }}>Rent Now</Text>
-                  </Pressable>
-                </View>
-              )}
-            </View>
-            {/* end Trending */}
-          </View>
-        </ScrollView>
+          </ScrollView>
+        </ImageBackground>
       </SafeAreaView>
     </View>
   );
@@ -208,7 +212,6 @@ const styles = StyleSheet.create({
   },
   scrollViewContainer: {
     position: "relative",
-    backgroundColor: "#17799A",
   },
 
   categoryTitle: {

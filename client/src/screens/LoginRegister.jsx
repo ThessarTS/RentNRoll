@@ -59,9 +59,7 @@ function Login({ navigation }) {
     inputLogin.otp = userOtp;
     const user = JSON.stringify(inputLogin);
     await AsyncStorage.setItem("user", user);
-    let newUser = await AsyncStorage.getItem("user");
-    newUser = JSON.parse(newUser);
-    console.log(newUser, ">>>>");
+    navigation.navigate("You");
   };
 
   const otpInputs = [];
