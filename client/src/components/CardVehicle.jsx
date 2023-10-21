@@ -2,8 +2,9 @@ import React from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 
-function CardVehicle({ id, image, name, price, rating, navigation }) {
+function CardVehicle({ vehicle, navigation }) {
   const maxLength = 18;
+  // console.log(vehicle, "<<< card");
 
   const truncateName = (name) => {
     if (name.length > maxLength) {
@@ -13,24 +14,32 @@ function CardVehicle({ id, image, name, price, rating, navigation }) {
   };
 
   const fPrice = (price) => {
-    return price.toLocaleString("id-ID", { style: "currency", currency: "IDR" });
+    return price.toLocaleString("id-ID", {
+      style: "currency",
+      currency: "IDR",
+    });
   };
 
   const goDetail = () => {
     navigation.navigate("detail", {
-      name: name,
+      name: vehicle.name,
+      id: vehicle.id,
     });
   };
 
   return (
     <Pressable style={styles.container} onPress={goDetail}>
       <View style={styles.innerContainer}>
-        <Image source={{ uri: `${image}` }} style={styles.image} resizeMode="contain" />
+        <Image
+          source={{ uri: `${vehicle.image}` }}
+          style={styles.image}
+          resizeMode="contain"
+        />
         <View style={styles.cardContainer}>
-          <Text style={styles.title}>{truncateName(name)}</Text>
-          <Text style={styles.price}>{fPrice(price)}</Text>
+          <Text style={styles.title}>{truncateName(vehicle.name)}</Text>
+          <Text style={styles.price}>{fPrice(vehicle.price)}</Text>
           <Text style={styles.rating}>
-            <AntDesign name="star" size={15} color="#F8B84E" />({rating})
+            <AntDesign name="star" size={15} color="#F8B84E" />({4})
           </Text>
         </View>
       </View>

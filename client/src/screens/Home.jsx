@@ -1,5 +1,14 @@
-import React from "react";
-import { SafeAreaView, StyleSheet, View, Text, Pressable, TextInput, FlatList, ScrollView } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  SafeAreaView,
+  StyleSheet,
+  View,
+  Text,
+  Pressable,
+  TextInput,
+  FlatList,
+  ScrollView,
+} from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import carIcon from "../../assets/vector/car.png";
@@ -9,8 +18,28 @@ import scooterIcon from "../../assets/vector/scooter.png";
 import CardCategory from "../components/CardCategory";
 import CardVehicle from "../components/CardVehicle";
 import { FontAwesome } from "@expo/vector-icons";
+import axios from "axios";
 
 function Home({ navigation }) {
+  let baseUrl =
+    "https://fd73-2001-448a-6021-5c1-9745-d939-1779-42e6.ngrok-free.app";
+  const [trend, setTrend] = useState([]);
+
+  const fetchTrending = async () => {
+    try {
+      const { data } = await axios({
+        url: baseUrl + "/trending",
+        method: "GET",
+      });
+      setTrend(data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  useEffect(() => {
+    fetchTrending();
+  }, []);
+  // console.log(trend, "<<<<");
   const categories = [
     {
       id: 1,
@@ -37,21 +66,24 @@ function Home({ navigation }) {
     {
       id: 1,
       name: "Avanza Veloz 2018",
-      image: "https://www.static-src.com/wcsstore/Indraprastha/images/catalog/full//92/MTA-61000784/toyota_toyota_avanza_1-3_veloz_mt_2018_putih_full01_h832rda0.jpg",
+      image:
+        "https://www.static-src.com/wcsstore/Indraprastha/images/catalog/full//92/MTA-61000784/toyota_toyota_avanza_1-3_veloz_mt_2018_putih_full01_h832rda0.jpg",
       price: 450000,
       rating: 4.5,
     },
     {
       id: 2,
       name: "Honda Scoopy 2023",
-      image: "https://imgcdn.oto.com/large/gallery/color/73/985/honda-scoopy-esp-color-781667.jpg",
+      image:
+        "https://imgcdn.oto.com/large/gallery/color/73/985/honda-scoopy-esp-color-781667.jpg",
       price: 85000,
       rating: 3.6,
     },
     {
       id: 3,
       name: "Suzuki Pick Up 2014",
-      image: "https://foto.kontan.co.id/nHuaBJpOFcJG7FYidDfIOomh_tg=/640x360/smart/2019/04/04/1979163550p.jpg",
+      image:
+        "https://foto.kontan.co.id/nHuaBJpOFcJG7FYidDfIOomh_tg=/640x360/smart/2019/04/04/1979163550p.jpg",
       price: 200000,
       rating: 4.6,
     },
@@ -70,11 +102,25 @@ function Home({ navigation }) {
     const { name, image } = category.item;
     const backgroundColor = getCategoryBackgroundColor(name);
 
-    return <CardCategory name={name} image={image} backgroundColor={backgroundColor} />;
+    return (
+      <CardCategory
+        name={name}
+        image={image}
+        backgroundColor={backgroundColor}
+      />
+    );
   };
   const RenderTrending = ({ vehicle }) => {
     const { name, image, price, rating } = vehicle.item;
-    return <CardVehicle name={name} image={image} price={price} rating={rating} navigation={navigation} />;
+    return (
+      <CardVehicle
+        name={name}
+        image={image}
+        price={price}
+        rating={rating}
+        navigation={navigation}
+      />
+    );
   };
 
   return (
@@ -99,26 +145,74 @@ function Home({ navigation }) {
             {/* category */}
             <View style={[styles.categoryContainer, styles.shadowProp]}>
               <Text style={styles.categoryTitle}>Categories</Text>
-              <FlatList style={{ marginTop: 10 }} data={categories} renderItem={(category) => <RenderCategories category={category} />} keyExtractor={(category) => category.id} horizontal={true} />
+              <FlatList
+                style={{ marginTop: 10 }}
+                data={categories}
+                renderItem={(category) => (
+                  <RenderCategories category={category} />
+                )}
+                keyExtractor={(category) => category.id}
+                horizontal={true}
+              />
             </View>
             {/* end category */}
             {/* Trending */}
             <View style={styles.itemsContainer}>
               <Text style={styles.itemTitle}>Trending</Text>
-              <FlatList style={{ marginTop: 10 }} data={trending} renderItem={(vehicle) => <RenderTrending vehicle={vehicle} />} keyExtractor={(vehicle) => vehicle.id} horizontal={true} showsHorizontalScrollIndicator={false} />
+              <FlatList
+                style={{ marginTop: 10 }}
+                data={trend}
+                // renderItem={(vehicle) => <CardVehicle vehicle={vehicle} />}
+                renderItem={({ item }) => {
+                  return <CardVehicle vehicle={item} navigation={navigation} />;
+                }}
+                keyExtractor={(item) => item.id}
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+              />
             </View>
             {/* end Trending */}
             {/* Trending */}
             <View style={styles.itemsContainer}>
               <Text style={styles.itemTitle}>History</Text>
               {order.length ? (
-                <FlatList style={{ marginTop: 10 }} data={order} renderItem={(vehicle) => <RenderTrending vehicle={vehicle} />} keyExtractor={(vehicle) => vehicle.id} horizontal={true} showsHorizontalScrollIndicator={false} />
+                <FlatList
+                  style={{ marginTop: 10 }}
+                  data={order}
+                  renderItem={(vehicle) => <RenderTrending vehicle={vehicle} />}
+                  keyExtractor={(vehicle) => vehicle.id}
+                  horizontal={true}
+                  showsHorizontalScrollIndicator={false}
+                />
               ) : (
-                <View style={{ paddingVertical: 40, alignItems: "center", justifyContent: "center", backgroundColor: "#f6f4f1", marginTop: 10, borderRadius: 10 }}>
+                <View
+                  style={{
+                    paddingVertical: 40,
+                    alignItems: "center",
+                    justifyContent: "center",
+                    backgroundColor: "#f6f4f1",
+                    marginTop: 10,
+                    borderRadius: 10,
+                  }}
+                >
                   <FontAwesome name="history" size={24} color="black" />
-                  <Text style={{ fontWeight: 500, fontSize: 18 }}>Your History is empty</Text>
-                  <Text style={{ fontWeight: 500, fontSize: 14, marginTop: 10 }}>Looks like you've never done a rental before</Text>
-                  <Pressable style={{ backgroundColor: "#17799A", padding: 10, paddingHorizontal: 20, borderRadius: 10, marginTop: 10 }}>
+                  <Text style={{ fontWeight: 500, fontSize: 18 }}>
+                    Your History is empty
+                  </Text>
+                  <Text
+                    style={{ fontWeight: 500, fontSize: 14, marginTop: 10 }}
+                  >
+                    Looks like you've never done a rental before
+                  </Text>
+                  <Pressable
+                    style={{
+                      backgroundColor: "#17799A",
+                      padding: 10,
+                      paddingHorizontal: 20,
+                      borderRadius: 10,
+                      marginTop: 10,
+                    }}
+                  >
                     <Text style={{ color: "white" }}>Rent Now</Text>
                   </Pressable>
                 </View>

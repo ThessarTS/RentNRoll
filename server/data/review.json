@@ -1,0 +1,20 @@
+[
+  {
+    "rating": 4,
+    "message": "Sangat memuaskan",
+    "VehicleId": 1,
+    "UserId": 2
+  },
+  {
+    "rating": 3.5,
+    "message": "Biasa aja",
+    "VehicleId": 1,
+    "UserId": 3
+  },
+  {
+    "rating": 4,
+    "message": "Keren sekali",
+    "VehicleId": 1,
+    "UserId": 1
+  }
+]

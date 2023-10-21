@@ -40,6 +40,19 @@ module.exports = {
       return el;
     });
     await queryInterface.bulkInsert("Orders", dataOrders, {});
+
+    const spesification = require("../data/spesification.json");
+    const dataSpesification = spesification.map((el) => {
+      el.createdAt = el.updatedAt = new Date();
+      return el;
+    });
+    await queryInterface.bulkInsert("Specifications", dataSpesification, {});
+    const review = require("../data/review.json");
+    const dataReview = review.map((el) => {
+      el.createdAt = el.updatedAt = new Date();
+      return el;
+    });
+    await queryInterface.bulkInsert("Reviews", dataReview, {});
   },
 
   async down(queryInterface, Sequelize) {
@@ -48,5 +61,7 @@ module.exports = {
     await queryInterface.bulkDelete("UserProfiles", null, {});
     await queryInterface.bulkDelete("Users", null, {});
     await queryInterface.bulkDelete("Orders", null, {});
+    await queryInterface.bulkDelete("Specifications", null, {});
+    await queryInterface.bulkDelete("Reviews", null, {});
   },
 };

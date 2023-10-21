@@ -1,0 +1,42 @@
+[
+  {
+    "name": "Transition",
+    "value": "Automatic",
+    "VehicleId": 1
+  },
+  {
+    "name": "Seats",
+    "value": "8",
+    "VehicleId": 1
+  },
+  {
+    "name": "Year",
+    "value": "2018",
+    "VehicleId": 1
+  },
+  {
+    "name": "Color",
+    "value": "Silver",
+    "VehicleId": 1
+  },
+  {
+    "name": "Transition",
+    "value": "Manual",
+    "VehicleId": 4
+  },
+  {
+    "name": "Seats",
+    "value": "8",
+    "VehicleId": 4
+  },
+  {
+    "name": "Year",
+    "value": "2020",
+    "VehicleId": 4
+  },
+  {
+    "name": "Color",
+    "value": "Black",
+    "VehicleId": 4
+  }
+]

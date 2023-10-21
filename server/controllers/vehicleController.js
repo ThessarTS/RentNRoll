@@ -1,4 +1,11 @@
-const { Vehicle, User, Category, Review, Order } = require("../models/index");
+const {
+  Vehicle,
+  User,
+  Category,
+  Review,
+  Order,
+  Specification,
+} = require("../models/index");
 
 class VehicleController {
   static async fetchVehicle(req, res, next) {
@@ -24,8 +31,22 @@ class VehicleController {
   }
   static async detailVehicle(req, res, next) {
     try {
-      // console.log(req.params);
       const { id } = req.params;
+      let averageRating = 0;
+      const reviews = await Review.findAll({
+        where: {
+          VehicleId: id,
+        },
+      });
+
+      if (reviews.length > 0) {
+        const ratingData = reviews.map((el) => {
+          return el.rating;
+        });
+        let average = ratingData.reduce((a, b) => a + b, 0) / ratingData.length;
+
+        averageRating = average.toFixed(1);
+      }
       const vehicle = await Vehicle.findOne({
         where: {
           id,
@@ -40,32 +61,37 @@ class VehicleController {
           {
             model: Order,
           },
+          {
+            model: Specification,
+          },
+          {
+            model: Review,
+          },
         ],
       });
       if (!vehicle) {
         throw { name: "not_found" };
       }
-      res.status(200).json(vehicle);
+      res.status(200).json({ vehicle, rating: averageRating });
     } catch (err) {
       next(err);
     }
   }
   static async addVehicle(req, res, next) {
     try {
-
-      const { name, CategoryId, price, seats } = req.body;
-      console.log(req.imageSecureUrl, '<<<<<<');
+      const { name, CategoryId, price } = req.body;
+      console.log(req.imageSecureUrl, "<<<<<<");
 
       const newVehicle = await Vehicle.create({
         name,
         CategoryId,
         price,
-        seats,
         image: req.imageSecureUrl,
         UserId: req.user.id,
       });
       res.status(201).json({ message: "Success Add New Vehicle" });
     } catch (err) {
+      console.log(err);
       next(err);
     }
   }
