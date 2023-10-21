@@ -21,14 +21,14 @@ function Account({ navigation }) {
       }
       setUser(newUser);
     } catch (error) {
-      navigation.navigate("loginRegister");
+      await navigation.navigate("loginRegister");
     }
   }
 
   async function logout() {
     try {
       await AsyncStorage.removeItem("user");
-      navigation.navigate("loginRegister");
+      await navigation.navigate("loginRegister");
       toggleSettings();
     } catch (error) {
       console.error("Error while logging out:", error);
@@ -129,6 +129,21 @@ function Account({ navigation }) {
                 <View style={styles.itemsContainer}>
                   <Text style={styles.itemsTitle}>Member Features</Text>
                   <View style={styles.memberContainer}>
+                    {/* add vehicle */}
+                    <Pressable style={styles.memberItemContainer} onPress={() => navigation.navigate("Add Vehicle")}>
+                      <View style={{ flex: 1 }}>
+                        <Ionicons name="ios-add-circle-outline" size={25} color="gray" />
+                      </View>
+                      <View style={{ gap: 2, flex: 6 }}>
+                        <Text style={styles.itemsDetailTitle}>Add Vehicle</Text>
+                        <Text style={[styles.itemsDetailInfo, { color: "gray" }]}>Register your vehicle now.</Text>
+                      </View>
+                      <View>
+                        <Ionicons name="chevron-forward" size={24} color="#17799A" />
+                      </View>
+                    </Pressable>
+                    {/* end add vehicle */}
+
                     {/* my vehicle */}
                     <Pressable style={styles.memberItemContainer}>
                       <View style={{ flex: 1 }}>
@@ -136,7 +151,7 @@ function Account({ navigation }) {
                       </View>
                       <View style={{ gap: 2, flex: 6 }}>
                         <Text style={styles.itemsDetailTitle}>My Vehicle</Text>
-                        <Text style={[styles.itemsDetailInfo, { color: "gray" }]}>View and register your vehicle now.</Text>
+                        <Text style={[styles.itemsDetailInfo, { color: "gray" }]}>View your vehicle now.</Text>
                       </View>
                       <View>
                         <Ionicons name="chevron-forward" size={24} color="#17799A" />

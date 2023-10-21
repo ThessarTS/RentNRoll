@@ -7,11 +7,29 @@ import Splash from "./src/screens/Splash";
 import LoginRegister from "./src/screens/LoginRegister";
 import Account from "./src/screens/Account";
 import Detail from "./src/screens/Detail";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import AddVehicle from "./src/screens/AddVehicle";
+import { useState, useEffect } from "react";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const HomeTab = () => {
+  const [user, setUser] = useState(false);
+  useEffect(() => {
+    const checkUser = async () => {
+      try {
+        const user = await AsyncStorage.getItem("user");
+        if (user) {
+          setUser(true);
+        }
+      } catch (error) {
+        console.error("Error while checking user:", error);
+      }
+    };
+
+    checkUser();
+  }, [user]);
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -38,6 +56,8 @@ const HomeTab = () => {
             iconName = focused ? "person-circle-sharp" : "person-circle-outline";
           } else if (route.name === "Rent Now") {
             iconName = focused ? "bicycle-sharp" : "bicycle-outline";
+          } else if (route.name === "Add Vehicle") {
+            iconName = focused ? "ios-add-circle-sharp" : "ios-add-circle-outline";
           }
 
           return <Ionicons name={iconName} size={20} color={color} />;
@@ -48,6 +68,7 @@ const HomeTab = () => {
     >
       <Tab.Screen name="Home" component={Home} />
       <Tab.Screen name="Rent Now" component={Home} />
+      {user && <Tab.Screen name="Add Vehicle" component={AddVehicle} />}
       <Tab.Screen name="Your Order" component={Home} />
       <Tab.Screen name="You" component={Account} />
     </Tab.Navigator>

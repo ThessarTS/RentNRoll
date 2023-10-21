@@ -71,10 +71,9 @@ function Home({ navigation }) {
   const RenderCategories = ({ category }) => {
     const { name, image } = category.item;
     const backgroundColor = getCategoryBackgroundColor(name);
-
     return <CardCategory name={name} image={image} backgroundColor={backgroundColor} />;
   };
-  const RenderTrending = ({ vehicle }) => {
+  const RenderCardVehicle = ({ vehicle }) => {
     const { name, image, price, rating } = vehicle.item;
     return <CardVehicle name={name} image={image} price={price} rating={rating} navigation={navigation} />;
   };
@@ -108,9 +107,15 @@ function Home({ navigation }) {
               {/* Trending */}
               <View style={styles.itemsContainer}>
                 <Text style={styles.itemTitle}>Trending</Text>
-                <FlatList style={{ marginTop: 10 }} data={trending} renderItem={(vehicle) => <RenderTrending vehicle={vehicle} />} keyExtractor={(vehicle) => vehicle.id} horizontal={true} showsHorizontalScrollIndicator={false} />
+                <FlatList style={{ marginTop: 10 }} data={trending} renderItem={(vehicle) => <RenderCardVehicle vehicle={vehicle} />} keyExtractor={(vehicle) => vehicle.id} horizontal={true} showsHorizontalScrollIndicator={false} />
               </View>
               {/* end Trending */}
+              {/* Near You */}
+              <View style={styles.itemsContainer}>
+                <Text style={styles.itemTitle}>Near You</Text>
+                <FlatList style={{ marginTop: 10 }} data={trending} renderItem={(vehicle) => <RenderCardVehicle vehicle={vehicle} />} keyExtractor={(vehicle) => vehicle.id} horizontal={true} showsHorizontalScrollIndicator={false} />
+              </View>
+              {/* end Near You */}
               {/* Trending */}
               <View style={styles.itemsContainer}>
                 <Text style={styles.itemTitle}>History</Text>
