@@ -5,6 +5,7 @@ import CardSpecification from "../components/CardSpecification";
 import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
+import { Entypo } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
 function Detail({ route }) {
@@ -18,7 +19,7 @@ function Detail({ route }) {
       const today = new Date();
       if (date >= today) {
         setSelectedStartDate(date);
-        setSelectedEndDate(date); // Perbarui End Date jika lebih kecil dari Start Date baru
+        setSelectedEndDate(date);
       }
     }
   };
@@ -55,22 +56,22 @@ function Detail({ route }) {
   };
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.container}>
           {/* header */}
           <View style={styles.headerContainer}>
             <Image source={{ uri: `https://imgcdn.oto.com/large/gallery/color/73/985/honda-scoopy-esp-color-781667.jpg` }} style={styles.imageCover} />
-            <View style={{ paddingHorizontal: 20, gap: 5 }}>
+            <View style={styles.headerItems}>
               <Text style={styles.headerTitle}> {name}</Text>
-              <View style={{ alignItems: "center", flexDirection: "row" }}>
+              <View style={[styles.headerItemContainer]}>
                 <Ionicons name="location" size={18} color="#17799A" />
                 <Text style={styles.location}>Location : Jakarta</Text>
               </View>
-              <View style={{ alignItems: "center", flexDirection: "row", marginStart: 2 }}>
+              <View style={[styles.headerItemContainer, { marginStart: 2 }]}>
                 <AntDesign name="star" size={15} color="#F8B84E" />
                 <Text style={styles.rating}>Rating: 4.5 (1000 Reviews)</Text>
               </View>
-              <View style={{ alignItems: "center", flexDirection: "row", marginStart: 3 }}>
+              <View style={[styles.headerItemContainer, { marginStart: 3 }]}>
                 <MaterialIcons name="category" size={15} color="#9B59B6" />
                 <Text style={styles.headerCategories}>Category: Car</Text>
               </View>
@@ -80,52 +81,60 @@ function Detail({ route }) {
 
           {/* spec */}
           <View style={styles.itemContainer}>
-            <Text style={{ fontSize: 17, fontWeight: 500 }}> Specification</Text>
+            <Text style={styles.itemTitle}> Specification</Text>
             <FlatList data={spec} renderItem={(spec) => <RenderSpec spec={spec} />} keyExtractor={(spec) => spec.id} horizontal={true} showsHorizontalScrollIndicator={false} />
           </View>
           {/* end spec */}
 
           {/* owner */}
           <View style={styles.itemContainer}>
-            <Text style={{ fontSize: 17, fontWeight: 500 }}> Owner</Text>
-            <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-              <View style={{ flexDirection: "row", gap: 10, alignItems: "center", justifyContent: "center" }}>
+            <Text style={styles.itemTitle}> Owner</Text>
+            <View style={styles.ownerContainer}>
+              <View style={styles.ownerItem}>
                 <Image
                   source={{ uri: "https://media.licdn.com/dms/image/C4E03AQGnouyn_2vSgw/profile-displayphoto-shrink_800_800/0/1646808937817?e=1703116800&v=beta&t=BZT5fOu-gScDu4h9GkegSv74GG0pSt47-0QAZOQHOeE" }}
-                  style={{ width: 60, height: 60, borderRadius: 50 }}
+                  style={styles.ownerImage}
                 />
-                <Text style={{ fontSize: 18, fontWeight: 400 }}>Sajad</Text>
+                <Text style={styles.itemTitle}>Winda Basudara</Text>
               </View>
-              <View style={{ padding: 10, flexDirection: "row", gap: 15 }}>
+              <View style={styles.ownerAction}>
                 <Feather name="phone-call" size={24} color="#17799A" />
                 <Ionicons name="ios-chatbox-ellipses-outline" size={25} color="#17799A" />
               </View>
             </View>
           </View>
           {/* end owner */}
-          {/*  */}
+
+          {/* Rent Action */}
           <View style={styles.itemContainer}>
-            <Text style={{ fontSize: 17, fontWeight: 500 }}> Rent Now</Text>
-            <View style={{ flexDirection: "row", justifyContent: "space-between", borderBottomColor: "gray", borderBottomWidth: 1, paddingBottom: 5 }}>
-              <View style={{ alignItems: "flex-start", gap: 10, padding: 5 }}>
+            <View style={styles.rentHeaderContainer}>
+              <Text style={styles.itemTitle}> Rent Now</Text>
+              <View style={[styles.headerItemContainer]}>
+                <Entypo name="price-tag" size={24} color="#17799A" />
+                <Text style={styles.location}>Rp. 450.000/day</Text>
+              </View>
+            </View>
+            <View style={styles.rentContainer}>
+              <View style={styles.rentStartContainer}>
                 <Text>Pick-up Date</Text>
-                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
+                <View style={styles.rentStartDate}>
                   <AntDesign name="calendar" size={24} color="black" />
                   <DateTimePicker value={startDate} mode="date" is24Hour={true} display="default" minimumDate={new Date()} onChange={handleStartDateChange} />
                 </View>
               </View>
-              <View style={{ alignItems: "flex-end", gap: 10, padding: 5, borderBottomColor: "gray" }}>
+              <View style={styles.rentEndContainer}>
                 <Text>Drop-off Date</Text>
-                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 7 }}>
+                <View style={styles.rendEndDate}>
                   <DateTimePicker value={endDate} mode="date" is24Hour={true} display="default" minimumDate={startDate} onChange={handleEndDateChange} />
                   <AntDesign name="calendar" size={24} color="black" />
                 </View>
               </View>
             </View>
-            <Pressable style={{ backgroundColor: "#17799A", padding: 15, alignItems: "center", justifyContent: "center", borderRadius: 10 }}>
-              <Text style={{ fontSize: 18, color: "white", fontWeight: 600 }}>Submit</Text>
+            <Pressable style={styles.rentButton}>
+              <Text style={styles.rentAction}>Rent</Text>
             </Pressable>
           </View>
+          {/* end rent Action */}
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -137,27 +146,42 @@ const styles = StyleSheet.create({
     backgroundColor: "whitesmoke",
     gap: 5,
   },
+
   imageCover: {
     width: "100%",
     height: 250,
     marginBottom: 10,
     objectFit: "contain",
   },
+
   headerTitle: {
     fontSize: 20,
     fontWeight: "600",
   },
+
   headerCategories: {
     fontSize: 11,
     marginStart: 5,
     fontWeight: "600",
   },
+  headerItems: {
+    paddingHorizontal: 20,
+    gap: 5,
+  },
+
+  headerItemContainer: {
+    alignItems: "center",
+    flexDirection: "row",
+  },
+
   rating: {
-    marginStart: 2,
+    marginStart: 3,
     fontSize: 11,
     fontWeight: "600",
   },
+
   location: {
+    marginStart: 3,
     fontSize: 11,
     fontWeight: "600",
   },
@@ -166,11 +190,88 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     paddingVertical: 20,
   },
+
   itemContainer: {
     padding: 20,
     paddingVertical: 15,
     gap: 10,
     backgroundColor: "white",
+  },
+
+  itemTitle: {
+    fontSize: 17,
+    fontWeight: "600",
+  },
+  ownerContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+
+  ownerItem: {
+    flexDirection: "row",
+    gap: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  ownerImage: {
+    width: 60,
+    height: 60,
+    borderRadius: 50,
+  },
+
+  ownerAction: {
+    padding: 10,
+    flexDirection: "row",
+    gap: 15,
+  },
+
+  rentContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    borderBottomColor: "gray",
+    borderBottomWidth: 1,
+    paddingBottom: 5,
+  },
+  rentStartContainer: {
+    alignItems: "flex-start",
+    gap: 10,
+    padding: 5,
+  },
+  rentStartDate: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  rentEndContainer: {
+    alignItems: "flex-end",
+    gap: 10,
+    padding: 5,
+    borderBottomColor: "gray",
+  },
+  rendEndDate: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 7,
+  },
+  rentAction: {
+    fontSize: 15,
+    color: "white",
+    fontWeight: 600,
+  },
+  rentButton: {
+    backgroundColor: "#17799A",
+    padding: 15,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 10,
+  },
+  rentHeaderContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
 });
 
