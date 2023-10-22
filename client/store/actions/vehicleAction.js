@@ -11,9 +11,8 @@ import {
 } from "./actionType";
 import axios from "axios";
 
-
 const baseUrl =
-  "https://7ed9-2001-448a-6021-5c1-7d07-8ba0-4ab-1d75.ngrok-free.app";
+  "https://f231-2001-448a-6021-5c1-7d07-8ba0-4ab-1d75.ngrok-free.app";
 
 // FETCH VEHICLES
 export const vehicleFetchRequest = () => {
@@ -35,6 +34,7 @@ export const fetchVehicles = () => {
       const { data } = await axios({
         url: baseUrl + "/vehicles",
       });
+      console.log(data);
       dispatch(vehicleFetchSuccess(data));
     } catch (error) {
       console.log(error);
@@ -44,7 +44,7 @@ export const fetchVehicles = () => {
 };
 // END FETCH VEHICLES
 
-// FETCH VEHICLE BY ID
+// FETCH VEHICLE DETAIL
 
 export const detailFetchSuccess = (payload) => {
   return { type: VEHICLE_FETCH_BY_ID_SUCCESS, payload };

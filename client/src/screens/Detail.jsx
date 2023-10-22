@@ -80,7 +80,6 @@ function Detail({ route }) {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
       <ScrollView showsVerticalScrollIndicator={false}>
-
         <View style={styles.container}>
           {/* header */}
           <View style={styles.headerContainer}>
@@ -148,10 +147,9 @@ function Detail({ route }) {
                   color="#17799A"
                 />
               </View>
-
             </View>
-            {/* end spec */}
-
+          </View>
+          {/* end spec */}
 
           {/* Rent Action */}
           <View style={styles.itemContainer}>
@@ -199,7 +197,7 @@ function Detail({ route }) {
             </View>
             {/* end rent Action */}
           </View>
-        )}
+        </View>
       </ScrollView>
     </SafeAreaView>
   );

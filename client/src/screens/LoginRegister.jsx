@@ -113,6 +113,7 @@ function Login({ navigation }) {
       })
       .catch((error) => {
         showAlertError(error.message);
+        setLoadingOtp(false);
       });
   };
 
@@ -144,7 +145,6 @@ function Login({ navigation }) {
   };
   const submitOtp = async () => {
     inputLogin.otp = userOtp;
-    // console.log(inputLogin);
     dispatch(handleLogin(inputLogin))
       .then((data) => {
         storeData("access_token", data.access_token).then(() => {
@@ -152,7 +152,7 @@ function Login({ navigation }) {
           toggleOtp;
           showAlert("Success!", "Welcome to RentNRoll");
         });
-        retrieveData("access_token");
+        // retrieveData("access_token");
       })
       .catch((error) => {
         showAlertError(error.message);
