@@ -8,6 +8,7 @@ import {
   TextInput,
   FlatList,
   ScrollView,
+  ActivityIndicator,
 } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
@@ -19,88 +20,53 @@ import CardCategory from "../components/CardCategory";
 import CardVehicle from "../components/CardVehicle";
 import { FontAwesome } from "@expo/vector-icons";
 import axios from "axios";
-
+import { useDispatch, useSelector } from "react-redux";
+import { fetchTrendingVehicle } from "../store/action/actionCreator/actionVehicle";
+import { fetchCategories } from "../store/action/actionCreator/actionCategory";
 function Home({ navigation }) {
   let baseUrl =
-    "https://fd73-2001-448a-6021-5c1-9745-d939-1779-42e6.ngrok-free.app";
-  const [trend, setTrend] = useState([]);
-
-  const fetchTrending = async () => {
-    try {
-      const { data } = await axios({
-        url: baseUrl + "/trending",
-        method: "GET",
-      });
-      setTrend(data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
+    "https://003e-2001-448a-6021-5c1-1ce5-bdb-d488-5ae0.ngrok-free.app";
+  // const [trend, setTrend] = useState([]);
+  const [loading, setLoading] = useState(false);
+  // const [categories, setCategories] = useState([]);
+  const trend = useSelector((state) => state.vehicleReducer.trending);
+  const categories = useSelector((state) => state.categoryReducer.categories);
+  const dispatch = useDispatch();
   useEffect(() => {
-    fetchTrending();
+    setLoading(true);
+    dispatch(fetchCategories());
+    dispatch(fetchTrendingVehicle()).then(() => {
+      setLoading(false);
+    });
   }, []);
   // console.log(trend, "<<<<");
-  const categories = [
-    {
-      id: 1,
-      name: "Car",
-      image: carIcon,
-    },
-    {
-      id: 2,
-      name: "Motorcycle",
-      image: motorcycleIcon,
-    },
-    {
-      id: 3,
-      name: "Bicycle",
-      image: bicycleIcon,
-    },
-    {
-      id: 4,
-      name: "Scooter",
-      image: scooterIcon,
-    },
-  ];
-  const trending = [
-    {
-      id: 1,
-      name: "Avanza Veloz 2018",
-      image:
-        "https://www.static-src.com/wcsstore/Indraprastha/images/catalog/full//92/MTA-61000784/toyota_toyota_avanza_1-3_veloz_mt_2018_putih_full01_h832rda0.jpg",
-      price: 450000,
-      rating: 4.5,
-    },
-    {
-      id: 2,
-      name: "Honda Scoopy 2023",
-      image:
-        "https://imgcdn.oto.com/large/gallery/color/73/985/honda-scoopy-esp-color-781667.jpg",
-      price: 85000,
-      rating: 3.6,
-    },
-    {
-      id: 3,
-      name: "Suzuki Pick Up 2014",
-      image:
-        "https://foto.kontan.co.id/nHuaBJpOFcJG7FYidDfIOomh_tg=/640x360/smart/2019/04/04/1979163550p.jpg",
-      price: 200000,
-      rating: 4.6,
-    },
-  ];
-
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" />
+        <Text style={{ marginTop: 16, fontSize: 18 }}>Loading...</Text>
+      </View>
+    );
+  }
   const order = [];
 
   function getCategoryBackgroundColor(name) {
-    if (name === "Car") return "#30336B";
-    else if (name === "Motorcycle") return "#22A6B3";
-    else if (name === "Bicycle") return "#F9CA24";
+    if (name === "car") return "#30336B";
+    else if (name === "motorcycle") return "#22A6B3";
+    else if (name === "bicycle") return "#F9CA24";
     else return "#9B59B6";
+  }
+  function getCategoryImage(name) {
+    if (name === "car") return carIcon;
+    else if (name === "motorcycle") return motorcycleIcon;
+    else if (name === "bicycle") return bicycleIcon;
+    else return scooterIcon;
   }
 
   const RenderCategories = ({ category }) => {
-    const { name, image } = category.item;
+    const { name } = category.item;
     const backgroundColor = getCategoryBackgroundColor(name);
+    const image = getCategoryImage(name);
 
     return (
       <CardCategory

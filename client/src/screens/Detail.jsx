@@ -16,33 +16,20 @@ import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchDetail } from "../store/action/actionCreator/actionVehicle";
 
 function Detail({ route }) {
   const { name, id } = route.params;
-  console.log(id);
-  let baseUrl =
-    "https://fd73-2001-448a-6021-5c1-9745-d939-1779-42e6.ngrok-free.app";
+  const dispatch = useDispatch();
   const [startDate, setSelectedStartDate] = useState(new Date());
   const [endDate, setSelectedEndDate] = useState(new Date());
-  const [detail, setDetail] = useState({});
+  const detail = useSelector((state) => state.vehicleReducer.detail);
   const [loading, setLoading] = useState(false);
 
-  const fetchDetail = async () => {
-    try {
-      const { data } = await axios({
-        url: baseUrl + "/vehicles/" + id,
-        method: "GET",
-      });
-      setDetail(data);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-  console.log(detail.vehicle);
   useEffect(() => {
     setLoading(true);
-    fetchDetail().then(() => {
+    dispatch(fetchDetail(id)).then(() => {
       setLoading(false);
     });
   }, []);
@@ -72,28 +59,6 @@ function Detail({ route }) {
     }
   };
 
-  const spec = [
-    {
-      id: 1,
-      type: "Engine Type",
-      value: "Bensin",
-    },
-    {
-      id: 2,
-      type: "Transition",
-      value: "Automatic",
-    },
-    {
-      id: 3,
-      type: "Capacity",
-      value: 7,
-    },
-  ];
-
-  const RenderSpec = ({ spec }) => {
-    const { type, value } = spec.item;
-    return <CardSpecification type={type} value={value} />;
-  };
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
       <ScrollView>
