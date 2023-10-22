@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { SafeAreaView, StyleSheet, View, Text, Pressable, TextInput, FlatList, ScrollView, ImageBackground } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
@@ -11,8 +11,17 @@ import CardVehicle from "../components/CardVehicle";
 import { FontAwesome } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import bg from "../../assets/image/bg-home.png";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchVehicles } from "../../store/actions/vehicleAction";
 
 function Home({ navigation }) {
+  const { vehicles } = useSelector((state) => state.vehicleReducer);
+  console.log(vehicles);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchVehicles());
+  }, []);
   const categories = [
     {
       id: 1,

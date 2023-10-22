@@ -10,6 +10,8 @@ import Detail from "./src/screens/Detail";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import AddVehicle from "./src/screens/AddVehicle";
 import { useState, useEffect } from "react";
+import { Provider } from "react-redux";
+import store from "./store/reducers";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -77,54 +79,56 @@ const HomeTab = () => {
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{
-          headerShown: true,
-          headerTintColor: "white",
-          headerStyle: {
-            backgroundColor: "#282424",
-          },
-        }}
-      >
-        <Stack.Screen
-          name="splash"
-          component={Splash}
-          options={{
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen
-          name="home"
-          component={HomeTab}
-          options={{
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen
-          name="loginRegister"
-          component={LoginRegister}
-          options={{
-            headerShown: false,
-            tabBarStyle: {
-              display: "none",
-            },
-          }}
-        />
-        <Stack.Screen
-          name="detail"
-          component={Detail}
-          options={({ route }) => ({
+    <Provider store={store}>
+      <NavigationContainer>
+        <Stack.Navigator
+          screenOptions={{
             headerShown: true,
             headerTintColor: "white",
             headerStyle: {
-              backgroundColor: "#17799A",
+              backgroundColor: "#282424",
             },
-            tabBarStyle: { display: "none" },
-            title: route.params.name,
-          })}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+          }}
+        >
+          <Stack.Screen
+            name="splash"
+            component={Splash}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="home"
+            component={HomeTab}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="loginRegister"
+            component={LoginRegister}
+            options={{
+              headerShown: false,
+              tabBarStyle: {
+                display: "none",
+              },
+            }}
+          />
+          <Stack.Screen
+            name="detail"
+            component={Detail}
+            options={({ route }) => ({
+              headerShown: true,
+              headerTintColor: "white",
+              headerStyle: {
+                backgroundColor: "#17799A",
+              },
+              tabBarStyle: { display: "none" },
+              title: route.params.name,
+            })}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </Provider>
   );
 }
