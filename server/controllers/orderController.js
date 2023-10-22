@@ -144,10 +144,7 @@ class OrderController {
   static async fetchTrending(req, res, next) {
     try {
       const results = await Order.findAll({
-        attributes: [
-          "VehicleId",
-          [Sequelize.fn("COUNT", "VehicleId"), "orderCount"],
-        ],
+        attributes: ["VehicleId", [Sequelize.fn("COUNT", "VehicleId"), "orderCount"]],
         where: { status: "returned" },
         group: ["VehicleId"],
         order: [[Sequelize.fn("COUNT", "VehicleId"), "DESC"]],
@@ -155,9 +152,7 @@ class OrderController {
       });
 
       if (results.length > 0) {
-        const mostOrderedVehicleIds = results.map((result) =>
-          result.getDataValue("VehicleId")
-        );
+        const mostOrderedVehicleIds = results.map((result) => result.getDataValue("VehicleId"));
         const mostOrderedVehicles = await Vehicle.findAll({
           where: { id: mostOrderedVehicleIds },
           include: [Review, Order],
@@ -166,15 +161,10 @@ class OrderController {
         const vehicleResults = [];
 
         for (const vehicle of mostOrderedVehicles) {
-          const { name, image, price, Reviews, Orders, id } = vehicle;
+          const { name, image, price, Reviews, Orders } = vehicle;
           const totalReviews = Reviews.length;
-          const averageRating =
-            totalReviews > 0
-              ? Reviews.reduce((sum, review) => sum + review.rating, 0) /
-                totalReviews
-              : 0;
+          const averageRating = totalReviews > 0 ? Reviews.reduce((sum, review) => sum + review.rating, 0) / totalReviews : 0;
           const vehicleInfo = {
-            id,
             name,
             image,
             price,
