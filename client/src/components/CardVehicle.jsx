@@ -19,13 +19,14 @@ function CardVehicle({ id, image, name, price, rating, navigation }) {
   const goDetail = () => {
     navigation.navigate("detail", {
       name: name,
+      id: id,
     });
   };
 
   return (
     <Pressable style={styles.container} onPress={goDetail}>
       <View style={styles.innerContainer}>
-        <Image source={{ uri: `${image}` }} style={styles.image} resizeMode="contain" />
+        <Image source={{ uri: `${image}` }} style={styles.image} resizeMode="cover" />
         <View style={styles.cardContainer}>
           <Text style={styles.title}>{truncateName(name)}</Text>
           <Text style={styles.price}>{fPrice(price)}</Text>
