@@ -28,6 +28,10 @@ module.exports = {
         type: Sequelize.TEXT,
         allowNull: false,
       },
+      location: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
       UserId: {
         type: Sequelize.INTEGER,
         references: {

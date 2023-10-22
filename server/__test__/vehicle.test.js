@@ -93,10 +93,10 @@ describe("Test add vehicle endpoint /vehicles method POST", () => {
     const response = await request(app)
       .post("/vehicles")
       .set("access_token", access_token)
-      .field('name', 'Toyota Rush')
-      .field('CategoryId', '1')
-      .field('price', '270000')
-      .attach('image', './data/testingImage.png')
+      .field("name", "Toyota Rush")
+      .field("CategoryId", "1")
+      .field("price", "270000")
+      .attach("image", "./data/testingImage.png");
 
     expect(response.status).toBe(201);
     expect(response.status).toBe(201);
@@ -108,10 +108,10 @@ describe("Test add vehicle endpoint /vehicles method POST", () => {
     const response = await request(app)
       .post("/vehicles")
       .set("access_token", access_token)
-      .field('name', '')
-      .field('CategoryId', '1')
-      .field('price', '270000')
-      .attach('image', './data/testingImage.png')
+      .field("name", "")
+      .field("CategoryId", "1")
+      .field("price", "270000")
+      .attach("image", "./data/testingImage.png");
 
     expect(response.status).toBe(400);
     expect(response.body).toBeInstanceOf(Object);
@@ -122,10 +122,10 @@ describe("Test add vehicle endpoint /vehicles method POST", () => {
     const response = await request(app)
       .post("/vehicles")
       .set("access_token", access_token)
-      .field('name', 'Toyota Rush')
-      .field('CategoryId', '1')
-      .field('price', '')
-      .attach('image', './data/testingImage.png')
+      .field("name", "Toyota Rush")
+      .field("CategoryId", "1")
+      .field("price", "")
+      .attach("image", "./data/testingImage.png");
 
     expect(response.status).toBe(400);
     expect(response.body).toBeInstanceOf(Object);
@@ -136,10 +136,10 @@ describe("Test add vehicle endpoint /vehicles method POST", () => {
     const response = await request(app)
       .post("/vehicles")
       .set("access_token", access_token)
-      .field('name', 'Toyota Rush')
-      .field('CategoryId', '1')
-      .field('price', '270000')
-      .attach('image', './data/orders.json')
+      .field("name", "Toyota Rush")
+      .field("CategoryId", "1")
+      .field("price", "270000")
+      .attach("image", "./data/orders.json");
 
     expect(response.status).toBe(500);
     expect(response.body).toBeInstanceOf(Object);

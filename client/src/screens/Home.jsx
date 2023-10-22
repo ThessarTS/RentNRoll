@@ -1,5 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { SafeAreaView, StyleSheet, View, Text, Pressable, TextInput, FlatList, ScrollView, ImageBackground, Image } from "react-native";
+
+import {
+  SafeAreaView,
+  StyleSheet,
+  View,
+  Text,
+  Pressable,
+  TextInput,
+  FlatList,
+  ScrollView,
+  ImageBackground,
+  ActivityIndicator,
+} from "react-native";
+
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import carIcon from "../../assets/vector/car.png";
@@ -14,12 +27,19 @@ import bg from "../../assets/image/bg-home.png";
 import { useDispatch, useSelector } from "react-redux";
 import Modal from "react-native-modal";
 import { MaterialIcons } from "@expo/vector-icons";
+import { fetchCategory } from "../../store/actions/categoryAction";
 import { fetchVehicles, fetchTrending } from "../../store/actions/vehicleAction";
 import { AntDesign } from "@expo/vector-icons";
 import notFound from "../../assets/image/not-found.jpg";
 function Home({ navigation }) {
-  const { vehicles, trending } = useSelector((state) => state.vehicleReducer);
+  const { vehicles, trending, loading } = useSelector(
+    (state) => state.vehicleReducer
+  );
+  const categories = useSelector((state) => state.categoryReducer.categories);
   const dispatch = useDispatch();
+
+  const [loadingCategory, setLoadingCategory] = useState(false);
+
   const [search, setSearch] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [filteredData, setFilteredData] = useState(vehicles);
@@ -53,33 +73,23 @@ function Home({ navigation }) {
     return price.toLocaleString("id-ID", { style: "currency", currency: "IDR" });
   };
 
+
   useEffect(() => {
+    // setLoadingCategory(true);
     dispatch(fetchVehicles());
+    dispatch(fetchCategory());
     dispatch(fetchTrending());
   }, []);
 
-  const categories = [
-    {
-      id: 1,
-      name: "Car",
-      image: carIcon,
-    },
-    {
-      id: 2,
-      name: "Motorcycle",
-      image: motorcycleIcon,
-    },
-    {
-      id: 3,
-      name: "Bicycle",
-      image: bicycleIcon,
-    },
-    {
-      id: 4,
-      name: "Scooter",
-      image: scooterIcon,
-    },
-  ];
+  // console.log(loading);
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" />
+        <Text style={{ marginTop: 16, fontSize: 18 }}>Loading...</Text>
+      </View>
+    );
+  }
 
   const RenderModalItems = ({ vehicle }) => {
     const { image, name, price, id } = vehicle.item;
@@ -123,20 +133,42 @@ function Home({ navigation }) {
   const order = [];
 
   function getCategoryBackgroundColor(name) {
-    if (name === "Car") return "#30336B";
-    else if (name === "Motorcycle") return "#22A6B3";
-    else if (name === "Bicycle") return "#F9CA24";
+    if (name === "car") return "#30336B";
+    else if (name === "motorcycle") return "#22A6B3";
+    else if (name === "bicycle") return "#F9CA24";
     else return "#9B59B6";
+  }
+  function getCategoryImage(name) {
+    if (name === "car") return carIcon;
+    else if (name === "motorcycle") return motorcycleIcon;
+    else if (name === "bicycle") return bicycleIcon;
+    else return scooterIcon;
   }
 
   const RenderCategories = ({ category }) => {
-    const { name, image } = category.item;
+    const { name } = category.item;
     const backgroundColor = getCategoryBackgroundColor(name);
-    return <CardCategory name={name} image={image} backgroundColor={backgroundColor} />;
+    const image = getCategoryImage(name);
+    return (
+      <CardCategory
+        name={name}
+        image={image}
+        backgroundColor={backgroundColor}
+      />
+    );
   };
   const RenderCardVehicle = ({ vehicle }) => {
     const { name, image, price, rating, id } = vehicle.item;
-    return <CardVehicle name={name} image={image} price={price} rating={rating} id={id} navigation={navigation} />;
+    return (
+      <CardVehicle
+        name={name}
+        image={image}
+        price={price}
+        rating={rating}
+        id={id}
+        navigation={navigation}
+      />
+    );
   };
 
   return (
@@ -162,13 +194,30 @@ function Home({ navigation }) {
               {/* category */}
               <View style={[styles.categoryContainer, styles.shadowProp]}>
                 <Text style={styles.categoryTitle}>Categories</Text>
-                <FlatList style={{ marginTop: 10 }} data={categories} renderItem={(category) => <RenderCategories category={category} />} keyExtractor={(category) => category.id} horizontal={true} />
+                <FlatList
+                  style={{ marginTop: 10 }}
+                  data={categories}
+                  renderItem={(category) => (
+                    <RenderCategories category={category} />
+                  )}
+                  keyExtractor={(category) => category.id}
+                  horizontal={true}
+                />
               </View>
               {/* end category */}
               {/* Trending */}
               <View style={styles.itemsContainer}>
                 <Text style={styles.itemTitle}>Trending</Text>
-                <FlatList style={{ marginTop: 10 }} data={trending} renderItem={(vehicle) => <RenderCardVehicle vehicle={vehicle} />} keyExtractor={(vehicle) => vehicle.id} horizontal={true} showsHorizontalScrollIndicator={false} />
+                <FlatList
+                  style={{ marginTop: 10 }}
+                  data={trending}
+                  renderItem={(vehicle) => (
+                    <RenderCardVehicle vehicle={vehicle} />
+                  )}
+                  keyExtractor={(vehicle) => vehicle.id}
+                  horizontal={true}
+                  showsHorizontalScrollIndicator={false}
+                />
               </View>
               {/* end Trending */}
 
@@ -176,13 +225,45 @@ function Home({ navigation }) {
               <View style={styles.itemsContainer}>
                 <Text style={styles.itemTitle}>History</Text>
                 {order.length ? (
-                  <FlatList style={{ marginTop: 10 }} data={order} renderItem={(vehicle) => <RenderTrending vehicle={vehicle} />} keyExtractor={(vehicle) => vehicle.id} horizontal={true} showsHorizontalScrollIndicator={false} />
+                  <FlatList
+                    style={{ marginTop: 10 }}
+                    data={order}
+                    renderItem={(vehicle) => (
+                      <RenderTrending vehicle={vehicle} />
+                    )}
+                    keyExtractor={(vehicle) => vehicle.id}
+                    horizontal={true}
+                    showsHorizontalScrollIndicator={false}
+                  />
                 ) : (
-                  <View style={{ paddingVertical: 40, alignItems: "center", justifyContent: "center", backgroundColor: "#f6f4f1", marginTop: 10, borderRadius: 10 }}>
+                  <View
+                    style={{
+                      paddingVertical: 40,
+                      alignItems: "center",
+                      justifyContent: "center",
+                      backgroundColor: "#f6f4f1",
+                      marginTop: 10,
+                      borderRadius: 10,
+                    }}
+                  >
                     <FontAwesome name="history" size={24} color="black" />
-                    <Text style={{ fontWeight: 500, fontSize: 18 }}>Your History is empty</Text>
-                    <Text style={{ fontWeight: 500, fontSize: 14, marginTop: 10 }}>Looks like you've never done a rental before</Text>
-                    <Pressable style={{ backgroundColor: "#17799A", padding: 10, paddingHorizontal: 20, borderRadius: 10, marginTop: 10 }}>
+                    <Text style={{ fontWeight: 500, fontSize: 18 }}>
+                      Your History is empty
+                    </Text>
+                    <Text
+                      style={{ fontWeight: 500, fontSize: 14, marginTop: 10 }}
+                    >
+                      Looks like you've never done a rental before
+                    </Text>
+                    <Pressable
+                      style={{
+                        backgroundColor: "#17799A",
+                        padding: 10,
+                        paddingHorizontal: 20,
+                        borderRadius: 10,
+                        marginTop: 10,
+                      }}
+                    >
                       <Text style={{ color: "white" }}>Rent Now</Text>
                     </Pressable>
                   </View>

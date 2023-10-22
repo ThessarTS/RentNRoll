@@ -1,10 +1,10 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 
-function CardSpecification({ type, value }) {
+function CardSpecification({ name, value }) {
   return (
     <View style={styles.container}>
-      <Text style={styles.specType}>{type}</Text>
+      <Text style={styles.specType}>{name}</Text>
       <Text style={styles.specValue}>{value}</Text>
     </View>
   );
