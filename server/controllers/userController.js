@@ -1,7 +1,7 @@
 const { comparePassword } = require("../helpers/bcrypt");
 const { signToken } = require("../helpers/jwt");
 const { generateOTP, sendOTPByEmail } = require("../helpers/nodemailer");
-const { User, UserProfile, Order } = require("../models");
+const { User, UserProfile, Order, Vehicle } = require("../models");
 const { OAuth2Client } = require("google-auth-library");
 class UserController {
   static async register(req, res, next) {
@@ -96,21 +96,18 @@ class UserController {
       const data = await User.findOne({
         where: { email: req.user.email },
         attributes: { exclude: ["password"] },
-        include: [UserProfile, Order],
+        include: [
+          {
+            model: UserProfile,
+          },
+          {
+            model: Order,
+            include: Vehicle,
+          },
+        ],
       });
-
-      // Get the total number of orders
       const totalOrders = data.Orders.length;
-
-      // Remove the Orders array to avoid circular serialization
-      delete data.dataValues.Orders;
-
-      // Add totalOrders to the response
       data.dataValues.totalOrders = totalOrders;
-
-      // Console log the totalOrders
-      console.log("Total Orders:", totalOrders);
-
       res.json(data);
     } catch (error) {
       console.log(error);
