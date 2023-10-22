@@ -15,7 +15,11 @@ router.post("/google-login", UserController.gLogin);
 
 router.get("/trending", OrderController.fetchTrending);
 router.get("/categories", VehicleController.getCategories);
-router.post("/midtrans-token/:orderId", authentication, OrderController.midtransToken);
+router.post(
+  "/midtrans-token/:orderId",
+  authentication,
+  OrderController.midtransToken
+);
 
 router.use("/profiles", user);
 router.use("/vehicles", vehicle);

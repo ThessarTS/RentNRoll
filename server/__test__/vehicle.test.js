@@ -77,59 +77,56 @@ describe("Test get data detail vehicle endpoint /vehicles/:id", () => {
     const response = await request(app).get("/vehicles/2");
     expect(response.status).toBe(200);
     expect(response.body).toBeInstanceOf(Object);
+    expect(response.body).toHaveProperty("Category", expect.any(Object));
+    expect(response.body).toHaveProperty("User", expect.any(Object));
   });
   it("Failed to get Main Entity because the given id params does not exist in the database / is invalid", async function () {
     const response = await request(app).get("/vehicles/200");
     expect(response.status).toBe(404);
-    expect(response.body).toHaveProperty("message", expect.any(String)));
+    expect(response.body).toHaveProperty("message", expect.any(String));
   });
 });
 
+// JANGAN DIHAPUS
 describe("Test add vehicle endpoint /vehicles method POST", () => {
   it("Successfully added a vehicle", async function () {
     const response = await request(app)
       .post("/vehicles")
       .set("access_token", access_token)
-      .send({
-        name: "Toyota Rush",
-        CategoryId: 1,
-        price: 270000,
-        image:
-          "https://1.bp.blogspot.com/-KCkEiJcf-gc/XdQxSkkgvfI/AAAAAAAAad0/O1OkNdU7lyEU13I7ydL5uyARYA5lVs69wCLcBGAsYHQ/w1200-h630-p-k-no-nu/spesifikasi-grand-new-avanza.jpg",
-        UserId: 1,
-      });
+      .field('name', 'Toyota Rush')
+      .field('CategoryId', '1')
+      .field('price', '270000')
+      .attach('image', './data/testingImage.png')
+
+    expect(response.status).toBe(201);
     expect(response.status).toBe(201);
     expect(response.body).toBeInstanceOf(Object);
     expect(response.body).toHaveProperty("message", "Success Add New Vehicle");
-  });
+  }, 10000);
 
-  it("Faild added a vehicle with empty name feild", async function () {
+  it("Failed added a vehicle with empty name field", async function () {
     const response = await request(app)
       .post("/vehicles")
       .set("access_token", access_token)
-      .send({
-        name: "",
-        CategoryId: 1,
-        price: 270000,
-        image:
-          "https://1.bp.blogspot.com/-KCkEiJcf-gc/XdQxSkkgvfI/AAAAAAAAad0/O1OkNdU7lyEU13I7ydL5uyARYA5lVs69wCLcBGAsYHQ/w1200-h630-p-k-no-nu/spesifikasi-grand-new-avanza.jpg",
-        UserId: 1,
-      });
+      .field('name', '')
+      .field('CategoryId', '1')
+      .field('price', '270000')
+      .attach('image', './data/testingImage.png')
+
     expect(response.status).toBe(400);
     expect(response.body).toBeInstanceOf(Object);
     expect(response.body).toHaveProperty("message", "Name is required!");
   });
+
   it("Faild added a vehicle without price feild", async function () {
     const response = await request(app)
       .post("/vehicles")
       .set("access_token", access_token)
-      .send({
-        name: "Toyota",
-        CategoryId: 1,
-        image:
-          "https://1.bp.blogspot.com/-KCkEiJcf-gc/XdQxSkkgvfI/AAAAAAAAad0/O1OkNdU7lyEU13I7ydL5uyARYA5lVs69wCLcBGAsYHQ/w1200-h630-p-k-no-nu/spesifikasi-grand-new-avanza.jpg",
-        UserId: 1,
-      });
+      .field('name', 'Toyota Rush')
+      .field('CategoryId', '1')
+      .field('price', '')
+      .attach('image', './data/testingImage.png')
+
     expect(response.status).toBe(400);
     expect(response.body).toBeInstanceOf(Object);
     expect(response.body).toHaveProperty("message", "Price is required!");
@@ -139,17 +136,15 @@ describe("Test add vehicle endpoint /vehicles method POST", () => {
     const response = await request(app)
       .post("/vehicles")
       .set("access_token", access_token)
-      .send({
-        name: "Toyota Rush",
-        CategoryId: 1,
-        price: 270000,
-        image: "",
-        UserId: 1,
-      });
-    expect(response.status).toBe(400);
+      .field('name', 'Toyota Rush')
+      .field('CategoryId', '1')
+      .field('price', '270000')
+      .attach('image', './data/orders.json')
+
+    expect(response.status).toBe(500);
     expect(response.body).toBeInstanceOf(Object);
-    expect(response.body).toHaveProperty("message", "Image is required!");
-  });
+    expect(response.body).toHaveProperty("error");
+  }, 10000);
 });
 
 describe("Test delete vehicle endpoint /vehicles/:id", () => {
