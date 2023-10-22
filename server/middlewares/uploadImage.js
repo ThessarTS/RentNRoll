@@ -7,12 +7,13 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-const uploadImage = (req, res, next) => {
-  const storage = multer.memoryStorage(); // bisa diganti ke disk storage
+// Create a combined middleware function
+const uploadMulti = (fields) => {
+  const storage = multer.memoryStorage();
   const upload = multer({
     storage: storage,
     limits: {
-      fileSize: 1024 * 1024 * 10,
+      fileSize: 1024 * 1024 * 10, // Adjust the file size limit as needed
     },
     fileFilter: (req, file, cb) => {
       if (file.mimetype.startsWith("image/")) {
@@ -21,36 +22,75 @@ const uploadImage = (req, res, next) => {
         cb(new Error("Invalid file type. Only images are allowed."));
       }
     },
-  }).single("image");
+  }).fields([
+    { name: "ktp", maxCount: 1 },
+    { name: "simA", maxCount: 1 },
+    { name: "simC", maxCount: 1 },
+    { name: "profilePicture", maxCount: 1 },
+    { name: "image", maxCount: 1 },
+  ]);
 
-  upload(req, res, async (err) => {
-    if (err) {
-      console.error("Error uploading image:", err);
-      return res.status(500).json({ error: "Failed to upload image" });
-    }
-    const { buffer, originalname } = req.file;
-    const cloudinaryResponse = await cloudinary.uploader.upload_stream(
-      {
-        resource_type: "raw",
-        public_id: originalname,
-      },
-      async (error, result) => {
-        if (error) {
-          console.error("Error uploading to Cloudinary:", error);
-          return res.status(500).json({ error: "Failed to upload image to Cloudinary" });
+  return async (req, res, next) => {
+    upload(req, res, async (err) => {
+      if (err) {
+        console.error("Error uploading images:", err);
+        return res.status(500).json({ error: "Failed to upload images" });
+      }
+
+      const cloudinaryResponses = [];
+      const promises = [];
+
+      for (const field of fields) {
+        if (req.files[field]) {
+          const image = req.files[field][0];
+
+          promises.push(uploadToCloudinary(image.buffer, image.originalname));
         }
+      }
 
-        const { public_id, secure_url } = result;
+      try {
+        const cloudinaryResults = await Promise.all(promises);
 
-        req.imagePublicId = public_id;
-        req.imageSecureUrl = secure_url;
+        cloudinaryResults.forEach((result, index) => {
+          const field = fields[index];
+          req[field] = result.secure_url;
+          cloudinaryResponses.push({
+            field,
+            public_id: result.public_id,
+            secure_url: result.secure_url,
+          });
+        });
+        console.log(cloudinaryResponses);
+        req.cloudinaryResponses = cloudinaryResponses;
 
         next();
+      } catch (error) {
+        return res.status(500).json({ error: "Failed to upload images to Cloudinary" });
       }
-    );
+    });
+  };
+};
 
-    cloudinaryResponse.end(buffer);
+// Function to upload to Cloudinary
+const uploadToCloudinary = (buffer, originalname) => {
+  return new Promise((resolve, reject) => {
+    cloudinary.uploader
+      .upload_stream(
+        {
+          resource_type: "auto",
+          public_id: originalname,
+        },
+        (error, result) => {
+          if (error) {
+            console.error("Error uploading to Cloudinary:", error);
+            reject(error);
+          } else {
+            resolve(result);
+          }
+        }
+      )
+      .end(buffer);
   });
 };
 
-module.exports = uploadImage;
+module.exports = uploadMulti;
