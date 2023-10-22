@@ -28,6 +28,10 @@ module.exports = {
       simC: {
         type: Sequelize.STRING,
       },
+      profilePicture: {
+        type: Sequelize.TEXT,
+        allowNull: false,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

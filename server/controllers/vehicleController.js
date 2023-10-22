@@ -16,6 +16,9 @@ class VehicleController {
           },
         ],
       });
+      const data = vehicle.forEach((el) => {
+        console.log(el.Category.specifications);
+      });
       res.status(200).json(vehicle);
     } catch (err) {
       console.log(err);
@@ -51,7 +54,8 @@ class VehicleController {
   }
   static async addVehicle(req, res, next) {
     try {
-      const { name, CategoryId, price } = req.body;
+
+      const { name, CategoryId, price, seats } = req.body;
       console.log(req.imageSecureUrl, "<<<<<<");
 
       const newVehicle = await Vehicle.create({

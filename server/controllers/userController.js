@@ -1,7 +1,7 @@
 const { comparePassword } = require("../helpers/bcrypt");
 const { signToken } = require("../helpers/jwt");
 const { generateOTP, sendOTPByEmail } = require("../helpers/nodemailer");
-const { User, UserProfile } = require("../models");
+const { User, UserProfile, Order } = require("../models");
 const { OAuth2Client } = require("google-auth-library");
 class UserController {
   static async register(req, res, next) {
@@ -40,7 +40,7 @@ class UserController {
       if (!user) throw { name: "invalid_email_password" };
       const passValid = comparePassword(password, user.password);
       if (!passValid) throw { name: "invalid_email_password" };
-      console.log(user, '===', otp);
+      console.log(user, "===", otp);
       if (user.otp !== otp) throw { name: "invalid_otp" };
       const access_token = signToken({ id: user.id });
       res.status(200).json({ access_token });
@@ -96,8 +96,21 @@ class UserController {
       const data = await User.findOne({
         where: { email: req.user.email },
         attributes: { exclude: ["password"] },
-        include: [UserProfile],
+        include: [UserProfile, Order],
       });
+
+      // Get the total number of orders
+      const totalOrders = data.Orders.length;
+
+      // Remove the Orders array to avoid circular serialization
+      delete data.dataValues.Orders;
+
+      // Add totalOrders to the response
+      data.dataValues.totalOrders = totalOrders;
+
+      // Console log the totalOrders
+      console.log("Total Orders:", totalOrders);
+
       res.json(data);
     } catch (error) {
       console.log(error);
@@ -110,10 +123,7 @@ class UserController {
       if (!ktp) {
         throw { name: "KTP is required!" };
       }
-      await UserProfile.update(
-        { ktp, simA, simC },
-        { where: { UserId: req.user.id } }
-      );
+      await UserProfile.update({ ktp, simA, simC }, { where: { UserId: req.user.id } });
       res.json({ message: "Successfully updated!" });
     } catch (error) {
       next(error);
