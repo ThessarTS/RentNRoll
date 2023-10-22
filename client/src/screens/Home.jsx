@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { SafeAreaView, StyleSheet, View, Text, Pressable, TextInput, FlatList, ScrollView, ImageBackground } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
@@ -11,8 +11,17 @@ import CardVehicle from "../components/CardVehicle";
 import { FontAwesome } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import bg from "../../assets/image/bg-home.png";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchVehicles, fetchTrending } from "../../store/actions/vehicleAction";
 
 function Home({ navigation }) {
+  const { vehicles, trending } = useSelector((state) => state.vehicleReducer);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchVehicles());
+    dispatch(fetchTrending());
+  }, []);
   const categories = [
     {
       id: 1,
@@ -35,29 +44,6 @@ function Home({ navigation }) {
       image: scooterIcon,
     },
   ];
-  const trending = [
-    {
-      id: 1,
-      name: "Avanza Veloz 2018",
-      image: "https://www.static-src.com/wcsstore/Indraprastha/images/catalog/full//92/MTA-61000784/toyota_toyota_avanza_1-3_veloz_mt_2018_putih_full01_h832rda0.jpg",
-      price: 450000,
-      rating: 4.5,
-    },
-    {
-      id: 2,
-      name: "Honda Scoopy 2023",
-      image: "https://imgcdn.oto.com/large/gallery/color/73/985/honda-scoopy-esp-color-781667.jpg",
-      price: 85000,
-      rating: 3.6,
-    },
-    {
-      id: 3,
-      name: "Suzuki Pick Up 2014",
-      image: "https://foto.kontan.co.id/nHuaBJpOFcJG7FYidDfIOomh_tg=/640x360/smart/2019/04/04/1979163550p.jpg",
-      price: 200000,
-      rating: 4.6,
-    },
-  ];
 
   const order = [];
 
@@ -74,8 +60,8 @@ function Home({ navigation }) {
     return <CardCategory name={name} image={image} backgroundColor={backgroundColor} />;
   };
   const RenderCardVehicle = ({ vehicle }) => {
-    const { name, image, price, rating } = vehicle.item;
-    return <CardVehicle name={name} image={image} price={price} rating={rating} navigation={navigation} />;
+    const { name, image, price, rating, id } = vehicle.item;
+    return <CardVehicle name={name} image={image} price={price} rating={rating} id={id} navigation={navigation} />;
   };
 
   return (
@@ -111,10 +97,10 @@ function Home({ navigation }) {
               </View>
               {/* end Trending */}
               {/* Near You */}
-              <View style={styles.itemsContainer}>
+              {/* <View style={styles.itemsContainer}>
                 <Text style={styles.itemTitle}>Near You</Text>
                 <FlatList style={{ marginTop: 10 }} data={trending} renderItem={(vehicle) => <RenderCardVehicle vehicle={vehicle} />} keyExtractor={(vehicle) => vehicle.id} horizontal={true} showsHorizontalScrollIndicator={false} />
-              </View>
+              </View> */}
               {/* end Near You */}
               {/* Trending */}
               <View style={styles.itemsContainer}>

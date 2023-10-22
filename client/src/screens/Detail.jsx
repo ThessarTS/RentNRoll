@@ -7,9 +7,21 @@ import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchVehicleById } from "../../store/actions/vehicleAction";
 
 function Detail({ route }) {
-  const { name } = route.params;
+  const { name, id } = route.params;
+  const { vehicle } = useSelector((state) => state.vehicleReducer);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchVehicleById(id));
+  }, []);
+
+  const fPrice = (price) => {
+    return price.toLocaleString("id-ID", { style: "currency", currency: "IDR" });
+  };
 
   const [startDate, setSelectedStartDate] = useState(new Date());
   const [endDate, setSelectedEndDate] = useState(new Date());
@@ -60,7 +72,7 @@ function Detail({ route }) {
         <View style={styles.container}>
           {/* header */}
           <View style={styles.headerContainer}>
-            <Image source={{ uri: `https://imgcdn.oto.com/large/gallery/color/73/985/honda-scoopy-esp-color-781667.jpg` }} style={styles.imageCover} />
+            <Image source={{ uri: `${vehicle.image}` }} style={styles.imageCover} resizeMode="cover" />
             <View style={styles.headerItems}>
               <Text style={styles.headerTitle}> {name}</Text>
               <View style={[styles.headerItemContainer]}>
@@ -73,7 +85,7 @@ function Detail({ route }) {
               </View>
               <View style={[styles.headerItemContainer, { marginStart: 3 }]}>
                 <MaterialIcons name="category" size={15} color="#9B59B6" />
-                <Text style={styles.headerCategories}>Category: Car</Text>
+                <Text style={styles.headerCategories}>Category: {vehicle.Category.name}</Text>
               </View>
             </View>
           </View>
@@ -95,7 +107,7 @@ function Detail({ route }) {
                   source={{ uri: "https://media.licdn.com/dms/image/C4E03AQGnouyn_2vSgw/profile-displayphoto-shrink_800_800/0/1646808937817?e=1703116800&v=beta&t=BZT5fOu-gScDu4h9GkegSv74GG0pSt47-0QAZOQHOeE" }}
                   style={styles.ownerImage}
                 />
-                <Text style={styles.itemTitle}>Winda Basudara</Text>
+                <Text style={styles.itemTitle}>{vehicle.User.fullName}</Text>
               </View>
               <View style={styles.ownerAction}>
                 <Feather name="phone-call" size={24} color="#17799A" />
@@ -111,7 +123,7 @@ function Detail({ route }) {
               <Text style={styles.itemTitle}> Rent Now</Text>
               <View style={[styles.headerItemContainer]}>
                 <Entypo name="price-tag" size={24} color="#17799A" />
-                <Text style={styles.location}>Rp. 450.000/day</Text>
+                <Text style={styles.location}>{fPrice(vehicle.price)}/day</Text>
               </View>
             </View>
             <View style={styles.rentContainer}>
@@ -151,7 +163,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 250,
     marginBottom: 10,
-    objectFit: "contain",
+    objectFit: "cover",
   },
 
   headerTitle: {
