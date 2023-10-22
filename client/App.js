@@ -12,6 +12,7 @@ import AddVehicle from "./src/screens/AddVehicle";
 import { useState, useEffect } from "react";
 import { Provider } from "react-redux";
 import store from "./store/reducers";
+import Rent from "./src/screens/Rent";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -69,7 +70,7 @@ const HomeTab = () => {
       })}
     >
       <Tab.Screen name="Home" component={Home} />
-      <Tab.Screen name="Rent Now" component={Home} />
+      <Tab.Screen name="Rent Now" component={Rent} />
       {user && <Tab.Screen name="Add Vehicle" component={AddVehicle} />}
       <Tab.Screen name="Your Order" component={Home} />
       <Tab.Screen name="You" component={Account} />

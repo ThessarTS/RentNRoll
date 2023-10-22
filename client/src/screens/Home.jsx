@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { SafeAreaView, StyleSheet, View, Text, Pressable, TextInput, FlatList, ScrollView, ImageBackground } from "react-native";
+import React, { useEffect, useState } from "react";
+import { SafeAreaView, StyleSheet, View, Text, Pressable, TextInput, FlatList, ScrollView, ImageBackground, Image } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import carIcon from "../../assets/vector/car.png";
@@ -12,16 +12,52 @@ import { FontAwesome } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import bg from "../../assets/image/bg-home.png";
 import { useDispatch, useSelector } from "react-redux";
+import Modal from "react-native-modal";
+import { MaterialIcons } from "@expo/vector-icons";
 import { fetchVehicles, fetchTrending } from "../../store/actions/vehicleAction";
-
+import { AntDesign } from "@expo/vector-icons";
+import notFound from "../../assets/image/not-found.jpg";
 function Home({ navigation }) {
   const { vehicles, trending } = useSelector((state) => state.vehicleReducer);
   const dispatch = useDispatch();
+  const [search, setSearch] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
+  const [filteredData, setFilteredData] = useState(vehicles);
+
+  const filterDataByName = (text) => {
+    const newData = vehicles.filter((item) => {
+      const itemName = item.name.toLowerCase();
+      const searchText = text.toLowerCase();
+      return itemName.indexOf(searchText) > -1;
+    });
+    setFilteredData(newData);
+  };
+
+  const toggleSearch = (value) => {
+    setSearch(value);
+  };
+
+  const handleInputSubmit = (text) => {
+    setSearchValue(text);
+
+    if (text.trim() !== "") {
+      filterDataByName(text);
+      toggleSearch(true);
+    } else {
+      setFilteredData(vehicles);
+      toggleSearch(false);
+    }
+  };
+
+  const fPrice = (price) => {
+    return price.toLocaleString("id-ID", { style: "currency", currency: "IDR" });
+  };
 
   useEffect(() => {
     dispatch(fetchVehicles());
     dispatch(fetchTrending());
   }, []);
+
   const categories = [
     {
       id: 1,
@@ -44,6 +80,46 @@ function Home({ navigation }) {
       image: scooterIcon,
     },
   ];
+
+  const RenderModalItems = ({ vehicle }) => {
+    console.log(vehicle);
+    const { image, name, price, id } = vehicle.item;
+    const goDetail = () => {
+      navigation.navigate("detail", {
+        name: name,
+        id: id,
+      });
+      setSearch(false);
+    };
+
+    return (
+      <Pressable style={styles.modalContainer} onPress={goDetail}>
+        <Text style={styles.itemsDetailTitle}>{name}</Text>
+        <View style={{ flexDirection: "row", gap: 10, alignItems: "center", marginTop: 5 }}>
+          <View>
+            <Image source={{ uri: `${image}` }} style={{ width: 90, height: 65 }} resizeMode="contain" />
+          </View>
+          <View style={{ flex: 6, marginStart: 10, gap: 3 }}>
+            <View style={[styles.headerItemContainer]}>
+              <Ionicons name="location" size={15} color="#17799A" />
+              <Text style={styles.itemsDetailInfo}>Jakarta</Text>
+            </View>
+            <View style={[styles.headerItemContainer, { marginStart: 2 }]}>
+              <AntDesign name="star" size={13} color="#F8B84E" />
+              <Text style={[styles.itemsDetailInfo, { marginStart: 2 }]}>4.5 (1000 Reviews)</Text>
+            </View>
+            <View style={[styles.headerItemContainer, { marginStart: 2 }]}>
+              <Entypo name="price-tag" size={15} color="#17799A" />
+              <Text style={[styles.itemsDetailInfo, { marginStart: 2 }]}>{fPrice(price)}/day</Text>
+            </View>
+          </View>
+          <View>
+            <Ionicons name="chevron-forward" size={24} color="#17799A" />
+          </View>
+        </View>
+      </Pressable>
+    );
+  };
 
   const order = [];
 
@@ -69,7 +145,7 @@ function Home({ navigation }) {
       <View style={styles.mastheadContainer}>
         <View style={styles.searchContainer}>
           <Ionicons name="ios-search-sharp" color="#17799A" size={25} />
-          <TextInput placeholder="Search" />
+          <TextInput placeholder="Search" value={searchValue} style={{ flex: 1 }} onChangeText={(text) => setSearchValue(text)} onSubmitEditing={() => handleInputSubmit(searchValue)} />
         </View>
         <Pressable style={styles.filterContainer}>
           <Entypo name="chat" size={25} color="white" />
@@ -96,13 +172,8 @@ function Home({ navigation }) {
                 <FlatList style={{ marginTop: 10 }} data={trending} renderItem={(vehicle) => <RenderCardVehicle vehicle={vehicle} />} keyExtractor={(vehicle) => vehicle.id} horizontal={true} showsHorizontalScrollIndicator={false} />
               </View>
               {/* end Trending */}
-              {/* Near You */}
-              {/* <View style={styles.itemsContainer}>
-                <Text style={styles.itemTitle}>Near You</Text>
-                <FlatList style={{ marginTop: 10 }} data={trending} renderItem={(vehicle) => <RenderCardVehicle vehicle={vehicle} />} keyExtractor={(vehicle) => vehicle.id} horizontal={true} showsHorizontalScrollIndicator={false} />
-              </View> */}
-              {/* end Near You */}
-              {/* Trending */}
+
+              {/* history */}
               <View style={styles.itemsContainer}>
                 <Text style={styles.itemTitle}>History</Text>
                 {order.length ? (
@@ -118,7 +189,32 @@ function Home({ navigation }) {
                   </View>
                 )}
               </View>
-              {/* end Trending */}
+              {/* end history */}
+              <Modal
+                isVisible={search}
+                onBackdropPress={toggleSearch}
+                style={{
+                  justifyContent: "flex-end",
+                  margin: 0,
+                }}
+              >
+                <View style={{ backgroundColor: filteredData.length !== 0 ? "whitesmoke" : "white", height: "75%", padding: 20, paddingVertical: 50, gap: 5 }}>
+                  {filteredData.length !== 0 ? (
+                    <FlatList style={{ marginTop: 10 }} data={filteredData} renderItem={(vehicle) => <RenderModalItems vehicle={vehicle} />} keyExtractor={(vehicle) => vehicle.id} showsHorizontalScrollIndicator={false} />
+                  ) : (
+                    <View style={{ flex: 1, justifyContent: "center" }}>
+                      <Image source={notFound} style={{ flex: 1, width: null, height: null }} resizeMode="cover" />
+                      <View style={{ flex: 1 }}>
+                        <Text style={{ textAlign: "center", fontSize: 20, fontWeight: 500 }}>Vehicle not Found</Text>
+                      </View>
+                    </View>
+                  )}
+
+                  <Pressable style={{ position: "absolute", top: 10, right: 20 }} onPress={() => toggleSearch(false)}>
+                    <MaterialIcons name="cancel" size={30} color="red" />
+                  </Pressable>
+                </View>
+              </Modal>
             </View>
           </ScrollView>
         </ImageBackground>
@@ -209,6 +305,27 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 500,
     alignSelf: "flex-start",
+  },
+  modalContainer: {
+    backgroundColor: "white",
+    elevation: 2,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    padding: 10,
+  },
+  itemsDetailTitle: {
+    fontSize: 14,
+    fontWeight: "500",
+  },
+  itemsDetailInfo: {
+    fontSize: 11,
+    color: "green",
+  },
+  headerItemContainer: {
+    alignItems: "center",
+    flexDirection: "row",
   },
 });
 

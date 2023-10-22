@@ -69,85 +69,87 @@ function Detail({ route }) {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={styles.container}>
-          {/* header */}
-          <View style={styles.headerContainer}>
-            <Image source={{ uri: `${vehicle.image}` }} style={styles.imageCover} resizeMode="cover" />
-            <View style={styles.headerItems}>
-              <Text style={styles.headerTitle}> {name}</Text>
-              <View style={[styles.headerItemContainer]}>
-                <Ionicons name="location" size={18} color="#17799A" />
-                <Text style={styles.location}>Location : Jakarta</Text>
-              </View>
-              <View style={[styles.headerItemContainer, { marginStart: 2 }]}>
-                <AntDesign name="star" size={15} color="#F8B84E" />
-                <Text style={styles.rating}>Rating: 4.5 (1000 Reviews)</Text>
-              </View>
-              <View style={[styles.headerItemContainer, { marginStart: 3 }]}>
-                <MaterialIcons name="category" size={15} color="#9B59B6" />
-                <Text style={styles.headerCategories}>Category: {vehicle.Category.name}</Text>
-              </View>
-            </View>
-          </View>
-          {/* end header */}
-
-          {/* spec */}
-          <View style={styles.itemContainer}>
-            <Text style={styles.itemTitle}> Specification</Text>
-            <FlatList data={spec} renderItem={(spec) => <RenderSpec spec={spec} />} keyExtractor={(spec) => spec.id} horizontal={true} showsHorizontalScrollIndicator={false} />
-          </View>
-          {/* end spec */}
-
-          {/* owner */}
-          <View style={styles.itemContainer}>
-            <Text style={styles.itemTitle}> Owner</Text>
-            <View style={styles.ownerContainer}>
-              <View style={styles.ownerItem}>
-                <Image
-                  source={{ uri: "https://media.licdn.com/dms/image/C4E03AQGnouyn_2vSgw/profile-displayphoto-shrink_800_800/0/1646808937817?e=1703116800&v=beta&t=BZT5fOu-gScDu4h9GkegSv74GG0pSt47-0QAZOQHOeE" }}
-                  style={styles.ownerImage}
-                />
-                <Text style={styles.itemTitle}>{vehicle.User.fullName}</Text>
-              </View>
-              <View style={styles.ownerAction}>
-                <Feather name="phone-call" size={24} color="#17799A" />
-                <Ionicons name="ios-chatbox-ellipses-outline" size={25} color="#17799A" />
-              </View>
-            </View>
-          </View>
-          {/* end owner */}
-
-          {/* Rent Action */}
-          <View style={styles.itemContainer}>
-            <View style={styles.rentHeaderContainer}>
-              <Text style={styles.itemTitle}> Rent Now</Text>
-              <View style={[styles.headerItemContainer]}>
-                <Entypo name="price-tag" size={24} color="#17799A" />
-                <Text style={styles.location}>{fPrice(vehicle.price)}/day</Text>
-              </View>
-            </View>
-            <View style={styles.rentContainer}>
-              <View style={styles.rentStartContainer}>
-                <Text>Pick-up Date</Text>
-                <View style={styles.rentStartDate}>
-                  <AntDesign name="calendar" size={24} color="black" />
-                  <DateTimePicker value={startDate} mode="date" is24Hour={true} display="default" minimumDate={new Date()} onChange={handleStartDateChange} />
+        {vehicle && (
+          <View style={styles.container}>
+            {/* header */}
+            <View style={styles.headerContainer}>
+              <Image source={{ uri: `${vehicle.image}` }} style={styles.imageCover} resizeMode="cover" />
+              <View style={styles.headerItems}>
+                <Text style={styles.headerTitle}> {name}</Text>
+                <View style={[styles.headerItemContainer]}>
+                  <Ionicons name="location" size={18} color="#17799A" />
+                  <Text style={styles.location}>Location : Jakarta</Text>
                 </View>
-              </View>
-              <View style={styles.rentEndContainer}>
-                <Text>Drop-off Date</Text>
-                <View style={styles.rendEndDate}>
-                  <DateTimePicker value={endDate} mode="date" is24Hour={true} display="default" minimumDate={startDate} onChange={handleEndDateChange} />
-                  <AntDesign name="calendar" size={24} color="black" />
+                <View style={[styles.headerItemContainer, { marginStart: 2 }]}>
+                  <AntDesign name="star" size={15} color="#F8B84E" />
+                  <Text style={styles.rating}>Rating: 4.5 (1000 Reviews)</Text>
+                </View>
+                <View style={[styles.headerItemContainer, { marginStart: 3 }]}>
+                  <MaterialIcons name="category" size={15} color="#9B59B6" />
+                  <Text style={styles.headerCategories}>Category: {vehicle.Category.name}</Text>
                 </View>
               </View>
             </View>
-            <Pressable style={styles.rentButton}>
-              <Text style={styles.rentAction}>Rent</Text>
-            </Pressable>
+            {/* end header */}
+
+            {/* spec */}
+            <View style={styles.itemContainer}>
+              <Text style={styles.itemTitle}> Specification</Text>
+              <FlatList data={spec} renderItem={(spec) => <RenderSpec spec={spec} />} keyExtractor={(spec) => spec.id} horizontal={true} showsHorizontalScrollIndicator={false} />
+            </View>
+            {/* end spec */}
+
+            {/* owner */}
+            <View style={styles.itemContainer}>
+              <Text style={styles.itemTitle}> Owner</Text>
+              <View style={styles.ownerContainer}>
+                <View style={styles.ownerItem}>
+                  <Image
+                    source={{ uri: "https://media.licdn.com/dms/image/C4E03AQGnouyn_2vSgw/profile-displayphoto-shrink_800_800/0/1646808937817?e=1703116800&v=beta&t=BZT5fOu-gScDu4h9GkegSv74GG0pSt47-0QAZOQHOeE" }}
+                    style={styles.ownerImage}
+                  />
+                  <Text style={styles.itemTitle}>{vehicle.User.fullName}</Text>
+                </View>
+                <View style={styles.ownerAction}>
+                  <Feather name="phone-call" size={24} color="#17799A" />
+                  <Ionicons name="ios-chatbox-ellipses-outline" size={25} color="#17799A" />
+                </View>
+              </View>
+            </View>
+            {/* end owner */}
+
+            {/* Rent Action */}
+            <View style={styles.itemContainer}>
+              <View style={styles.rentHeaderContainer}>
+                <Text style={styles.itemTitle}> Rent Now</Text>
+                <View style={[styles.headerItemContainer]}>
+                  <Entypo name="price-tag" size={24} color="#17799A" />
+                  <Text style={styles.location}>{fPrice(vehicle.price)}/day</Text>
+                </View>
+              </View>
+              <View style={styles.rentContainer}>
+                <View style={styles.rentStartContainer}>
+                  <Text>Pick-up Date</Text>
+                  <View style={styles.rentStartDate}>
+                    <AntDesign name="calendar" size={24} color="black" />
+                    <DateTimePicker value={startDate} mode="date" is24Hour={true} display="default" minimumDate={new Date()} onChange={handleStartDateChange} />
+                  </View>
+                </View>
+                <View style={styles.rentEndContainer}>
+                  <Text>Drop-off Date</Text>
+                  <View style={styles.rendEndDate}>
+                    <DateTimePicker value={endDate} mode="date" is24Hour={true} display="default" minimumDate={startDate} onChange={handleEndDateChange} />
+                    <AntDesign name="calendar" size={24} color="black" />
+                  </View>
+                </View>
+              </View>
+              <Pressable style={styles.rentButton}>
+                <Text style={styles.rentAction}>Rent</Text>
+              </Pressable>
+            </View>
+            {/* end rent Action */}
           </View>
-          {/* end rent Action */}
-        </View>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
