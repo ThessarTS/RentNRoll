@@ -82,7 +82,6 @@ function Home({ navigation }) {
   ];
 
   const RenderModalItems = ({ vehicle }) => {
-    console.log(vehicle);
     const { image, name, price, id } = vehicle.item;
     const goDetail = () => {
       navigation.navigate("detail", {
@@ -198,7 +197,17 @@ function Home({ navigation }) {
                   margin: 0,
                 }}
               >
-                <View style={{ backgroundColor: filteredData.length !== 0 ? "whitesmoke" : "white", height: "75%", padding: 20, paddingVertical: 50, gap: 5 }}>
+                <View
+                  style={{
+                    backgroundColor: filteredData.length !== 0 ? "whitesmoke" : "white",
+                    height: filteredData.length !== 0 ? "75%" : "45%",
+                    padding: 20,
+                    paddingVertical: 50,
+                    gap: 5,
+                    borderTopLeftRadius: 16,
+                    borderTopRightRadius: 16,
+                  }}
+                >
                   {filteredData.length !== 0 ? (
                     <FlatList style={{ marginTop: 10 }} data={filteredData} renderItem={(vehicle) => <RenderModalItems vehicle={vehicle} />} keyExtractor={(vehicle) => vehicle.id} showsHorizontalScrollIndicator={false} />
                   ) : (
