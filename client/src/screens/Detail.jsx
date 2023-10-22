@@ -80,6 +80,7 @@ function Detail({ route }) {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
       <ScrollView showsVerticalScrollIndicator={false}>
+
         <View style={styles.container}>
           {/* header */}
           <View style={styles.headerContainer}>
@@ -147,9 +148,10 @@ function Detail({ route }) {
                   color="#17799A"
                 />
               </View>
+
             </View>
-          </View>
-          {/* end owner */}
+            {/* end spec */}
+
 
           {/* Rent Action */}
           <View style={styles.itemContainer}>
@@ -191,13 +193,13 @@ function Detail({ route }) {
                   <AntDesign name="calendar" size={24} color="black" />
                 </View>
               </View>
+              <Pressable style={styles.rentButton}>
+                <Text style={styles.rentAction}>Rent</Text>
+              </Pressable>
             </View>
-            <Pressable style={styles.rentButton}>
-              <Text style={styles.rentAction}>Rent</Text>
-            </Pressable>
+            {/* end rent Action */}
           </View>
-          {/* end rent Action */}
-        </View>
+        )}
       </ScrollView>
     </SafeAreaView>
   );

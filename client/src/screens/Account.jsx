@@ -341,6 +341,10 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     gap: 15,
     zIndex: 2,
+    shadowColor: "#171717",
+    shadowOffset: { width: -2, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
   },
   profileButton: {
     backgroundColor: "#17799A",
