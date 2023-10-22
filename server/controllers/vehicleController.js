@@ -105,7 +105,6 @@ class VehicleController {
         UserId: req.user.id,
         location: location,
       });
-      console.log(req.imageSecureUrls[0]);
       res.status(201).json({ message: "Success Add New Vehicle" });
     } catch (err) {
       console.log(err);
