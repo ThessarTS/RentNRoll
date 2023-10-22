@@ -41,17 +41,30 @@ const uploadImage = (req, res, next) => {
           return res.status(500).json({ error: "Failed to upload image to Cloudinary" });
         }
 
-        const { public_id, secure_url } = result;
+    upload(req, res, async (err) => {
+        if (err) {
+            return res.status(500).json({ error: 'Failed to upload image' });
+        }
+        const { buffer, originalname } = req.file;
+        const cloudinaryResponse = await cloudinary.uploader.upload_stream({
+            resource_type: 'raw',
+            public_id: originalname,
+        }, async (error, result) => {
+            if (error) {
+                console.error('Error uploading to Cloudinary:', error);
+                return res.status(500).json({ error: 'Failed to upload image to Cloudinary' });
+            }
 
-        req.imagePublicId = public_id;
-        req.imageSecureUrl = secure_url;
+            const { public_id, secure_url } = result;
 
-        next();
-      }
-    );
+            req.imagePublicId = public_id;
+            req.imageSecureUrl = secure_url;
 
-    cloudinaryResponse.end(buffer);
-  });
+            next();
+        });
+
+        cloudinaryResponse.end(buffer);
+    });
 };
 
 module.exports = uploadImage;

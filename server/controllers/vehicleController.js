@@ -27,7 +27,6 @@ class VehicleController {
   }
   static async detailVehicle(req, res, next) {
     try {
-      // console.log(req.params);
       const { id } = req.params;
       const vehicle = await Vehicle.findOne({
         where: {
@@ -55,6 +54,7 @@ class VehicleController {
   }
   static async addVehicle(req, res, next) {
     try {
+
       const { name, CategoryId, price, seats } = req.body;
       console.log(req.imageSecureUrl, "<<<<<<");
 
@@ -62,12 +62,12 @@ class VehicleController {
         name,
         CategoryId,
         price,
-        seats,
         image: req.imageSecureUrl,
         UserId: req.user.id,
       });
       res.status(201).json({ message: "Success Add New Vehicle" });
     } catch (err) {
+      console.log(err);
       next(err);
     }
   }
