@@ -10,7 +10,6 @@ const {
   it,
 } = require("@jest/globals");
 const { hashPassword } = require("../helpers/bcrypt");
-// const { User } = require("../models/index");
 const { signToken } = require("../helpers/jwt");
 
 let access_token;
@@ -54,7 +53,7 @@ beforeAll(async () => {
   await sequelize.queryInterface.bulkInsert("Users", dataUser);
   await sequelize.queryInterface.bulkInsert("Categories", dataCategory);
   await sequelize.queryInterface.bulkInsert("Vehicles", dataVehicle);
-  //   await sequelize.queryInterface.bulkInsert("Reviews", dataReview);
+  // await sequelize.queryInterface.bulkInsert("Reviews", dataReview);
   await sequelize.queryInterface.bulkInsert("Orders", dataOrder);
 
   const userToken = await User.findOne({
@@ -312,12 +311,21 @@ describe("Test get trending endpoint /trending", () => {
   });
 });
 
-// describe("Test midtrans token end point /midtrans-token/:orderId", () => {
-//   it("Successfully get order by vehicle id", async function () {
-//     const response = await request(app)
-//       .post("/midtrans-token/1")
-//       .set("access_token", access_token);
-//     expect(response.status).toBe(200);
-//     expect(response.body).toBeInstanceOf(Object);
-//   });
-// });
+describe("Test midtrans token end point /midtrans-token/:orderId", () => {
+  it("should responds with 201, successfully generate midtrans-token", async function () {
+    const response = await request(app)
+      .post("/midtrans-token/1")
+      .send({ amount: 500000 })
+      .set("access_token", access_token);
+    expect(response.status).toBe(201);
+    expect(response.body).toBeInstanceOf(Object)
+  })
+  it("should responds with 404 with body message", async function () {
+    const response = await request(app)
+      .post("/midtrans-token/1000")
+      .send({ amount: 500000 })
+      .set("access_token", access_token);
+    expect(response.status).toBe(404);
+    expect(response.body).toBeInstanceOf(Object)
+  });
+});

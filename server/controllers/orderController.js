@@ -1,4 +1,4 @@
-const { Order, Vehicle, User } = require("../models/index");
+const { Order, Vehicle, User, Review } = require("../models/index");
 const midtransClient = require("midtrans-client");
 const { Sequelize } = require("sequelize");
 
@@ -90,7 +90,7 @@ class OrderController {
             let vehicle = await Vehicle.findByPk(req.params.vehicleid);
 
             if (!vehicle) {
-                throw { name: "not_found" };
+                throw { name: "not_found" }
             }
 
             let orders = await Order.findAll({
@@ -113,10 +113,7 @@ class OrderController {
     static async fetchTrending(req, res, next) {
         try {
             const results = await Order.findAll({
-                attributes: [
-                    "VehicleId",
-                    [Sequelize.fn("COUNT", "VehicleId"), "orderCount"],
-                ],
+                attributes: ["VehicleId", [Sequelize.fn("COUNT", "VehicleId"), "orderCount"]],
                 where: { status: "returned" },
                 group: ["VehicleId"],
                 order: [[Sequelize.fn("COUNT", "VehicleId"), "DESC"]],
@@ -124,11 +121,10 @@ class OrderController {
             });
 
             if (results.length > 0) {
-                const mostOrderedVehicleIds = results.map((result) =>
-                    result.getDataValue("VehicleId")
-                );
+                const mostOrderedVehicleIds = results.map((result) => result.getDataValue("VehicleId"));
                 const mostOrderedVehicles = await Vehicle.findAll({
                     where: { id: mostOrderedVehicleIds },
+                    include: [Review],
                 });
 
                 res.json(mostOrderedVehicles);
@@ -139,12 +135,21 @@ class OrderController {
             next(error);
         }
     }
+
     static async midtransToken(req, res, next) {
         try {
+            let findOrder = await Order.findByPk(req.params.orderId)
+            if (!findOrder) {
+                throw { name: 'not_found' }
+            }
+            if (!req.body) {
+                throw { name: 'amount_blank' }
+            }
             let snap = new midtransClient.Snap({
                 isProduction: false,
                 serverKey: process.env.MIDTRANS_SERVER_KEY,
             });
+
             let parameter = {
                 transaction_details: {
                     order_id: req.params.orderId,
