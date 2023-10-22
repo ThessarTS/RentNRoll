@@ -95,16 +95,17 @@ class VehicleController {
   }
   static async addVehicle(req, res, next) {
     try {
-      const { name, CategoryId, price, seats } = req.body;
-      console.log(req.imageSecureUrl, "<<<<<<");
+      const { name, CategoryId, price, location } = req.body;
 
       await Vehicle.create({
         name,
         CategoryId,
         price,
-        image: req.imageSecureUrl,
+        image: req.image,
         UserId: req.user.id,
+        location: location,
       });
+      console.log(req.imageSecureUrls[0]);
       res.status(201).json({ message: "Success Add New Vehicle" });
     } catch (err) {
       console.log(err);
