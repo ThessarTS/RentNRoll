@@ -23,6 +23,18 @@ module.exports = (sequelize, DataTypes) => {
       },
       simA: DataTypes.STRING,
       simC: DataTypes.STRING,
+      profilePicture: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+        validate: {
+          notEmpty: {
+            msg: "Profile picture is required!",
+          },
+          notNull: {
+            msg: "Profile picture is required!",
+          },
+        },
+      },
     },
     {
       sequelize,

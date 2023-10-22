@@ -85,9 +85,9 @@ class OrderController {
         }
     }
 
-    static async findAllOrderByVehicle(req, res, next) {
-        try {
-            let vehicle = await Vehicle.findByPk(req.params.vehicleid);
+  static async findAllOrderByVehicle(req, res, next) {
+    try {
+      let vehicle = await Vehicle.findByPk(req.params.vehicleid);
 
             if (!vehicle) {
                 throw { name: "not_found" }
@@ -117,8 +117,9 @@ class OrderController {
                 where: { status: "returned" },
                 group: ["VehicleId"],
                 order: [[Sequelize.fn("COUNT", "VehicleId"), "DESC"]],
-                limit: 5,
+                limit: 7,
             });
+
 
             if (results.length > 0) {
                 const mostOrderedVehicleIds = results.map((result) => result.getDataValue("VehicleId"));
@@ -127,15 +128,31 @@ class OrderController {
                     include: [Review],
                 });
 
-                res.json(mostOrderedVehicles);
-            } else {
-                throw { name: "No vehicle with status returned" };
-            }
-        } catch (error) {
-            next(error);
-        }
-    }
+        const vehicleResults = [];
 
+        for (const vehicle of mostOrderedVehicles) {
+          const { name, image, price, Reviews } = vehicle;
+          const totalReviews = Reviews.length;
+          const averageRating = totalReviews > 0 ? Reviews.reduce((sum, review) => sum + review.rating, 0) / totalReviews : 0;
+          const vehicleInfo = {
+            name,
+            image,
+            price,
+            totalReviews,
+            averageRating,
+          };
+          vehicleResults.push(vehicleInfo);
+        }
+
+        res.json(vehicleResults);
+      } else {
+        throw { name: "No vehicle with status returned" };
+      }
+    } catch (error) {
+      next(error);
+    }
+    }
+  
     static async midtransToken(req, res, next) {
         try {
             let findOrder = await Order.findByPk(req.params.orderId)
@@ -164,12 +181,12 @@ class OrderController {
                 },
             };
 
-            const midtransToken = await snap.createTransaction(parameter);
-            res.status(201).json(midtransToken);
-        } catch (error) {
-            next(error);
-        }
+      const midtransToken = await snap.createTransaction(parameter);
+      res.status(201).json(midtransToken);
+    } catch (error) {
+      next(error);
     }
+  }
 }
 
 module.exports = OrderController;
