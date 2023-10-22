@@ -1,5 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { SafeAreaView, Image, View, ScrollView, StyleSheet, Text, FlatList, Pressable } from "react-native";
+import {
+  SafeAreaView,
+  Image,
+  View,
+  ScrollView,
+  StyleSheet,
+  Text,
+  FlatList,
+  Pressable,
+  ActivityIndicator,
+} from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import CardSpecification from "../components/CardSpecification";
 import { Feather } from "@expo/vector-icons";
@@ -8,19 +18,29 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchVehicleById } from "../../store/actions/vehicleAction";
+import {
+  fetchDetail,
+  fetchVehicleById,
+} from "../../store/actions/vehicleAction";
 
 function Detail({ route }) {
   const { name, id } = route.params;
-  const { vehicle } = useSelector((state) => state.vehicleReducer);
+  const detail = useSelector((state) => state.vehicleReducer.vehicle);
+  const [loadingDetail, setLoadingDetail] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchVehicleById(id));
+    setLoadingDetail(true);
+    dispatch(fetchDetail(id)).then(() => {
+      setLoadingDetail(false);
+    });
   }, []);
 
   const fPrice = (price) => {
-    return price.toLocaleString("id-ID", { style: "currency", currency: "IDR" });
+    return price.toLocaleString("id-ID", {
+      style: "currency",
+      currency: "IDR",
+    });
   };
 
   const [startDate, setSelectedStartDate] = useState(new Date());
@@ -43,28 +63,19 @@ function Detail({ route }) {
       }
     }
   };
-
-  const spec = [
-    {
-      id: 1,
-      type: "Engine Type",
-      value: "Bensin",
-    },
-    {
-      id: 2,
-      type: "Transition",
-      value: "Automatic",
-    },
-    {
-      id: 3,
-      type: "Capacity",
-      value: 7,
-    },
-  ];
+  if (loadingDetail) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" />
+        <Text style={{ marginTop: 16, fontSize: 18 }}>Loading...</Text>
+      </View>
+    );
+  }
+  const spec = detail ? detail.vehicle.Specifications : [];
 
   const RenderSpec = ({ spec }) => {
-    const { type, value } = spec.item;
-    return <CardSpecification type={type} value={value} />;
+    const { name, value } = spec.item;
+    return <CardSpecification name={name} value={value} />;
   };
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
@@ -72,7 +83,11 @@ function Detail({ route }) {
         <View style={styles.container}>
           {/* header */}
           <View style={styles.headerContainer}>
-            <Image source={{ uri: `${vehicle.image}` }} style={styles.imageCover} resizeMode="cover" />
+            <Image
+              source={{ uri: detail ? detail.vehicle.image : "" }}
+              style={styles.imageCover}
+              resizeMode="cover"
+            />
             <View style={styles.headerItems}>
               <Text style={styles.headerTitle}> {name}</Text>
               <View style={[styles.headerItemContainer]}>
@@ -81,11 +96,16 @@ function Detail({ route }) {
               </View>
               <View style={[styles.headerItemContainer, { marginStart: 2 }]}>
                 <AntDesign name="star" size={15} color="#F8B84E" />
-                <Text style={styles.rating}>Rating: 4.5 (1000 Reviews)</Text>
+                <Text style={styles.rating}>
+                  Rating: {detail ? detail.rating : ""} (
+                  {detail ? detail.vehicle.Reviews.length : 0} Reviews)
+                </Text>
               </View>
               <View style={[styles.headerItemContainer, { marginStart: 3 }]}>
                 <MaterialIcons name="category" size={15} color="#9B59B6" />
-                <Text style={styles.headerCategories}>Category: {vehicle.Category.name}</Text>
+                <Text style={styles.headerCategories}>
+                  Category: {detail ? detail.vehicle.Category.name : ""}
+                </Text>
               </View>
             </View>
           </View>
@@ -94,7 +114,13 @@ function Detail({ route }) {
           {/* spec */}
           <View style={styles.itemContainer}>
             <Text style={styles.itemTitle}> Specification</Text>
-            <FlatList data={spec} renderItem={(spec) => <RenderSpec spec={spec} />} keyExtractor={(spec) => spec.id} horizontal={true} showsHorizontalScrollIndicator={false} />
+            <FlatList
+              data={spec}
+              renderItem={(spec) => <RenderSpec spec={spec} />}
+              keyExtractor={(spec) => spec.id}
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}
+            />
           </View>
           {/* end spec */}
 
@@ -104,14 +130,22 @@ function Detail({ route }) {
             <View style={styles.ownerContainer}>
               <View style={styles.ownerItem}>
                 <Image
-                  source={{ uri: "https://media.licdn.com/dms/image/C4E03AQGnouyn_2vSgw/profile-displayphoto-shrink_800_800/0/1646808937817?e=1703116800&v=beta&t=BZT5fOu-gScDu4h9GkegSv74GG0pSt47-0QAZOQHOeE" }}
+                  source={{
+                    uri: "https://media.licdn.com/dms/image/C4E03AQGnouyn_2vSgw/profile-displayphoto-shrink_800_800/0/1646808937817?e=1703116800&v=beta&t=BZT5fOu-gScDu4h9GkegSv74GG0pSt47-0QAZOQHOeE",
+                  }}
                   style={styles.ownerImage}
                 />
-                <Text style={styles.itemTitle}>{vehicle.User.fullName}</Text>
+                <Text style={styles.itemTitle}>
+                  {detail ? detail.vehicle.User.fullName : ""}
+                </Text>
               </View>
               <View style={styles.ownerAction}>
                 <Feather name="phone-call" size={24} color="#17799A" />
-                <Ionicons name="ios-chatbox-ellipses-outline" size={25} color="#17799A" />
+                <Ionicons
+                  name="ios-chatbox-ellipses-outline"
+                  size={25}
+                  color="#17799A"
+                />
               </View>
             </View>
           </View>
@@ -123,7 +157,9 @@ function Detail({ route }) {
               <Text style={styles.itemTitle}> Rent Now</Text>
               <View style={[styles.headerItemContainer]}>
                 <Entypo name="price-tag" size={24} color="#17799A" />
-                <Text style={styles.location}>{fPrice(vehicle.price)}/day</Text>
+                <Text style={styles.location}>
+                  {fPrice(detail ? detail.vehicle.price : "")}/day
+                </Text>
               </View>
             </View>
             <View style={styles.rentContainer}>
@@ -131,13 +167,27 @@ function Detail({ route }) {
                 <Text>Pick-up Date</Text>
                 <View style={styles.rentStartDate}>
                   <AntDesign name="calendar" size={24} color="black" />
-                  <DateTimePicker value={startDate} mode="date" is24Hour={true} display="default" minimumDate={new Date()} onChange={handleStartDateChange} />
+                  <DateTimePicker
+                    value={startDate}
+                    mode="date"
+                    is24Hour={true}
+                    display="default"
+                    minimumDate={new Date()}
+                    onChange={handleStartDateChange}
+                  />
                 </View>
               </View>
               <View style={styles.rentEndContainer}>
                 <Text>Drop-off Date</Text>
                 <View style={styles.rendEndDate}>
-                  <DateTimePicker value={endDate} mode="date" is24Hour={true} display="default" minimumDate={startDate} onChange={handleEndDateChange} />
+                  <DateTimePicker
+                    value={endDate}
+                    mode="date"
+                    is24Hour={true}
+                    display="default"
+                    minimumDate={startDate}
+                    onChange={handleEndDateChange}
+                  />
                   <AntDesign name="calendar" size={24} color="black" />
                 </View>
               </View>

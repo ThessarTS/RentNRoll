@@ -35,6 +35,9 @@ const errorHandler = (error, req, res, next) => {
   } else if (error.name === "same-user") {
     code = 403;
     message = "Cannot order your own vehicle";
+  } else if (error.name == 'amount_blank') {
+    code = 400
+    message = 'Amount required'
   }
 
   res.status(code).json({ message });

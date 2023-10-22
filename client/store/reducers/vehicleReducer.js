@@ -39,25 +39,25 @@ const vehicleReducer = (state = initialState, action) => {
         loading: false,
       };
 
-    case VEHICLE_FETCH_BY_ID_REQUEST:
-      return {
-        ...state,
-        loading: true,
-      };
+    // case VEHICLE_FETCH_BY_ID_REQUEST:
+    //   return {
+    //     ...state,
+    //     loading: true,
+    //   };
 
     case VEHICLE_FETCH_BY_ID_SUCCESS:
       return {
         ...state,
         vehicle: action.payload,
-        loading: false,
+        // loading: false,
       };
 
-    case VEHICLE_FETCH_BY_ID_FAIL:
-      return {
-        ...state,
-        error: action.payload,
-        loading: false,
-      };
+    // case VEHICLE_FETCH_BY_ID_FAIL:
+    //   return {
+    //     ...state,
+    //     error: action.payload,
+    //     loading: false,
+    //   };
 
     case TRENDING_FETCH_REQUEST:
       return {

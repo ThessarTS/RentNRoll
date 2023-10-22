@@ -11,8 +11,8 @@ import {
 } from "./actionType";
 import axios from "axios";
 
-const vehicleBaseURL = "https://a348-114-122-141-190.ngrok-free.app/vehicles/";
-const trendingBaseURL = "https://a348-114-122-141-190.ngrok-free.app/trending/";
+const baseUrl =
+  "https://7ed9-2001-448a-6021-5c1-7d07-8ba0-4ab-1d75.ngrok-free.app";
 
 // FETCH VEHICLES
 export const vehicleFetchRequest = () => {
@@ -31,7 +31,9 @@ export const fetchVehicles = () => {
   return async (dispatch) => {
     dispatch(vehicleFetchRequest());
     try {
-      const { data } = await axios.get(vehicleBaseURL);
+      const { data } = await axios({
+        url: baseUrl + "/vehicles",
+      });
       dispatch(vehicleFetchSuccess(data));
     } catch (error) {
       console.log(error);
@@ -42,26 +44,22 @@ export const fetchVehicles = () => {
 // END FETCH VEHICLES
 
 // FETCH VEHICLE BY ID
-export const vehicleFetchByIdRequest = () => {
-  return { type: VEHICLE_FETCH_BY_ID_REQUEST };
-};
 
-export const vehicleFetchByIdSuccess = (payload) => {
+export const detailFetchSuccess = (payload) => {
   return { type: VEHICLE_FETCH_BY_ID_SUCCESS, payload };
 };
 
-export const vehicleFetchByIdFail = (payload) => {
-  return { type: VEHICLE_FETCH_BY_ID_FAIL, payload };
-};
-
-export const fetchVehicleById = (id) => {
+export const fetchDetail = (id) => {
   return async (dispatch) => {
-    dispatch(vehicleFetchByIdRequest());
     try {
-      const { data } = await axios.get(vehicleBaseURL + id);
-      dispatch(vehicleFetchByIdSuccess(data));
-    } catch (error) {
-      dispatch(vehicleFetchByIdFail(error));
+      const { data } = await axios({
+        url: baseUrl + "/vehicles/" + id,
+        method: "GET",
+      });
+      dispatch(detailFetchSuccess(data));
+    } catch (err) {
+      console.log(err);
+      throw err;
     }
   };
 };
@@ -86,7 +84,9 @@ export const fetchTrending = () => {
   return async (dispatch) => {
     dispatch(trendingFetchRequest());
     try {
-      const { data } = await axios.get(trendingBaseURL);
+      const { data } = await axios({
+        url: baseUrl + "/trending",
+      });
       dispatch(trendingFetchSuccess(data));
     } catch (error) {
       dispatch(trendingFetchFail(error));
