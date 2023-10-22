@@ -52,6 +52,18 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
       },
+      location: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notEmpty: {
+            msg: "Location is required!",
+          },
+          notNull: {
+            msg: "Location is required!",
+          },
+        },
+      },
       UserId: DataTypes.INTEGER,
     },
     {
