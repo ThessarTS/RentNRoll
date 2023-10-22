@@ -11,8 +11,8 @@ import {
 } from "./actionType";
 import axios from "axios";
 
-const vehicleBaseURL = "https://a348-114-122-141-190.ngrok-free.app/vehicles/";
-const trendingBaseURL = "https://a348-114-122-141-190.ngrok-free.app/trending/";
+const vehicleBaseURL = "https://87dd-114-122-169-6.ngrok-free.app/vehicles/";
+const trendingBaseURL = "https://87dd-114-122-169-6.ngrok-free.app/trending/";
 
 // FETCH VEHICLES
 export const vehicleFetchRequest = () => {
