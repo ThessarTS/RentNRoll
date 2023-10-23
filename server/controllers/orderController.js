@@ -161,12 +161,14 @@ class OrderController {
         const vehicleResults = [];
 
         for (const vehicle of mostOrderedVehicles) {
-          const { name, image, price, Reviews, Orders } = vehicle;
+          const { name, image, price, Reviews, Orders, location, id } = vehicle;
           const totalReviews = Reviews.length;
           const averageRating = totalReviews > 0 ? Reviews.reduce((sum, review) => sum + review.rating, 0) / totalReviews : 0;
           const vehicleInfo = {
+            id,
             name,
             image,
+            location,
             price,
             totalReviews,
             averageRating: averageRating.toFixed(1),

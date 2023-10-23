@@ -1,7 +1,7 @@
 import { PROFILES_FETCH_SUCCESS } from "../actions/actionType";
 
 const initialState = {
-  profile: {},
+  profile: null,
 };
 const userReducer = (state = initialState, action) => {
   switch (action.type) {
