@@ -1,5 +1,5 @@
-const { Op } = require("sequelize");
 const { Vehicle, User, Category, Review, Order, UserProfile, Specification } = require("../models/index");
+const redis = require("../helpers/redis");
 
 class VehicleController {
   static async fetchVehicle(req, res, next) {
@@ -27,10 +27,10 @@ class VehicleController {
       }
       const vehicles = await Vehicle.findAll(options);
 
-
       if (vehicles.length == 0) {
-        throw { name: 'not_found' }
+        throw { name: "not_found" };
       }
+      
       let filteredVehicles;
       if (startdate && enddate) {
         filteredVehicles = vehicles.filter(vehicle => {
@@ -47,6 +47,7 @@ class VehicleController {
       } else {
         filteredVehicles = vehicles
       }
+
       const vehicleData = filteredVehicles.map((vehicle) => {
         const { name, image, price, Reviews, Orders, location, id } = vehicle;
         const totalReviews = Reviews.length;
@@ -71,12 +72,30 @@ class VehicleController {
       next(err);
     }
   }
+  static async fetchMyVehicle(req, res, next) {
+    try {
+      let dataVehicle = await redis.get("myVehicleFinalProject:" + req.user.id);
+      if (!dataVehicle) {
+        const vehicle = await Vehicle.findAll({ where: { UserId: req.user.id } });
+        if (!vehicle) {
+          throw { name: "You don't have any vehicle" };
+        }
+        dataVehicle = vehicle;
+      }
+      res.json(dataVehicle);
+    } catch (error) {
+      next(error);
+    }
+  }
   static async fetchLocation(req, res, next) {
     try {
-      const vehicles = await Vehicle.findAll();
-      const locations = [...new Set(vehicles.map((vehicle) => vehicle.location))];
-      console.log(locations);
-      res.status(200).json(locations);
+      let locationsData = await redis.get("locationFinalProject");
+      if (!locationsData) {
+        const vehicles = await Vehicle.findAll();
+        const locations = [...new Set(vehicles.map((vehicle) => vehicle.location))];
+        locationsData = locations;
+      }
+      res.status(200).json(locationsData);
     } catch (error) {
       next(error);
     }
@@ -84,49 +103,55 @@ class VehicleController {
   static async detailVehicle(req, res, next) {
     try {
       const { id } = req.params;
-      let averageRating = 0;
-      const reviews = await Review.findAll({
-        where: {
-          VehicleId: id,
-        },
-      });
-
-      if (reviews.length > 0) {
-        const ratingData = reviews.map((el) => {
-          return el.rating;
+      let detailVehicleData = await redis.get("detailVehicle:" + id);
+      if (!detailVehicleData) {
+        let averageRating = 0;
+        const reviews = await Review.findAll({
+          where: {
+            VehicleId: id,
+          },
         });
-        let average = ratingData.reduce((a, b) => a + b, 0) / ratingData.length;
+        if (reviews.length > 0) {
+          const ratingData = reviews.map((el) => {
+            return el.rating;
+          });
+          let average = ratingData.reduce((a, b) => a + b, 0) / ratingData.length;
 
-        averageRating = average.toFixed(1);
+          averageRating = average.toFixed(1);
+        }
+        const vehicle = await Vehicle.findOne({
+          where: {
+            id,
+          },
+          include: [
+            {
+              model: Category,
+            },
+            {
+              model: User,
+              attributes: { exclude: ["password"] },
+              include: UserProfile,
+            },
+            {
+              model: Order,
+            },
+            {
+              model: Specification,
+            },
+            {
+              model: Review,
+            },
+          ],
+        });
+        if (!vehicle) {
+          throw { name: "not_found" };
+        }
+        detailVehicleData = {
+          vehicle,
+          averageRating,
+        };
       }
-      const vehicle = await Vehicle.findOne({
-        where: {
-          id,
-        },
-        include: [
-          {
-            model: Category,
-          },
-          {
-            model: User,
-            attributes: { exclude: ["password"] },
-            include: UserProfile,
-          },
-          {
-            model: Order,
-          },
-          {
-            model: Specification,
-          },
-          {
-            model: Review,
-          },
-        ],
-      });
-      if (!vehicle) {
-        throw { name: "not_found" };
-      }
-      res.status(200).json({ vehicle, rating: averageRating });
+      res.status(200).json({ vehicle: detailVehicleData.vehicle, rating: detailVehicleData.averageRating });
     } catch (err) {
       next(err);
     }
@@ -134,7 +159,6 @@ class VehicleController {
   static async addVehicle(req, res, next) {
     try {
       const { name, CategoryId, price, location } = req.body;
-
       await Vehicle.create({
         name,
         CategoryId,
@@ -143,6 +167,8 @@ class VehicleController {
         UserId: req.user.id,
         location: location,
       });
+      await redis.del("locationFinalProject");
+      await redis.del("myVehicleFinalProject:" + req.user.id);
       res.status(201).json({ message: "Success Add New Vehicle" });
     } catch (err) {
       console.log(err);
@@ -161,6 +187,9 @@ class VehicleController {
           id,
         },
       });
+      await redis.del("detailVehicle/" + id);
+      await redis.del("locationFinalProject");
+      await redis.del("myVehicleFinalProject:" + req.user.id);
       res.status(200).json({ message: `Success Delete Vehicle With Id ${id}` });
     } catch (err) {
       console.log(err);
@@ -188,6 +217,8 @@ class VehicleController {
         },
         { where: { id } }
       );
+      await redis.del("detailVehicle/" + id);
+      await redis.del("myVehicleFinalProject:" + req.user.id);
       res.status(200).json({ message: "Succes Edit Vehicle" });
     } catch (err) {
       next(err);
@@ -195,8 +226,12 @@ class VehicleController {
   }
   static async getCategories(req, res, next) {
     try {
-      const data = await Category.findAll();
-      res.json(data);
+      let dataCategories = await redis.get("categoryFinalProject");
+      if (!dataCategories) {
+        const data = await Category.findAll();
+        dataCategories = data;
+      }
+      res.json(dataCategories);
     } catch (error) {
       next(error);
     }

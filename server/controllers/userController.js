@@ -1,6 +1,7 @@
 const { comparePassword } = require("../helpers/bcrypt");
 const { signToken } = require("../helpers/jwt");
 const { generateOTP, sendOTPByEmail } = require("../helpers/nodemailer");
+const redis = require("../helpers/redis");
 const { User, UserProfile, Order, Vehicle } = require("../models");
 const { OAuth2Client } = require("google-auth-library");
 class UserController {
@@ -8,6 +9,7 @@ class UserController {
     try {
       const { fullName, email, password, phone } = req.body;
       await User.create({ fullName, email, password, phone });
+      await redis.del("userFinalProject:" + req.user.id);
       res.status(201).json({ message: `Account succesfully created!` });
     } catch (error) {
       console.log(error);
@@ -76,6 +78,7 @@ class UserController {
       if (isCreated) {
         status = 201;
       }
+      await redis.del("userFinalProject:" + req.user.id);
       res.status(status).json({ access_token });
     } catch (error) {
       next(error);
@@ -97,6 +100,7 @@ class UserController {
         simC: req.simC,
         UserId: req.user.id,
       });
+      await redis.del("userFinalProject:" + req.user.id);
       res.status(201).json({ message: `Account profile succesfully created!` });
     } catch (error) {
       next(error);
@@ -104,22 +108,26 @@ class UserController {
   }
   static async getProfile(req, res, next) {
     try {
-      const data = await User.findOne({
-        where: { email: req.user.email },
-        attributes: { exclude: ["password"] },
-        include: [
-          {
-            model: UserProfile,
-          },
-          {
-            model: Order,
-            include: Vehicle,
-          },
-        ],
-      });
-      const totalOrders = data.Orders.length;
-      data.dataValues.totalOrders = totalOrders;
-      res.json(data);
+      let users = await redis.get("userFinalProject:" + req.user.id);
+      if (!users) {
+        const data = await User.findOne({
+          where: { email: req.user.email },
+          attributes: { exclude: ["password"] },
+          include: [
+            {
+              model: UserProfile,
+            },
+            {
+              model: Order,
+              include: Vehicle,
+            },
+          ],
+        });
+        const totalOrders = data.Orders.length;
+        data.dataValues.totalOrders = totalOrders;
+        users = data;
+      }
+      res.json(users);
     } catch (error) {
       console.log(error);
       next(error);
@@ -132,6 +140,7 @@ class UserController {
         throw { name: "KTP is required!" };
       }
       await UserProfile.update({ ktp, simA, simC }, { where: { UserId: req.user.id } });
+      await redis.del("userFinalProject");
       res.json({ message: "Successfully updated!" });
     } catch (error) {
       next(error);
@@ -141,6 +150,7 @@ class UserController {
     try {
       await User.destroy({ where: { id: req.user.id } });
       res.json({ message: "Account successfully deleted!" });
+      await redis.del("userFinalProject:" + req.user.id);
     } catch (error) {
       next(error);
     }

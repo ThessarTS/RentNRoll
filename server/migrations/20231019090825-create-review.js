@@ -23,7 +23,7 @@ module.exports = {
           model: "Vehicles",
           key: "id",
         },
-        onDelete: "CASCADE",
+        onDelete: "SET NULL",
         onUpdate: "CASCADE",
       },
       UserId: {
