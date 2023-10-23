@@ -23,6 +23,8 @@ module.exports = {
           model: "Vehicles",
           key: "id",
         },
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
       },
       UserId: {
         type: Sequelize.INTEGER,
@@ -30,6 +32,8 @@ module.exports = {
           model: "Users",
           key: "id",
         },
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
       },
       createdAt: {
         allowNull: false,
