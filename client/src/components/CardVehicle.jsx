@@ -4,7 +4,6 @@ import { AntDesign } from "@expo/vector-icons";
 
 function CardVehicle({ id, image, name, price, rating, navigation }) {
   const maxLength = 18;
-
   const truncateName = (name) => {
     if (name.length > maxLength) {
       return name.substring(0, maxLength) + "...";
@@ -38,7 +37,7 @@ function CardVehicle({ id, image, name, price, rating, navigation }) {
           <Text style={styles.title}>{truncateName(name)}</Text>
           <Text style={styles.price}>{fPrice(price)}</Text>
           <Text style={styles.rating}>
-            <AntDesign name="star" size={15} color="#F8B84E" />({rating})
+            <AntDesign name="star" size={15} color="#F8B84E" /> {rating}
           </Text>
         </View>
       </View>

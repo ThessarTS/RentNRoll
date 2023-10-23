@@ -20,6 +20,7 @@ import Modal from "react-native-modal";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchProfile,
+  getUser,
   profilesFetchSuccess,
 } from "../../store/actions/userAction";
 import { useFocusEffect } from "@react-navigation/native";

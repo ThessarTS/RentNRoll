@@ -34,7 +34,7 @@ import {
   fetchTrending,
 } from "../../store/actions/vehicleAction";
 import { AntDesign } from "@expo/vector-icons";
-import notFound from "../../assets/image/not-found.jpg";
+// import notFound from "../../assets/image/not-found.jpg";
 import CardOrderHome from "../components/CardOrderHome";
 // import CardOrderHome from "../components/CardOrderHome";
 
@@ -48,10 +48,10 @@ function Home({ navigation }) {
   const categories = useSelector((state) => state.categoryReducer.categories);
   const dispatch = useDispatch();
   const [loadingCategory, setLoadingCategory] = useState(false);
-
   const [search, setSearch] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [filteredData, setFilteredData] = useState(vehicles);
+  const [filteredCategory, setFilteredCategory] = useState(vehicles);
 
   const filterDataByName = (text) => {
     const newData = vehicles.filter((item) => {
@@ -62,6 +62,13 @@ function Home({ navigation }) {
     setFilteredData(newData);
   };
 
+  const filterDataByCategory = (name) => {
+    const dataByCategory = vehicles.filter((item) => {
+      return item.Category.name === name;
+    });
+    setFilteredCategory(dataByCategory);
+    setSearch(true);
+  };
   const toggleSearch = (value) => {
     setSearch(value);
   };
@@ -90,9 +97,7 @@ function Home({ navigation }) {
     dispatch(fetchCategory());
     dispatch(fetchTrending());
   }, []);
-  // console.log(vehicles.item, "<<<<");
 
-  console.log(profile);
   if (loading) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -103,7 +108,8 @@ function Home({ navigation }) {
   }
 
   const RenderModalItems = ({ vehicle }) => {
-    const { image, name, price, averageRating, totalReviews } = vehicle.item;
+    const { image, name, price, averageRating, totalReviews, id } =
+      vehicle.item;
     const goDetail = () => {
       navigation.navigate("detail", {
         name: name,
@@ -176,27 +182,33 @@ function Home({ navigation }) {
     const backgroundColor = getCategoryBackgroundColor(name);
     const image = getCategoryImage(name);
     return (
-      <CardCategory
-        name={name}
-        image={image}
-        backgroundColor={backgroundColor}
-      />
+      <Pressable
+        onPress={() => {
+          filterDataByCategory(name);
+        }}
+      >
+        <CardCategory
+          name={name}
+          image={image}
+          backgroundColor={backgroundColor}
+        />
+      </Pressable>
     );
   };
   const RenderCardVehicle = ({ vehicle }) => {
-    const { name, image, price, rating, id } = vehicle.item;
+    const { name, image, price, averageRating, id } = vehicle.item;
     return (
       <CardVehicle
         name={name}
         image={image}
         price={price}
-        rating={rating}
+        rating={averageRating}
         id={id}
         navigation={navigation}
       />
     );
   };
-  
+
   return (
     <View style={styles.container}>
       <View style={styles.mastheadContainer}>
@@ -226,6 +238,7 @@ function Home({ navigation }) {
               {/* category */}
               <View style={[styles.categoryContainer, styles.shadowProp]}>
                 <Text style={styles.categoryTitle}>Categories</Text>
+
                 <FlatList
                   style={{ marginTop: 10 }}
                   data={categories}
@@ -353,7 +366,10 @@ function Home({ navigation }) {
                   style={{
                     backgroundColor:
                       filteredData.length !== 0 ? "whitesmoke" : "white",
-                    height: filteredData.length !== 0 ? "75%" : "45%",
+                    height:
+                      filteredData.length !== 0 || filteredCategory.length !== 0
+                        ? "75%"
+                        : "45%",
                     padding: 20,
                     paddingVertical: 50,
                     gap: 5,
@@ -365,6 +381,17 @@ function Home({ navigation }) {
                     <FlatList
                       style={{ marginTop: 10 }}
                       data={filteredData}
+                      renderItem={(vehicle) => (
+                        <RenderModalItems vehicle={vehicle} />
+                      )}
+                      keyExtractor={(vehicle) => vehicle.id}
+                      showsHorizontalScrollIndicator={false}
+                    />
+                  ) : filteredCategory.length !== 0 ? (
+                    // Display the FlatList when filteredCategory is not empty
+                    <FlatList
+                      style={{ marginTop: 10 }}
+                      data={filteredCategory}
                       renderItem={(vehicle) => (
                         <RenderModalItems vehicle={vehicle} />
                       )}

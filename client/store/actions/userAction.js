@@ -4,9 +4,10 @@ import {
   TRENDING_FETCH_FAIL,
 } from "./actionType";
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const baseUrl =
-  "https://0dba-2001-448a-6021-5c1-d3d5-fb4c-3050-5644.ngrok-free.app";
+  "https://5a7c-2001-448a-6021-5c1-d3d5-fb4c-3050-5644.ngrok-free.app";
 
 export const registerHandler = (value) => {
   return async () => {
@@ -77,5 +78,41 @@ export const fetchProfile = (value) => {
     }
   };
 };
+
+// export const getUser = () => {
+//   return async (dispatch) => {
+//     console.log("asas");
+//     try {
+//       const newUser = await AsyncStorage.getItem("access_token");
+//       if (!newUser) {
+//         console.log("masuk sini");
+//         throw new Error("userNotFound");
+//       }
+//       const newValue = {
+//         access_token: newUser,
+//       };
+//       console.log(newValue);
+//       console.log("masuk");
+//       // dispatch(fetchProfile(newValue));
+//     } catch (err) {
+//       console.log(err);
+//       throw err;
+//     }
+//   };
+// };
+// async function as() {
+//   try {
+//     const newUser = await AsyncStorage.getItem("access_token");
+//     if (!newUser) {
+//       throw new Error("userNotFound");
+//     }
+//     const newValue = {
+//       access_token: newUser,
+//     };
+//     dispatch(fetchProfile(newValue));
+//   } catch (error) {
+//     await navigation.navigate("loginRegister");
+//   }
+// }
 
 // END FETCH CATEGORIES

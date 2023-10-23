@@ -10,7 +10,7 @@ import {
 import axios from "axios";
 
 const baseUrl =
-  "https://0dba-2001-448a-6021-5c1-d3d5-fb4c-3050-5644.ngrok-free.app";
+  "https://5a7c-2001-448a-6021-5c1-d3d5-fb4c-3050-5644.ngrok-free.app";
 
 // FETCH VEHICLES
 export const vehicleFetchRequest = () => {
@@ -32,7 +32,6 @@ export const fetchVehicles = () => {
       const { data } = await axios({
         url: baseUrl + "/vehicles",
       });
-      console.log(data);
       dispatch(vehicleFetchSuccess(data));
     } catch (error) {
       console.log(error);
@@ -92,5 +91,28 @@ export const fetchTrending = () => {
     }
   };
 };
-
 // END TRENDING
+// ADD VEHICLE
+export const addVehicleSuccess = (payload) => {
+  return { type: ADD_FETCH_SUCCESS, payload };
+};
+
+export const addVehicle = (value, access_token) => {
+  return async (dispatch) => {
+    try {
+      const { data } = await axios({
+        url: baseUrl + "/vehicles",
+        method: "POST",
+        data: value,
+        "Content-Type": "multipart/form-data",
+        headers: {
+          access_token: access_token,
+        },
+      });
+      dispatch(fetchVehicles());
+      return data;
+    } catch (error) {
+      throw error.response.data;
+    }
+  };
+};
