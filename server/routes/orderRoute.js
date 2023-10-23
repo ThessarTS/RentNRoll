@@ -5,7 +5,7 @@ const authentication = require("../middlewares/loginAuthentication");
 
 router.get("/", authentication, OrderController.findAllOrder);
 router.get("/:id", OrderController.findOrderById);
-router.post("/", authentication, OrderController.createOrder);
+router.post("/:VehicleId", authentication, OrderController.createOrder);
 router.patch("/:id", authentication, OrderController.updateOrderStatus);
 router.get("/vehicle/:vehicleid", OrderController.findAllOrderByVehicle);
 
