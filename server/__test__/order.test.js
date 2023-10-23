@@ -62,7 +62,6 @@ beforeAll(async () => {
     },
   });
   access_token = signToken({ id: userToken.id });
-  console.log(access_token);
 });
 
 afterAll(async () => {
@@ -107,6 +106,14 @@ describe("Test get data orders endpoint /orders", () => {
     expect(response.status).toBe(401);
     expect(response.body).toHaveProperty("message", expect.any(String));
   });
+  it("Failed get all orders because order with match user id not found", async function () {
+    let access_token2 = signToken({ id: 5 });
+    const response = await request(app).get("/orders")
+      .set("access_token", access_token2)
+
+    expect(response.status).toBe(404);
+    expect(response.body).toHaveProperty("message", expect.any(String));
+  });
 });
 
 describe("Test get data orders endpoint /orders/:id", () => {
@@ -142,14 +149,10 @@ describe("Test get data orders endpoint /orders/:id", () => {
 describe("Test add orders endpoint /orders", () => {
   it("Successfully add order", async function () {
     const response = await request(app)
-      .post("/orders")
+      .post("/orders/2")
       .send({
-        VehicleId: 2,
-        UserId: 3,
-        startDate: "2023-08-20T15:55:00.375Z",
-        endDate: "2024-11-20T15:55:00.375Z",
-        ownerId: 2,
-        status: "returned",
+        startDate: "2025-01-20T15:55:00.375Z",
+        endDate: "2025-01-21T15:55:00.375Z",
       })
       .set("access_token", access_token);
     expect(response.status).toBe(201);
@@ -157,13 +160,11 @@ describe("Test add orders endpoint /orders", () => {
     expect(response.body).toHaveProperty("message", expect.any(String));
   });
   it("Failed add order without access token", async function () {
-    const response = await request(app).post("/orders").send({
-      VehicleId: 2,
-      UserId: 3,
-      startDate: "2023-08-20T15:55:00.375Z",
-      endDate: "2024-11-20T15:55:00.375Z",
-      ownerId: 2,
-      status: "returned",
+    const response = await request(app).post("/orders/2").send({
+
+      startDate: "2023-01-20T15:55:00.375Z",
+      endDate: "2023-01-21T15:55:00.375Z",
+
     });
     expect(response.status).toBe(401);
     expect(response.body).toBeInstanceOf(Object);
@@ -171,14 +172,10 @@ describe("Test add orders endpoint /orders", () => {
   });
   it("Failed to add order because start date empty", async function () {
     const response = await request(app)
-      .post("/orders")
+      .post("/orders/2")
       .send({
-        VehicleId: 2,
-        UserId: 3,
         startDate: "",
         endDate: "2024-11-20T15:55:00.375Z",
-        ownerId: 2,
-        status: "returned",
       })
       .set("access_token", access_token);
     expect(response.status).toBe(400);
@@ -187,27 +184,20 @@ describe("Test add orders endpoint /orders", () => {
   });
   it("Failed to add order because end date empty", async function () {
     const response = await request(app)
-      .post("/orders")
+      .post("/orders/2")
       .send({
-        VehicleId: 2,
-        UserId: 3,
         startDate: "2023-08-20T15:55:00.375Z",
         endDate: "",
-        ownerId: 2,
-        status: "returned",
       })
       .set("access_token", access_token);
     expect(response.status).toBe(400);
     expect(response.body).toBeInstanceOf(Object);
     expect(response.body).toHaveProperty("message", expect.any(String));
   });
-  it("Failed to add order because vehicleid empty", async function () {
-    const response = await request(app).post("/orders").send({
-      VehicleId: 200,
-      UserId: 3,
+  it("Failed to add order because vehicle not found", async function () {
+    const response = await request(app).post("/orders/200").send({
       startDate: "2023-08-20T15:55:00.375Z",
       endDate: "2024-11-20T15:55:00.375Z",
-      status: "returned",
     })
       .set("access_token", access_token);
     expect(response.status).toBe(404);
@@ -215,12 +205,9 @@ describe("Test add orders endpoint /orders", () => {
     expect(response.body).toHaveProperty("message", expect.any(String));
   });
   it("Failed to add order because order self-own vehicle", async function () {
-    const response = await request(app).post("/orders").send({
-      VehicleId: 5,
-      UserId: 3,
-      startDate: "2023-08-20T15:55:00.375Z",
-      endDate: "2024-11-20T15:55:00.375Z",
-      status: "returned",
+    const response = await request(app).post("/orders/5").send({
+      startDate: "2025-01-20T15:55:00.375Z",
+      endDate: "2025-01-21T15:55:00.375Z",
     })
       .set("access_token", access_token);
     expect(response.status).toBe(403);
@@ -284,7 +271,7 @@ describe("Test get order by vehicle id endpoint /orders/vehicle/:vehicleId", () 
       .get("/orders/vehicle/3")
       .set("access_token", access_token);
     expect(response.status).toBe(200);
-    expect(response.body).toBeInstanceOf(Object);
+    expect(response.body).toBeInstanceOf(Array);
     // expect(response.body).toHaveProperty("message", expect.any(String));
   });
   it("Failed get order by vehicle id without access token", async function () {
@@ -303,11 +290,29 @@ describe("Test get order by vehicle id endpoint /orders/vehicle/:vehicleId", () 
   });
 });
 
-describe("Test get trending endpoint /trending", () => {
+describe("GET trending vehicle based on order /trending", () => {
   it("Successfully get order by vehicle id", async function () {
     const response = await request(app).get("/trending");
     expect(response.status).toBe(200);
     expect(response.body).toBeInstanceOf(Array);
+  });
+  it("GET failed fetch trending because not found vehicle with status returned /trending", async function () {
+    await sequelize.queryInterface.bulkDelete("Orders", null, {
+      truncate: true,
+      cascade: true,
+      restartIdentity: true,
+    });
+    let dataOrder2 = require("../data/orders.json");
+    dataOrder2.forEach((el) => {
+      el.createdAt = el.updatedAt = new Date()
+      el.status = 'ongoing'
+    });
+    await sequelize.queryInterface.bulkInsert("Orders", dataOrder2);
+
+    const response = await request(app).get("/trending");
+    expect(response.status).toBe(404);
+    expect(response.body).toBeInstanceOf(Object);
+    expect(response.body).toHaveProperty('message', 'No vehicle with status returned');
   });
 });
 
@@ -327,5 +332,14 @@ describe("Test midtrans token end point /midtrans-token/:orderId", () => {
       .set("access_token", access_token);
     expect(response.status).toBe(404);
     expect(response.body).toBeInstanceOf(Object)
+    expect(response.body).toHaveProperty('message', 'Not Found')
+  });
+  it("should responds with 400 with body message", async function () {
+    const response = await request(app)
+      .post("/midtrans-token/1")
+      .set("access_token", access_token);
+    expect(response.status).toBe(400);
+    expect(response.body).toBeInstanceOf(Object)
+    expect(response.body).toHaveProperty('message', 'Amount required')
   });
 });

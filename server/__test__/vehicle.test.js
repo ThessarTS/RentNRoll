@@ -97,8 +97,8 @@ describe("Test get data Vehicle endpoint /vehicles", () => {
     expect(response.body[0]).toHaveProperty('totalOrders', expect.any(Number));
   });
   it("fetch vehicles using query startdate and enddate /vehicles", async function () {
-    let startdate = new Date('2023-09-01')
-    let enddate = new Date('2023-09-03')
+    let startdate = new Date('2025-09-01')
+    let enddate = new Date('2025-09-03')
     const response = await request(app)
       .get(`/vehicles?startdate=${startdate}&enddate=${enddate}`)
 
@@ -112,6 +112,18 @@ describe("Test get data Vehicle endpoint /vehicles", () => {
     let enddate = new Date('2023-01-03')
     const response = await request(app)
       .get(`/vehicles?location=Papua&startdate=${startdate}&enddate=${enddate}`)
+
+    expect(response.status).toBe(404);
+    expect(response.body).toBeInstanceOf(Object);
+    expect(response.body).toHaveProperty('message', 'Not Found');
+  });
+
+  it("failed fetch using query filter parameters because date match with booking/vehicles", async function () {
+
+    let startdate = new Date('2023-10-02')
+    let enddate = new Date('2023-11-03')
+    const response = await request(app)
+      .get(`/vehicles?location=Jakarata&startdate=${startdate}&enddate=${enddate}`)
 
     expect(response.status).toBe(404);
     expect(response.body).toBeInstanceOf(Object);
@@ -154,7 +166,6 @@ describe("Test add vehicle endpoint /vehicles method POST", () => {
       .field('location', 'Bandung')
       .attach('image', './data/testingImage.png')
 
-    expect(response.status).toBe(201);
     expect(response.status).toBe(201);
     expect(response.body).toBeInstanceOf(Object);
     expect(response.body).toHaveProperty("message", "Success Add New Vehicle");
@@ -227,4 +238,50 @@ describe("Test delete vehicle endpoint /vehicles/:id", () => {
     expect(response.body).toBeInstanceOf(Object);
     expect(response.body).toHaveProperty("message", "Not Found");
   });
+});
+
+
+describe("PUT edit vehicle endpoint /vehicles/:id", () => {
+  it("Successfully edit vehicle", async function () {
+    const response = await request(app)
+      .put("/vehicles/3")
+      .set("access_token", access_token)
+      .field('name', 'Toyota Rush')
+      .field('CategoryId', '1')
+      .field('price', '270000')
+      .field('location', 'Bandung')
+      .attach('image', './data/testingImage.png')
+
+    expect(response.status).toBe(200);
+    expect(response.body).toBeInstanceOf(Object);
+    expect(response.body).toHaveProperty("message", "Success Edit Vehicle");
+  }, 10000);
+
+  it("Failed edit vehicle because cannot found vehicle", async function () {
+    const response = await request(app)
+      .put("/vehicles/200")
+      .set("access_token", access_token)
+      .field('name', 'test')
+      .field('CategoryId', '1')
+      .field('price', '270000')
+      .field('location', 'Bandung')
+      .attach('image', './data/testingImage.png')
+
+    expect(response.status).toBe(404);
+    expect(response.body).toBeInstanceOf(Object);
+    expect(response.body).toHaveProperty("message", "Not Found");
+  }, 7000);
+
+});
+
+
+describe("GET all categories /categories/:id", () => {
+  it("Successfully get all categories", async function () {
+    const response = await request(app)
+      .get("/categories")
+
+    expect(response.status).toBe(200);
+    expect(response.body).toBeInstanceOf(Array);
+  });
+
 });

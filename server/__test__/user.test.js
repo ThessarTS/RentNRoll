@@ -514,68 +514,61 @@ describe("POST users profile /profiles", function () {
     expect(response.body).toBeInstanceOf(Object);
     expect(response.body).toHaveProperty("message", "KTP is required!");
   }, 7000);
+  it("should responds with 400 and body object with message", async function () {
+    const response = await request(app)
+      .post("/profiles")
+      .set("access_token", access_token)
+      .attach('ktp', './data/testingImage.png')
+      .attach('simA', './data/testingImage.png')
+      .attach('simC', './data/testingImage.png')
+
+    expect(response.status).toEqual(400);
+    expect(response.body).toBeInstanceOf(Object);
+    expect(response.body).toHaveProperty("message", "Profile Picture is required!");
+  }, 7000);
 });
 
-// describe("PUT users profile /profiles", function () {
-//   it("should responds with 200 and body message", async function () {
-//     const response = await request(app)
-//       .put("/profiles")
-//       .set("access_token", access_token)
-//       .send({
-//         ktp: "url_ktp",
-//         simA: "url_sim_A",
-//         simC: "url_sim_C",
-//       });
-//     expect(response.status).toEqual(200);
-//     expect(response.body).toBeInstanceOf(Object);
-//     expect(response.body).toHaveProperty("message", expect.any(String));
-//   });
+describe("PUT users profile /profiles", function () {
+  it("should responds with 200 and body message", async function () {
+    const response = await request(app)
+      .put("/profiles")
+      .set("access_token", access_token)
+      .attach('ktp', './data/testingImage.png')
+      .attach('simA', './data/testingImage.png')
+      .attach('simC', './data/testingImage.png')
+      .attach('profilePicture', './data/testingImage.png')
 
-//   it("should responds with 401 and body object with message", async function () {
-//     const response = await request(app).put("/profiles");
+    expect(response.status).toEqual(200);
+    expect(response.body).toBeInstanceOf(Object);
+    expect(response.body).toHaveProperty("message", "Successfully updated!");
+  }, 8000);
 
-//     expect(response.status).toEqual(401);
-//     expect(response.body).toBeInstanceOf(Object);
-//     expect(response.body).toHaveProperty("message", "Invalid Token");
-//   });
+  it("should responds with 400 and body object with message", async function () {
+    const response = await request(app)
+      .put("/profiles")
+      .set("access_token", access_token)
+      .attach('simA', './data/testingImage.png')
+      .attach('simC', './data/testingImage.png')
+      .attach('profilePicture', './data/testingImage.png')
 
-//   it("should responds with 401 and body object with message", async function () {
-//     const response = await request(app)
-//       .put("/profiles")
-//       .set("access_token", "randomstring");
+    expect(response.status).toEqual(400);
+    expect(response.body).toBeInstanceOf(Object);
+    expect(response.body).toHaveProperty("message", "KTP is required!");
+  }, 8000);
 
-//     expect(response.status).toEqual(401);
-//     expect(response.body).toBeInstanceOf(Object);
-//     expect(response.body).toHaveProperty("message", "Invalid Token");
-//   });
+  it("should responds with 400 and body object with message", async function () {
+    const response = await request(app)
+      .put("/profiles")
+      .set("access_token", access_token)
+      .attach('ktp', './data/testingImage.png')
+      .attach('simA', './data/testingImage.png')
+      .attach('simC', './data/testingImage.png')
 
-//   it("should responds with 400 and body object with message", async function () {
-//     const response = await request(app)
-//       .put("/profiles")
-//       .set("access_token", access_token)
-//       .send({
-//         simA: "url_sim_A",
-//       });
-
-//     expect(response.status).toEqual(400);
-//     expect(response.body).toBeInstanceOf(Object);
-//     expect(response.body).toHaveProperty("message", "KTP is required!");
-//   });
-
-//   it("should responds with 400 and body object with message", async function () {
-//     const response = await request(app)
-//       .put("/profiles")
-//       .set("access_token", access_token)
-//       .send({
-//         ktp: "",
-//         simA: "url_sim_A",
-//       });
-
-//     expect(response.status).toEqual(400);
-//     expect(response.body).toBeInstanceOf(Object);
-//     expect(response.body).toHaveProperty("message", "KTP is required!");
-//   });
-// });
+    expect(response.status).toEqual(400);
+    expect(response.body).toBeInstanceOf(Object);
+    expect(response.body).toHaveProperty("message", "Profile Picture is required!");
+  }, 8000);
+});
 
 describe("DELETE users profile /profiles", function () {
   it("should responds with 200 and body message", async function () {
@@ -605,3 +598,18 @@ describe("DELETE users profile /profiles", function () {
     expect(response.body).toHaveProperty("message", "Invalid Token");
   });
 });
+
+
+// describe("POST login with google account /google-login", function () {
+//   it.only("should responds with 200 and body message", async function () {
+//     const response = await request(app)
+//       .post("/google-login")
+//       .set("google_token", "eyJhbGciOiJSUzI1NiIsImtpZCI6IjdkMzM0NDk3NTA2YWNiNzRjZGVlZGFhNjYxODRkMTU1NDdmODM2OTMiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiI0MDc0MDg3MTgxOTIuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiI0MDc0MDg3MTgxOTIuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMTM5NDkxNjI2NTI5ODA1MDg5MDAiLCJlbWFpbCI6InRoZXNzYXJ0c0BnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiYXRfaGFzaCI6Im1RbjhtbU1mZkVfb3RRNkdXcERTWlEiLCJuYW1lIjoiVGhlc3NhciBUUyIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NLUVhUS0tqN05kaXIzcm9YLUFOMTI0d182Tk5DM2Z1cW9TYmd4ZVdWR3lIUT1zOTYtYyIsImdpdmVuX25hbWUiOiJUaGVzc2FyIiwiZmFtaWx5X25hbWUiOiJUUyIsImxvY2FsZSI6ImVuIiwiaWF0IjoxNjk4MDgyNjM0LCJleHAiOjE2OTgwODYyMzR9.QayTBxJ9whXG5q27ARj5q49qv4lQjjaL7xa5OuTyJUKVCcJMYviTpizsQt8Xpf5PqarzWTXI_zcv6K3REAu7YJvnL5fJcPzn9oltj_JGUtfj192knZaTWe3_-oMAGyoSuk9ho55SfDHHsfM2aPQsXlc1QlRdzFsavIcc8U5n1BOQ2r0L8o0bAyqoy1Kr0w5MKNPabwBahfVyiHtY2CGgrVoVFzaOVMfqsZwr9l2AkaSrrzTT86S7HLYgCfsW83qx8rfCG7weTlgaP0_-YAOrIQDe-7RN_oUohDlzTqAmQ5Dorm1m18n8_VO0gW2amawPZVMDI5dYUN623AwOfHL0Xg");
+//     expect(response.status).toEqual(200);
+//     expect(response.body).toBeInstanceOf(Object);
+//     expect(response.body).toHaveProperty("access_token", expect.any(String));
+//   });
+
+
+// });
+// // ya29.a0AfB_byDF-eLc7QzybkL56UzYLYHuPNoQJXjNmR2t0dOYTOAwpXyPww6xKSx3t6hHIu18CyF5MDLjXt9RCZMuX6aPGZwvPn0IBuBTtSOj5gtG6Sc1KPjScNZ7Ampnd_TtDwyNzyeUA9PHCA0lmVtiPuOY0qtebGvKmF7UaCgYKAQcSARASFQGOcNnCTds9ZxKIZhPVtWoQCM_u8g0171

@@ -6,6 +6,6 @@ const uploadMulti = require("../middlewares/uploadImage");
 router.get("/", authentication, UserController.getProfile);
 router.post("/", authentication, uploadMulti(["profilePicture", "ktp", "simA", "simC"]), UserController.createProfile);
 router.delete("/", authentication, UserController.deleteUser);
-router.put("/", authentication, UserController.editProfile);
+router.put("/", authentication, uploadMulti(["profilePicture", "ktp", "simA", "simC"]), UserController.editProfile);
 
 module.exports = router;
