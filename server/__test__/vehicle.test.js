@@ -11,6 +11,14 @@ const app = require("../app");
 const { sequelize, Vehicle, User } = require("../models/index");
 const { hashPassword } = require("../helpers/bcrypt");
 const { signToken } = require("../helpers/jwt");
+
+const Redis = require("ioredis");
+const redis = new Redis({
+  port: 15470,
+  host: process.env.REDIS_HOST,
+  password: process.env.REDIS_PASSWORD,
+});
+
 let access_token;
 beforeAll(async () => {
   let dataUsers = require("../data/users.json");
@@ -99,16 +107,11 @@ describe("Test get data Vehicle endpoint /vehicles", () => {
 
   });
   it("failed fetch using query filter parameters because cannot find result /vehicles", async function () {
-    await sequelize.queryInterface.bulkDelete("Vehicles", null, {
-      truncate: true,
-      cascade: true,
-      restartIdentity: true,
-    })
 
     let startdate = new Date('2023-01-02')
     let enddate = new Date('2023-01-03')
     const response = await request(app)
-      .get(`/vehicles?location=Jakarta&startdate=${startdate}&enddate=${enddate}`)
+      .get(`/vehicles?location=Papua&startdate=${startdate}&enddate=${enddate}`)
 
     expect(response.status).toBe(404);
     expect(response.body).toBeInstanceOf(Object);

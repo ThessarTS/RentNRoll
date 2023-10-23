@@ -9,7 +9,6 @@ class UserController {
     try {
       const { fullName, email, password, phone } = req.body;
       await User.create({ fullName, email, password, phone });
-      await redis.del("userFinalProject:" + req.user.id);
       res.status(201).json({ message: `Account succesfully created!` });
     } catch (error) {
       console.log(error);
@@ -86,7 +85,7 @@ class UserController {
   }
   static async createProfile(req, res, next) {
     try {
-      console.log(req.ktp, '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<><><><>');
+
       if (!req.profilePicture) {
         throw { name: 'Profile Picture is required!' }
       }
