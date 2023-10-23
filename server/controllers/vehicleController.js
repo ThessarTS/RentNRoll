@@ -4,7 +4,7 @@ const redis = require("../helpers/redis");
 class VehicleController {
   static async fetchVehicle(req, res, next) {
     try {
-      const { location, startdate, enddate } = req.query
+      const { location, startdate, enddate } = req.query;
       let options = {
         include: [
           {
@@ -21,9 +21,9 @@ class VehicleController {
             model: Review,
           },
         ],
-      }
+      };
       if (location) {
-        options.where = { location }
+        options.where = { location };
       }
       const vehicles = await Vehicle.findAll(options);
 
@@ -33,19 +33,19 @@ class VehicleController {
 
       let filteredVehicles;
       if (startdate && enddate) {
-        filteredVehicles = vehicles.filter(vehicle => {
-          let isNotIncluded = true
-          vehicle.Orders.forEach(el => {
+        filteredVehicles = vehicles.filter((vehicle) => {
+          let isNotIncluded = true;
+          vehicle.Orders.forEach((el) => {
             if (startdate < el.endDate && enddate > el.startDate) {
-              isNotIncluded = false
+              isNotIncluded = false;
             }
-          })
+          });
           if (isNotIncluded) {
-            return vehicle
+            return vehicle;
           }
-        })
+        });
       } else {
-        filteredVehicles = vehicles
+        filteredVehicles = vehicles;
       }
 
       const vehicleData = filteredVehicles.map((vehicle) => {
@@ -158,17 +158,24 @@ class VehicleController {
   }
   static async addVehicle(req, res, next) {
     try {
-      const { name, CategoryId, price, location } = req.body;
-      await Vehicle.create({
-        name,
-        CategoryId,
-        price,
-        image: req.image,
-        UserId: req.user.id,
-        location: location,
+      const result = await sequelize.transaction(async (t) => {
+        const { name, CategoryId, price, location, specificationName, value } = req.body;
+        const vehicle = await Vehicle.create(
+          {
+            name,
+            CategoryId,
+            price,
+            image: req.image,
+            UserId: req.user.id,
+            location,
+          },
+          { transaction: t }
+        );
+        // await vehicle.Specification.bulkCreate({ name: specificationName, value }, { transaction: t });
+        await redis.del("locationFinalProject");
+        await redis.del("myVehicleFinalProject:" + req.user.id);
+        return result;
       });
-      await redis.del("locationFinalProject");
-      await redis.del("myVehicleFinalProject:" + req.user.id);
       res.status(201).json({ message: "Success Add New Vehicle" });
     } catch (err) {
       console.log(err);

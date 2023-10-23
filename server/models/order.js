@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       status: {
         type: DataTypes.ENUM,
-        values: ["accepted", "ongoing", "available", "returned"],
+        values: ["pending", "ongoing", "payment", "returned"],
       },
       VehicleId: DataTypes.INTEGER,
       UserId: DataTypes.INTEGER,
