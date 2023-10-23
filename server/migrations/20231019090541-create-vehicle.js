@@ -41,6 +41,10 @@ module.exports = {
         onDelete: "SET NULL",
         onUpdate: "CASCADE",
       },
+      status: {
+        type: Sequelize.ENUM,
+        values: ["on rent", "available"],
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
