@@ -7,33 +7,33 @@ const totalDayConverter = require("../helpers/totalDayConverter");
 class OrderController {
     static async findAllOrder(req, res, next) {
         try {
-            let userOrders = await redis.get("userOrderFinalProject:" + req.user.id);
-            if (!userOrders) {
-                let orders = await Order.findAll({
-                    where: {
-                        UserId: req.user.id,
+            // let userOrders = await redis.get("userOrderFinalProject:" + req.user.id);
+            // if (!userOrders) {
+            let orders = await Order.findAll({
+                where: {
+                    UserId: req.user.id,
+                },
+                include: [
+                    {
+                        model: Vehicle,
+                        include: [
+                            {
+                                model: User,
+                                attributes: { exclude: ["password"] },
+                            },
+                        ],
                     },
-                    include: [
-                        {
-                            model: Vehicle,
-                            include: [
-                                {
-                                    model: User,
-                                    attributes: { exclude: ["password"] },
-                                },
-                            ],
-                        },
-                        {
-                            model: User,
-                            attributes: { exclude: ["password"] },
-                        },
-                    ],
-                });
-                if (orders.length == 0) {
-                    throw { name: 'not_found' }
-                }
-                userOrders = orders;
+                    {
+                        model: User,
+                        attributes: { exclude: ["password"] },
+                    },
+                ],
+            });
+            if (orders.length == 0) {
+                throw { name: 'not_found' }
             }
+            let userOrders = orders;
+            // }
             res.json(userOrders);
         } catch (error) {
             next(error);
@@ -43,33 +43,35 @@ class OrderController {
     static async findOrderById(req, res, next) {
         try {
             const { id } = req.params;
-            let dataOrder = await redis.get("orderDetailFinalProject:" + id);
-            if (!dataOrder) {
-                let order = await Order.findOne({
-                    where: {
-                        id,
+            // let dataOrder = await redis.get("orderDetailFinalProject:" + id);
+            // if (!dataOrder) {
+            let order = await Order.findOne({
+                where: {
+                    id,
+                },
+                include: [
+                    {
+                        model: Vehicle,
+                        include: [
+                            {
+                                model: User,
+                                attributes: { exclude: ["password"] },
+                            },
+                        ],
                     },
-                    include: [
-                        {
-                            model: Vehicle,
-                            include: [
-                                {
-                                    model: User,
-                                    attributes: { exclude: ["password"] },
-                                },
-                            ],
-                        },
-                        {
-                            model: User,
-                            attributes: { exclude: ["password"] },
-                        },
-                    ],
-                });
-                if (!order) {
-                    throw { name: "not_found" };
-                }
-                dataOrder = order;
+                    {
+                        model: User,
+                        attributes: { exclude: ["password"] },
+                    },
+                ],
+            });
+            if (!order) {
+                throw { name: "not_found" };
             }
+            let dataOrder = order;
+            // } else {
+            //     dataOrder = JSON.parse(dataOrder)
+            // }
             res.json(dataOrder);
         } catch (error) {
             next(error);
@@ -136,87 +138,91 @@ class OrderController {
 
     static async findAllOrderByVehicle(req, res, next) {
         try {
-            const { VehicleId } = req.params;
-            let dataOrder = await redis.get("vehicleOrderFinalProject");
-            if (!dataOrder) {
-                let vehicle = await Vehicle.findByPk(VehicleId);
+            const { vehicleid } = req.params;
+            // let dataOrder = await redis.get(`order/vehicle/${vehicleid}`)
+            // if (!dataOrder) {
+            let vehicle = await Vehicle.findByPk(vehicleid);
 
-                if (!vehicle) {
-                    throw { name: "not_found" };
-                }
-
-                let orders = await Order.findAll({
-                    where: {
-                        VehicleId: req.params.vehicleid,
-                    },
-                    include: [
-                        {
-                            model: Vehicle,
-                            include: [
-                                {
-                                    model: User,
-                                    attributes: { exclude: ["password"] },
-                                },
-                            ],
-                        },
-                        {
-                            model: User,
-                            attributes: { exclude: ["password"] },
-                        },
-                    ],
-                });
-                dataOrder = orders;
+            if (!vehicle) {
+                throw { name: "not_found" };
             }
+
+            let orders = await Order.findAll({
+                where: {
+                    VehicleId: req.params.vehicleid,
+                },
+                include: [
+                    {
+                        model: Vehicle,
+                        include: [
+                            {
+                                model: User,
+                                attributes: { exclude: ["password"] },
+                            },
+                        ],
+                    },
+                    {
+                        model: User,
+                        attributes: { exclude: ["password"] },
+                    },
+                ],
+            });
+            let dataOrder = orders;
+            // await redis.set(`order/vehicle/${vehicleid}`, JSON.stringify(orders))
+            // } else {
+            //     dataOrder = JSON.parse(dataOrder)
+            // }
             res.json(dataOrder);
         } catch (error) {
+            console.log(error);
             next(error);
         }
     }
 
     static async fetchTrending(req, res, next) {
         try {
-            let trendingData = await redis.get("trendingDataFinalProject");
-            if (!trendingData) {
-                let results = await Order.findAll({
-                    attributes: ["VehicleId", [Sequelize.fn("COUNT", "VehicleId"), "orderCount"]],
-                    where: { status: "returned" },
-                    group: ["VehicleId"],
-                    order: [[Sequelize.fn("COUNT", "VehicleId"), "DESC"]],
-                    limit: 7,
+            let trendingData //= await redis.get("trendingDataFinalProject");
+            // if (!trendingData) {
+            let results = await Order.findAll({
+                attributes: ["VehicleId", [Sequelize.fn("COUNT", "VehicleId"), "orderCount"]],
+                where: { status: "returned" },
+                group: ["VehicleId"],
+                order: [[Sequelize.fn("COUNT", "VehicleId"), "DESC"]],
+                limit: 7,
+            });
+
+            if (results.length > 0) {
+                let mostOrderedVehicleIds = results.map((result) => result.getDataValue("VehicleId"));
+                let mostOrderedVehicles = await Vehicle.findAll({
+                    where: { id: mostOrderedVehicleIds },
+                    include: [Review, Order],
                 });
 
-                if (results.length > 0) {
-                    let mostOrderedVehicleIds = results.map((result) => result.getDataValue("VehicleId"));
-                    let mostOrderedVehicles = await Vehicle.findAll({
-                        where: { id: mostOrderedVehicleIds },
-                        include: [Review, Order],
-                    });
+                let vehicleResults = [];
 
-                    let vehicleResults = [];
-
-                    for (let vehicle of mostOrderedVehicles) {
-                        let { name, image, price, Reviews, Orders, location, id } = vehicle;
-                        let totalReviews = Reviews.length;
-                        let averageRating = totalReviews > 0 ? Reviews.reduce((sum, review) => sum + review.rating, 0) / totalReviews : 0;
-                        let vehicleInfo = {
-                            id,
-                            name,
-                            image,
-                            location,
-                            price,
-                            totalReviews,
-                            averageRating: averageRating.toFixed(1),
-                            totalOrders: Orders.length,
-                            Order: Orders,
-                        };
-                        vehicleResults.push(vehicleInfo);
-                    }
-                    trendingData = vehicleResults;
+                for (let vehicle of mostOrderedVehicles) {
+                    let { name, image, price, Reviews, Orders, location, id } = vehicle;
+                    let totalReviews = Reviews.length;
+                    let averageRating = totalReviews > 0 ? Reviews.reduce((sum, review) => sum + review.rating, 0) / totalReviews : 0;
+                    let vehicleInfo = {
+                        id,
+                        name,
+                        image,
+                        location,
+                        price,
+                        totalReviews,
+                        averageRating: averageRating.toFixed(1),
+                        totalOrders: Orders.length,
+                        Order: Orders,
+                    };
+                    vehicleResults.push(vehicleInfo);
                 }
-                res.json(trendingData);
+                trendingData = vehicleResults;
             } else {
                 throw { name: "No vehicle with status returned" };
             }
+            res.json(trendingData);
+
         } catch (error) {
             next(error);
         }
@@ -228,7 +234,7 @@ class OrderController {
             if (!findOrder) {
                 throw { name: "not_found" };
             }
-            if (!req.body) {
+            if (!req.body.amount) {
                 throw { name: "amount_blank" };
             }
             let snap = new midtransClient.Snap({

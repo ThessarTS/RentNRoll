@@ -11,7 +11,7 @@ const OrderController = require("../controllers/orderController");
 router.post("/register", UserController.register);
 router.post("/otp", UserController.getOTP);
 router.post("/login", UserController.login);
-router.post("/google-login", UserController.gLogin);
+// router.post("/google-login", UserController.gLogin);
 
 router.get("/trending", OrderController.fetchTrending);
 router.get("/categories", VehicleController.getCategories);

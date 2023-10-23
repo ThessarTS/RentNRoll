@@ -41,6 +41,9 @@ const errorHandler = (error, req, res, next) => {
   } else if (error.name == 'amount_blank') {
     code = 400
     message = 'Amount required'
+  } else if (error.name == "Profile Picture is required!") {
+    code = 400
+    message = error.name
   }
 
   res.status(code).json({ message });

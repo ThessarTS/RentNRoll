@@ -7,13 +7,12 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// Create a combined middleware function
 const uploadMulti = (fields) => {
   const storage = multer.memoryStorage();
   const upload = multer({
     storage: storage,
     limits: {
-      fileSize: 1024 * 1024 * 10, // Adjust the file size limit as needed
+      fileSize: 1024 * 1024 * 10,
     },
     fileFilter: (req, file, cb) => {
       if (file.mimetype.startsWith("image/")) {
@@ -65,13 +64,13 @@ const uploadMulti = (fields) => {
   };
 };
 
-// Function to upload to Cloudinary
+
 const uploadToCloudinary = (buffer, originalname) => {
   return new Promise((resolve, reject) => {
     cloudinary.uploader
       .upload_stream(
         {
-          resource_type: "auto",
+          resource_type: "raw",
           public_id: originalname,
         },
         (error, result) => {

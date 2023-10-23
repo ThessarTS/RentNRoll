@@ -50,42 +50,43 @@ class UserController {
       next(err);
     }
   }
-  static async gLogin(req, res, next) {
-    try {
-      const { google_token } = req.headers;
-      const client = new OAuth2Client();
-      const ticket = await client.verifyIdToken({
-        idToken: google_token,
-        audience: process.env.GOOGLE_CLIENT_ID,
-      });
-      const payload = ticket.getPayload();
-      const [user, isCreated] = await User.findOrCreate({
-        where: {
-          email: payload.email,
-        },
-        defaults: {
-          fullName: payload.name,
-          email: payload.email,
-          password: "iniRandomAja",
-        },
-        hooks: false,
-      });
-      const access_token = signToken({
-        id: user.id,
-      });
-      let status = 200;
-      if (isCreated) {
-        status = 201;
-      }
-      await redis.del("userFinalProject:" + req.user.id);
-      res.status(status).json({ access_token });
-    } catch (error) {
-      next(error);
-    }
-  }
+  // static async gLogin(req, res, next) {
+  //   try {
+  //     const { google_token } = req.headers;
+  //     const client = new OAuth2Client();
+  //     const ticket = await client.verifyIdToken({
+  //       idToken: google_token,
+  //       audience: process.env.GOOGLE_CLIENT_ID,
+  //     });
+  //     const payload = ticket.getPayload();
+  //     const [user, isCreated] = await User.findOrCreate({
+  //       where: {
+  //         email: payload.email,
+  //       },
+  //       defaults: {
+  //         fullName: payload.name,
+  //         email: payload.email,
+  //         password: "iniRandomAja",
+  //       },
+  //       hooks: false,
+  //     });
+  //     const access_token = signToken({
+  //       id: user.id,
+  //     });
+  //     let status = 200;
+  //     if (isCreated) {
+  //       status = 201;
+  //     }
+  //     // await redis.del("userFinalProject:" + req.user.id);
+  //     res.status(status).json({ access_token });
+  //   } catch (error) {
+  //     console.log(error);
+  //     next(error);
+  //   }
+  // }
   static async createProfile(req, res, next) {
     try {
-      
+
       if (!req.profilePicture) {
         throw { name: "Profile Picture is required!" };
       }
@@ -137,9 +138,12 @@ class UserController {
   }
   static async editProfile(req, res, next) {
     try {
-      const { ktp, simA, simC } = req.body;
+      const { ktp, simA, simC, profilePicture } = req;
       if (!ktp) {
         throw { name: "KTP is required!" };
+      }
+      if (!profilePicture) {
+        throw { name: "Profile Picture is required!" };
       }
       await UserProfile.update({ ktp, simA, simC }, { where: { UserId: req.user.id } });
       await redis.del("userFinalProject");

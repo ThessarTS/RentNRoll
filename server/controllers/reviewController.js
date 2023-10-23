@@ -3,14 +3,17 @@ const { Review, Vehicle } = require("../models");
 class ReviewController {
   static async getReviewUser(req, res, next) {
     try {
-      let reviewUser = await redis.get("reviewUserFinalProject:" + req.user.id);
-      if (!reviewUser) {
-        const data = await Review.findAll({
-          where: { UserId: req.user.id },
-          include: [Vehicle],
-        });
-        reviewUser = data;
-      }
+      // let reviewUser = await redis.get(`reviewUserFinalProject:${req.user.id}`);
+      // if (!reviewUser) {
+      const data = await Review.findAll({
+        where: { UserId: req.user.id },
+        include: [Vehicle],
+      });
+      let reviewUser = data;
+      // await redis.set(`reviewUserFinalProject:${req.user.id}`, JSON.stringify(data));
+      // } else {
+      //   reviewUser = JSON.parse(reviewUser)
+      // }
       res.json(reviewUser);
     } catch (error) {
       next(error);
@@ -19,14 +22,21 @@ class ReviewController {
   static async getReviewVehicle(req, res, next) {
     try {
       const { VehicleId } = req.params;
-      let reviewVehicle = await redis.get("reviewVehicleFinalProject:" + VehicleId);
-      if (!reviewVehicle) {
-        const data = await Review.findAll({
-          where: { VehicleId },
-          include: [Vehicle],
-        });
-        reviewVehicle = data;
+      let vehicle = await Vehicle.findByPk(VehicleId)
+      if (!vehicle) {
+        throw { name: 'not_found' }
       }
+      // let reviewVehicle = await redis.get(`reviewVehicleFinalProject:${VehicleId}`);
+      // if (!reviewVehicle) {
+      const data = await Review.findAll({
+        where: { VehicleId },
+        include: [Vehicle],
+      });
+      let reviewVehicle = data;
+      // await redis.set(`reviewVehicleFinalProject:${VehicleId}`, JSON.stringify(data))
+      // } else {
+      //   reviewVehicle = JSON.parse(reviewVehicle)
+      // }
       res.json(reviewVehicle);
     } catch (error) {
       next(error);

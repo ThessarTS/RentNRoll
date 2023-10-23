@@ -98,6 +98,22 @@ describe("Test get data review endpoint /reviews", () => {
   });
 });
 
+describe("Test get data vehicle review endpoint /reviews/:VehicleId", () => {
+  it("Successfully get review", async function () {
+    const response = await request(app)
+      .get("/reviews/1")
+      .set("access_token", access_token);
+    expect(response.status).toBe(200);
+    expect(response.body).toBeInstanceOf(Array);
+  });
+  it("Failed get review because vehicle not found", async function () {
+    const response = await request(app).get("/reviews/200");
+    expect(response.status).toBe(404);
+    expect(response.body).toBeInstanceOf(Object);
+    expect(response.body).toHaveProperty("message", 'Not Found');
+  });
+});
+
 describe("Test post review endpoint /reviews/:VehicleId", () => {
   it("Successfully post review", async function () {
     const response = await request(app)
