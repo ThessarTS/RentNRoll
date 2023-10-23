@@ -4,6 +4,8 @@ const { Vehicle, User, Category, Review, Order, UserProfile, Specification } = r
 class VehicleController {
   static async fetchVehicle(req, res, next) {
     try {
+      const { location, startdate, enddate } = req.query
+
       const vehicles = await Vehicle.findAll({
         include: [
           {
@@ -20,16 +22,34 @@ class VehicleController {
             model: Review,
           },
         ],
+        where: { location }
       });
 
-      const vehicleData = vehicles.map((vehicle) => {
-        const { name, image, price, Reviews, Orders, location } = vehicle;
+
+      if (vehicles.length == 0) {
+        throw { name: 'not_found' }
+      }
+      let filteredVehicles = vehicles.filter(vehicle => {
+        let isNotIncluded = true
+        vehicle.Orders.forEach(el => {
+          if (startdate < el.endDate && enddate > el.startDate) {
+            isNotIncluded = false
+          }
+        })
+        if (isNotIncluded) {
+          return vehicle
+        }
+      })
+      const vehicleData = filteredVehicles.map((vehicle) => {
+        const { name, image, price, Reviews, Orders, location, id } = vehicle;
         const totalReviews = Reviews.length;
         const totalOrders = Orders.length;
         const averageRating = totalReviews > 0 ? Reviews.reduce((sum, review) => sum + review.rating, 0) / totalReviews : 0;
 
         return {
+          id,
           name,
+          location,
           image,
           price,
           totalReviews,
