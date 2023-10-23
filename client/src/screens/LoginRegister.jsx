@@ -129,6 +129,7 @@ function Login({ navigation }) {
     try {
       const value = await AsyncStorage.getItem(key);
       if (value !== null) {
+        return value;
       }
     } catch (error) {
       console.log(error);
@@ -138,7 +139,6 @@ function Login({ navigation }) {
   const storeData = async (key, value) => {
     try {
       await AsyncStorage.setItem(key, value);
-      // console.log("Data saved successfully");
     } catch (error) {
       console.error("Error saving data:", error);
     }
