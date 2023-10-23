@@ -10,6 +10,8 @@ const userReducer = (state = initialState, action) => {
         ...state,
         profile: action.payload,
       };
+    case "logout/success":
+      return initialState;
 
     default:
       return state;

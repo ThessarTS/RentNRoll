@@ -44,11 +44,15 @@ const HomeTab = () => {
           } else if (route.name === "Video") {
             iconName = focused ? "play-circle-sharp" : "play-circle-outline";
           } else if (route.name === "You") {
-            iconName = focused ? "person-circle-sharp" : "person-circle-outline";
+            iconName = focused
+              ? "person-circle-sharp"
+              : "person-circle-outline";
           } else if (route.name === "Rent Now") {
             iconName = focused ? "bicycle-sharp" : "bicycle-outline";
           } else if (route.name === "Add Vehicle") {
-            iconName = focused ? "ios-add-circle-sharp" : "ios-add-circle-outline";
+            iconName = focused
+              ? "ios-add-circle-sharp"
+              : "ios-add-circle-outline";
           }
 
           return <Ionicons name={iconName} size={20} color={color} />;

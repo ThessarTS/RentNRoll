@@ -1,7 +1,16 @@
-import { TRENDING_FETCH_FAIL, TRENDING_FETCH_REQUEST, TRENDING_FETCH_SUCCESS, VEHICLE_FETCH_BY_ID_SUCCESS, VEHICLE_FETCH_FAIL, VEHICLE_FETCH_REQUEST, VEHICLE_FETCH_SUCCESS } from "./actionType";
+import {
+  TRENDING_FETCH_FAIL,
+  TRENDING_FETCH_REQUEST,
+  TRENDING_FETCH_SUCCESS,
+  VEHICLE_FETCH_BY_ID_SUCCESS,
+  VEHICLE_FETCH_FAIL,
+  VEHICLE_FETCH_REQUEST,
+  VEHICLE_FETCH_SUCCESS,
+} from "./actionType";
 import axios from "axios";
 
-const baseUrl = "https://2f5c-114-122-143-178.ngrok-free.app";
+const baseUrl =
+  "https://0dba-2001-448a-6021-5c1-d3d5-fb4c-3050-5644.ngrok-free.app";
 
 // FETCH VEHICLES
 export const vehicleFetchRequest = () => {
