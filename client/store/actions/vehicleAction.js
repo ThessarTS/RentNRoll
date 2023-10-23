@@ -1,4 +1,7 @@
 import {
+  MY_VEHICLE_FETCH_FAIL,
+  MY_VEHICLE_FETCH_REQUEST,
+  MY_VEHICLE_FETCH_SUCCESS,
   TRENDING_FETCH_FAIL,
   TRENDING_FETCH_REQUEST,
   TRENDING_FETCH_SUCCESS,
@@ -115,3 +118,34 @@ export const fetchTrending = () => {
 };
 
 // END TRENDING
+
+// MY VEHICLE
+export const myVehiclefetchRequest = () => {
+  return { type: MY_VEHICLE_FETCH_REQUEST };
+};
+
+export const myVehiclefetchSuccess = (payload) => {
+  return { type: MY_VEHICLE_FETCH_SUCCESS, payload };
+};
+
+export const myVehiclefetchFail = (payload) => {
+  return { type: MY_VEHICLE_FETCH_FAIL, payload };
+};
+
+export const fetchMyVehicles = (access_token) => {
+  return async (dispatch) => {
+    try {
+      const { data } = await axios({
+        url: baseUrl + "/vehicles/myVehicle",
+        headers: {
+          access_token: access_token,
+        },
+      });
+      dispatch(myVehiclefetchSuccess(data));
+    } catch (error) {
+      dispatch(myVehiclefetchFail(error));
+    }
+  };
+};
+
+// END MY VEHICLE

@@ -10,9 +10,7 @@ import NavIcon from "../components/NavIcon";
 
 function Account({ navigation }) {
   const [user, setUser] = useState(null);
-  const [settings, setSettings] = useState(false);
   const { profile } = useSelector((state) => state.userReducer);
-  console.log(profile);
   const dispatch = useDispatch();
   async function getUser() {
     try {
@@ -67,13 +65,21 @@ function Account({ navigation }) {
                   <View>
                     <Text style={styles.profileName}>{profile ? profile.fullName : ""}</Text>
                     <View style={{ gap: 2 }}>
+                      <Text style={{ fontSize: 15 }}>Balance: {profile ? profile.Balances : ""}</Text>
                       <Text style={styles.profileInfo}>{profile ? profile.email : ""}</Text>
                       {profile && profile.Orders && <Text style={styles.profileInfo}>{profile ? profile.Orders.length : 0} Orders</Text>}
                     </View>
                   </View>
                 </View>
                 <View>
-                  <Pressable style={styles.profileButton}>
+                  <Pressable
+                    style={styles.profileButton}
+                    onPress={() =>
+                      navigation.navigate("myprofile", {
+                        name: profile && profile.fullName,
+                      })
+                    }
+                  >
                     <Text style={styles.profileButtonText}>View My Profile</Text>
                   </Pressable>
                 </View>

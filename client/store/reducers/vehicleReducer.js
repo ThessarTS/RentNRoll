@@ -1,4 +1,7 @@
 import {
+  MY_VEHICLE_FETCH_FAIL,
+  MY_VEHICLE_FETCH_REQUEST,
+  MY_VEHICLE_FETCH_SUCCESS,
   TRENDING_FETCH_FAIL,
   TRENDING_FETCH_REQUEST,
   TRENDING_FETCH_SUCCESS,
@@ -18,6 +21,7 @@ const initialState = {
   trending: [],
   vehicle: null,
   loading: false,
+  myVehicles: [],
   error: "",
 };
 const vehicleReducer = (state = initialState, action) => {
@@ -54,25 +58,12 @@ const vehicleReducer = (state = initialState, action) => {
         vehiclesQuery: action.payload,
         loading: false,
       };
-    // case VEHICLE_FETCH_BY_ID_REQUEST:
-    //   return {
-    //     ...state,
-    //     loading: true,
-    //   };
 
     case VEHICLE_FETCH_BY_ID_SUCCESS:
       return {
         ...state,
         vehicle: action.payload,
-        // loading: false,
       };
-
-    // case VEHICLE_FETCH_BY_ID_FAIL:
-    //   return {
-    //     ...state,
-    //     error: action.payload,
-    //     loading: false,
-    //   };
 
     case TRENDING_FETCH_REQUEST:
       return {
@@ -88,6 +79,26 @@ const vehicleReducer = (state = initialState, action) => {
       };
 
     case TRENDING_FETCH_FAIL:
+      return {
+        ...state,
+        error: action.payload,
+        loading: false,
+      };
+
+    case MY_VEHICLE_FETCH_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+
+    case MY_VEHICLE_FETCH_SUCCESS:
+      return {
+        ...state,
+        myVehicles: action.payload,
+        loading: false,
+      };
+
+    case MY_VEHICLE_FETCH_FAIL:
       return {
         ...state,
         error: action.payload,
