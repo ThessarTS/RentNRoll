@@ -4,6 +4,7 @@ import axios from "axios";
 const baseUrl =
   "https://0dba-2001-448a-6021-5c1-d3d5-fb4c-3050-5644.ngrok-free.app";
 
+
 // FETCH CATEGORIES
 export const categoriesFetchSuccess = (payload) => {
   return { type: CATEGORIES_FETCH_SUCCESS, payload };

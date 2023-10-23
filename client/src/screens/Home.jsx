@@ -38,6 +38,8 @@ import notFound from "../../assets/image/not-found.jpg";
 import CardOrderHome from "../components/CardOrderHome";
 // import CardOrderHome from "../components/CardOrderHome";
 
+import notFound from "../../assets/image/zzz.png";
+
 function Home({ navigation }) {
   const { vehicles, trending, loading } = useSelector(
     (state) => state.vehicleReducer
@@ -194,19 +196,7 @@ function Home({ navigation }) {
       />
     );
   };
-  // const RenderHistory = ({ profile }) => {
-  //   const { name, image, price, rating, id } = profile.Orders.Vehicle.item;
-  //   return (
-  //     <CardVehicle
-  //       name={name}
-  //       image={image}
-  //       price={price}
-  //       rating={rating}
-  //       id={id}
-  //       navigation={navigation}
-  //     />
-  //   );
-  // };
+  
   return (
     <View style={styles.container}>
       <View style={styles.mastheadContainer}>

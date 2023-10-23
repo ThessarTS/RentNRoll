@@ -63,7 +63,6 @@ export const profilesFetchSuccess = (payload) => {
 };
 
 export const fetchProfile = (value) => {
-  console.log(value, "<< action");
   return async (dispatch) => {
     try {
       const { data } = await axios({
