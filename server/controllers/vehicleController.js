@@ -1,3 +1,4 @@
+const { Op } = require("sequelize");
 const { Vehicle, User, Category, Review, Order, UserProfile, Specification } = require("../models/index");
 
 class VehicleController {
@@ -23,6 +24,7 @@ class VehicleController {
         ],
         where: { location }
       });
+
 
       if (vehicles.length == 0) {
         throw { name: 'not_found' }
@@ -52,14 +54,24 @@ class VehicleController {
           price,
           totalReviews,
           totalOrders,
+          location,
           averageRating: averageRating.toFixed(1),
         };
       });
-
       res.status(200).json(vehicleData);
     } catch (err) {
       console.log(err);
       next(err);
+    }
+  }
+  static async fetchLocation(req, res, next) {
+    try {
+      const vehicles = await Vehicle.findAll();
+      const locations = [...new Set(vehicles.map((vehicle) => vehicle.location))];
+      console.log(locations);
+      res.status(200).json(locations);
+    } catch (error) {
+      next(error);
     }
   }
   static async detailVehicle(req, res, next) {
@@ -151,7 +163,7 @@ class VehicleController {
     try {
       const { id } = req.params;
 
-      const { name, CategoryId, price, seats, image } = req.body;
+      const { name, CategoryId, price, image, location } = req.body;
 
       const findVehicle = await Vehicle.findByPk(id);
       if (!findVehicle) {
@@ -163,6 +175,7 @@ class VehicleController {
           CategoryId,
           price,
           image,
+          location,
           UserId: req.user.id,
         },
         { where: { id } }
