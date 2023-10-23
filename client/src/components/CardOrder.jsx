@@ -1,6 +1,6 @@
 import React from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
-import { Ionicons, AntDesign, Entypo, FontAwesome } from "@expo/vector-icons";
+import { Ionicons, Entypo, FontAwesome } from "@expo/vector-icons";
 
 function CardOrder({ order }) {
   function fDate(dateString) {

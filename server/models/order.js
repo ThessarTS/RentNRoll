@@ -39,6 +39,9 @@ module.exports = (sequelize, DataTypes) => {
           notEmpty: { msg: "Owner Id required" },
         },
       },
+      totalPrice: {
+        type: DataTypes.FLOAT,
+      },
     },
     {
       sequelize,

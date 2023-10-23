@@ -1,12 +1,8 @@
-import {
-  CATEGORIES_FETCH_SUCCESS,
-  PROFILES_FETCH_SUCCESS,
-  TRENDING_FETCH_FAIL,
-} from "./actionType";
+import { CATEGORIES_FETCH_SUCCESS, PROFILES_FETCH_SUCCESS, TRENDING_FETCH_FAIL } from "./actionType";
 import axios from "axios";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const baseUrl =
-  "https://0dba-2001-448a-6021-5c1-d3d5-fb4c-3050-5644.ngrok-free.app";
+const baseUrl = "https://0187-2001-448a-1021-5f44-11c3-740a-ea80-49d6.ngrok-free.app";
 
 export const registerHandler = (value) => {
   return async () => {
@@ -32,7 +28,6 @@ export const createOtp = (value) => {
         method: "POST",
         data: value,
       });
-      console.log(data);
       return data;
     } catch (error) {
       // console.log(error.response.data);
@@ -57,6 +52,22 @@ export const handleLogin = (value) => {
 };
 
 // FETCH PROFILES
+export const getUser = () => {
+  return async (dispatch) => {
+    try {
+      const newUser = await AsyncStorage.getItem("access_token");
+      if (!newUser) {
+        throw new Error("userNotFound");
+      }
+      const newValue = {
+        access_token: newUser,
+      };
+      dispatch(fetchProfile(newValue));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
 
 export const profilesFetchSuccess = (payload) => {
   return { type: PROFILES_FETCH_SUCCESS, payload };
@@ -78,4 +89,15 @@ export const fetchProfile = (value) => {
   };
 };
 
-// END FETCH CATEGORIES
+export const handleLogout = () => {
+  return async (dispatch) => {
+    try {
+      await AsyncStorage.removeItem("access_token");
+      dispatch({
+        type: "logout/success",
+      });
+    } catch (error) {
+      console.error("Error while logging out:", error);
+    }
+  };
+};

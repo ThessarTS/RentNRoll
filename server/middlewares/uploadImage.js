@@ -37,12 +37,13 @@ const uploadMulti = (fields) => {
         return res.status(500).json({ error: "Failed to upload images" });
       }
 
-      const cloudinaryResponses = [];
       const promises = [];
+      const inputField = []
 
       for (const field of fields) {
         if (req.files[field]) {
           const image = req.files[field][0];
+          inputField.push(field)
 
           promises.push(uploadToCloudinary(image.buffer, image.originalname));
         }
@@ -52,16 +53,9 @@ const uploadMulti = (fields) => {
         const cloudinaryResults = await Promise.all(promises);
 
         cloudinaryResults.forEach((result, index) => {
-          const field = fields[index];
+          const field = inputField[index];
           req[field] = result.secure_url;
-          cloudinaryResponses.push({
-            field,
-            public_id: result.public_id,
-            secure_url: result.secure_url,
-          });
         });
-        console.log(cloudinaryResponses);
-        req.cloudinaryResponses = cloudinaryResponses;
 
         next();
       } catch (error) {

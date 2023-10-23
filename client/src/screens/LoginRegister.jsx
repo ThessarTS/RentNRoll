@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ImageBackground, Pressable, StyleSheet, Text, TextInput, View, Image, ScrollView, Platform, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, Alert, ActivityIndicator } from "react-native";
+import { ImageBackground, Pressable, StyleSheet, Text, TextInput, View, Image, ScrollView, Platform, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, ActivityIndicator } from "react-native";
 import Checkbox from "expo-checkbox";
 import banner from "../../assets/image/banner.jpg";
 import { Ionicons } from "@expo/vector-icons";
@@ -9,8 +9,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch } from "react-redux";
 import { createOtp, handleLogin, registerHandler } from "../../store/actions/userAction";
-import { showAlert, showAlertError } from "../components/helpers/alertMessage";
-// import { showAlert } from "../components/helpers/alertMessage";
+import { errorAlert, successAlert } from "../helpers/alert";
 
 function Login({ navigation }) {
   const [isChecked, setChecked] = useState(false);
@@ -24,12 +23,19 @@ function Login({ navigation }) {
     email: "",
     password: "",
   });
+
+  const changePage = () => {
+    setFormRegister(!formRegister);
+    setLoginForm(!loginForm);
+  };
+
   const dispatch = useDispatch();
+  const [loginForm, setLoginForm] = useState(true);
   const [formRegister, setFormRegister] = useState(false);
   const [formOtp, setFormOtp] = useState(false);
   const [otp, setOtp] = useState(["", "", "", ""]);
   const [userOtp, setUserOtp] = useState(null);
-  const [loadingOtp, setLoadingOtp] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleOtpChange = (index, value) => {
     if (/^[0-9]$/.test(value) || value === "") {
@@ -49,6 +55,20 @@ function Login({ navigation }) {
     setUserOtp(otp.join(""));
   }, [otp]);
 
+  const getOtp = async () => {
+    setLoading(true);
+    dispatch(createOtp(inputLogin))
+      .then((data) => {
+        toggleOtp();
+        setLoading(false);
+        successAlert(data.message);
+      })
+      .catch((error) => {
+        errorAlert(error.message);
+        setLoading(false);
+      });
+  };
+
   const handleChangeLogin = (name, text) => {
     setInputLogin((input) => ({
       ...input,
@@ -66,41 +86,20 @@ function Login({ navigation }) {
   const submitRegister = () => {
     dispatch(registerHandler(inputRegister))
       .then((data) => {
-        showAlert("Success", data.message, setFormRegister(false), setFormRegister(false));
-        setInputRegister({
-          fullName: "",
-          email: "",
-          password: "",
-          phone: "",
-        });
+        successAlert(data.message);
+        changePage();
+        setFormRegister(false),
+          setInputRegister({
+            fullName: "",
+            email: "",
+            password: "",
+            phone: "",
+          });
       })
       .catch((err) => {
-        showAlertError(err.message);
+        errorAlert(err.message);
       });
   };
-
-  const getOtp = async () => {
-    setLoadingOtp(true);
-    dispatch(createOtp(inputLogin))
-      .then((data) => {
-        toggleOtp();
-        setLoadingOtp(false);
-        showAlert("Send Otp", data.message);
-      })
-      .catch((error) => {
-        showAlertError(error.message);
-        setLoadingOtp(false);
-      });
-  };
-
-  if (loadingOtp) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" />
-        <Text style={{ marginTop: 16, fontSize: 18 }}>Loading...</Text>
-      </View>
-    );
-  }
 
   retrieveData = async (key) => {
     try {
@@ -127,12 +126,11 @@ function Login({ navigation }) {
         storeData("access_token", data.access_token).then(() => {
           navigation.navigate("You");
           toggleOtp;
-          showAlert("Success!", "Welcome to RentNRoll");
+          successAlert("Welcome to RentNRoll");
         });
-        // retrieveData("access_token");
       })
       .catch((error) => {
-        showAlertError(error.message);
+        errorAlert(error.message);
       });
   };
   const otpInputs = [];
@@ -143,9 +141,6 @@ function Login({ navigation }) {
 
   const toggleOtp = () => {
     setFormOtp(!formOtp);
-  };
-  const toggleRegister = () => {
-    setFormRegister(!formRegister);
   };
 
   return (
@@ -158,61 +153,60 @@ function Login({ navigation }) {
       </ImageBackground>
 
       {/* login */}
-      <View style={styles.formContainer}>
-        <View style={{ gap: 5 }}>
-          <Text style={styles.label}>Email</Text>
-          <TextInput placeholder="email" keyboardType="email-address" value={inputLogin.email} onChangeText={(text) => handleChangeLogin("email", text)} style={styles.textInput} />
-        </View>
-        <View style={{ gap: 5 }}>
-          <Text style={styles.label}>Password</Text>
-          <TextInput placeholder="password" secureTextEntry={true} name="password" value={inputLogin.password} onChangeText={(text) => handleChangeLogin("password", text)} style={styles.textInput} />
-        </View>
-        <View style={styles.checkboxContainer}>
-          <View style={styles.checkBoxView}>
-            <Checkbox style={styles.checkbox} value={isChecked} onValueChange={toggleRememberMe} color={isChecked ? "#17799A" : undefined} />
-            <Text style={{ paddingLeft: -50 }}>Remember Me</Text>
+      {loginForm && (
+        <View style={styles.formContainer}>
+          <View style={{ gap: 5 }}>
+            <Text style={styles.label}>Email</Text>
+            <TextInput placeholder="email" keyboardType="email-address" value={inputLogin.email} onChangeText={(text) => handleChangeLogin("email", text)} style={styles.textInput} />
           </View>
-        </View>
-        <View style={{ marginTop: 15 }}>
-          <View style={styles.actionContainer}>
-            <Text style={{ textAlign: "center" }}>Dont have account? </Text>
-            <Pressable onPress={toggleRegister}>
-              <Text style={{ textDecorationLine: "underline", color: "#17799A" }}>Register Now</Text>
+          <View style={{ gap: 5 }}>
+            <Text style={styles.label}>Password</Text>
+            <TextInput placeholder="password" secureTextEntry={true} name="password" value={inputLogin.password} onChangeText={(text) => handleChangeLogin("password", text)} style={styles.textInput} />
+          </View>
+          <View style={styles.checkboxContainer}>
+            <View style={styles.checkBoxView}>
+              <Checkbox style={styles.checkbox} value={isChecked} onValueChange={toggleRememberMe} color={isChecked ? "#17799A" : undefined} />
+              <Text style={{ paddingLeft: -50 }}>Remember Me</Text>
+            </View>
+          </View>
+          {loading && (
+            <View style={{ justifyContent: "center", alignItems: "center" }}>
+              <ActivityIndicator size="large" />
+              <Text style={{ marginTop: 16, fontSize: 18 }}>Loading...</Text>
+            </View>
+          )}
+
+          <View style={{ marginTop: 15 }}>
+            <View style={styles.actionContainer}>
+              <Text style={{ textAlign: "center" }}>Dont have account? </Text>
+              <Pressable onPress={changePage}>
+                <Text style={{ textDecorationLine: "underline", color: "#17799A" }}>Register Now</Text>
+              </Pressable>
+            </View>
+            <Pressable style={styles.buttonAction} onPress={getOtp}>
+              <Text style={styles.textAction}>Log In</Text>
             </Pressable>
           </View>
-          <Pressable style={styles.buttonAction} onPress={getOtp}>
-            <Text style={styles.textAction}>Log In</Text>
-          </Pressable>
+          <View style={styles.lineContainer}>
+            <View style={styles.line}></View>
+            <Text style={styles.orText}>or log in with</Text>
+            <View style={styles.line}></View>
+          </View>
+          <View>
+            <Pressable style={styles.buttonGoggle} onPress={() => navigation.navigate("register")}>
+              <Image source={googleIcon} style={styles.googleIcon} />
+              <Text style={styles.googleText}>Google</Text>
+            </Pressable>
+          </View>
         </View>
-        <View style={styles.lineContainer}>
-          <View style={styles.line}></View>
-          <Text style={styles.orText}>or log in with</Text>
-          <View style={styles.line}></View>
-        </View>
-        <View>
-          <Pressable style={styles.buttonGoggle} onPress={() => navigation.navigate("register")}>
-            <Image source={googleIcon} style={styles.googleIcon} />
-            <Text style={styles.googleText}>Google</Text>
-          </Pressable>
-        </View>
-      </View>
+      )}
       {/* end login */}
 
       {/* register */}
-      <Modal
-        isVisible={formRegister}
-        onBackdropPress={toggleRegister}
-        style={{
-          justifyContent: "flex-end",
-          margin: 0,
-        }}
-      >
+      {formRegister && (
         <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.registerContainer}>
           <ScrollView>
             <View style={[styles.formContainer, { justifyContent: "space-around" }]}>
-              <Pressable style={{ position: "absolute", top: 10, right: 20 }} onPress={toggleRegister}>
-                <MaterialIcons name="cancel" size={30} color="red" />
-              </Pressable>
               <View style={{ gap: 10 }}>
                 <View style={{ gap: 5 }}>
                   <Text style={styles.label}>Full Name</Text>
@@ -246,9 +240,9 @@ function Login({ navigation }) {
                       textAlign: "center",
                     }}
                   >
-                    Already have account?{" "}
+                    Already have account?
                   </Text>
-                  <Pressable onPress={toggleRegister}>
+                  <Pressable onPress={changePage}>
                     <Text
                       style={{
                         textDecorationLine: "underline",
@@ -266,7 +260,8 @@ function Login({ navigation }) {
             </View>
           </ScrollView>
         </KeyboardAvoidingView>
-      </Modal>
+      )}
+
       {/* end register */}
 
       {/* modalotp */}
@@ -274,7 +269,7 @@ function Login({ navigation }) {
         isVisible={formOtp}
         onBackdropPress={toggleOtp}
         style={{
-          justifyContent: "flex-end",
+          justifyContent: "center",
           margin: 0,
         }}
       >
@@ -389,9 +384,10 @@ const styles = StyleSheet.create({
 
   registerContainer: {
     backgroundColor: "white",
-    height: "72%",
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
+    flex: 1,
+    borderRadius: 15,
+    padding: 20,
+    paddingVertical: 30,
   },
 
   checkboxContainer: {
@@ -462,13 +458,15 @@ const styles = StyleSheet.create({
   },
 
   otpContainer: {
-    height: "72%",
-    backgroundColor: "white",
+    position: "relative",
+    backgroundColor: "whitesmoke",
+    height: "30%",
+    width: "95%",
+    padding: 20,
     alignItems: "center",
     justifyContent: "center",
-    gap: 20,
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
+    alignSelf: "center",
+    borderRadius: 10,
   },
 
   otpField: {
@@ -484,6 +482,7 @@ const styles = StyleSheet.create({
 
   otpView: {
     flexDirection: "row",
+    marginBottom: 10,
     gap: 10,
   },
 });
