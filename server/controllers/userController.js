@@ -83,11 +83,15 @@ class UserController {
   }
   static async createProfile(req, res, next) {
     try {
-      const { ktp, simA, simC } = req.body;
-      await UserProfile.create({ ktp, simA, simC, UserId: req.user.id });
+      await UserProfile.create({
+        profilePicture: req.profilePicture,
+        ktp: req.ktp,
+        simA: req.simA,
+        simC: req.simC,
+        UserId: req.user.id,
+      });
       res.status(201).json({ message: `Account profile succesfully created!` });
     } catch (error) {
-      console.log(error);
       next(error);
     }
   }

@@ -1,5 +1,5 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, useFocusEffect } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Home from "./src/screens/Home";
@@ -9,30 +9,18 @@ import Account from "./src/screens/Account";
 import Detail from "./src/screens/Detail";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import AddVehicle from "./src/screens/AddVehicle";
-import { useState, useEffect } from "react";
-import { Provider } from "react-redux";
+import { useState, useEffect, useCallback } from "react";
+import { Provider, useSelector } from "react-redux";
 import store from "./store/reducers";
 import Rent from "./src/screens/Rent";
+import MyOrder from "./src/screens/MyOrder";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const HomeTab = () => {
-  const [user, setUser] = useState(false);
-  useEffect(() => {
-    const checkUser = async () => {
-      try {
-        const user = await AsyncStorage.getItem("user");
-        if (user) {
-          setUser(true);
-        }
-      } catch (error) {
-        console.error("Error while checking user:", error);
-      }
-    };
+  const { profile } = useSelector((state) => state.userReducer);
 
-    checkUser();
-  }, [user]);
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -71,8 +59,8 @@ const HomeTab = () => {
     >
       <Tab.Screen name="Home" component={Home} />
       <Tab.Screen name="Rent Now" component={Rent} />
-      {user && <Tab.Screen name="Add Vehicle" component={AddVehicle} />}
-      <Tab.Screen name="Your Order" component={Home} />
+      {profile && <Tab.Screen name="Add Vehicle" component={AddVehicle} />}
+      <Tab.Screen name="Your Order" component={MyOrder} />
       <Tab.Screen name="You" component={Account} />
     </Tab.Navigator>
   );

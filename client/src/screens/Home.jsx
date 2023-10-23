@@ -1,18 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import {
-  SafeAreaView,
-  StyleSheet,
-  View,
-  Text,
-  Pressable,
-  TextInput,
-  FlatList,
-  ScrollView,
-  ImageBackground,
-  ActivityIndicator,
-  Image,
-} from "react-native";
+import { SafeAreaView, StyleSheet, View, Text, Pressable, TextInput, FlatList, ScrollView, ImageBackground, ActivityIndicator, Image } from "react-native";
 
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
@@ -29,17 +17,12 @@ import { useDispatch, useSelector } from "react-redux";
 import Modal from "react-native-modal";
 import { MaterialIcons } from "@expo/vector-icons";
 import { fetchCategory } from "../../store/actions/categoryAction";
-import {
-  fetchVehicles,
-  fetchTrending,
-} from "../../store/actions/vehicleAction";
+import { fetchVehicles, fetchTrending } from "../../store/actions/vehicleAction";
 import { AntDesign } from "@expo/vector-icons";
 // import notFound from "../../assets/image/not-found.jpg";
 import notFound from "../../assets/image/not-found.jpg";
 function Home({ navigation }) {
-  const { vehicles, trending, loading } = useSelector(
-    (state) => state.vehicleReducer
-  );
+  const { vehicles, trending, loading } = useSelector((state) => state.vehicleReducer);
   const categories = useSelector((state) => state.categoryReducer.categories);
   const dispatch = useDispatch();
   const [loadingCategory, setLoadingCategory] = useState(false);
@@ -119,11 +102,7 @@ function Home({ navigation }) {
           }}
         >
           <View>
-            <Image
-              source={{ uri: `${image}` }}
-              style={{ width: 90, height: 65 }}
-              resizeMode="contain"
-            />
+            <Image source={{ uri: `${image}` }} style={{ width: 90, height: 65 }} resizeMode="contain" />
           </View>
           <View style={{ flex: 6, marginStart: 10, gap: 3 }}>
             <View style={[styles.headerItemContainer]}>
@@ -138,9 +117,7 @@ function Home({ navigation }) {
             </View>
             <View style={[styles.headerItemContainer, { marginStart: 2 }]}>
               <Entypo name="price-tag" size={15} color="#17799A" />
-              <Text style={[styles.itemsDetailInfo, { marginStart: 2 }]}>
-                {fPrice(price)} /day
-              </Text>
+              <Text style={[styles.itemsDetailInfo, { marginStart: 2 }]}>{fPrice(price)} /Day</Text>
             </View>
           </View>
           <View>
@@ -170,39 +147,18 @@ function Home({ navigation }) {
     const { name } = category.item;
     const backgroundColor = getCategoryBackgroundColor(name);
     const image = getCategoryImage(name);
-    return (
-      <CardCategory
-        name={name}
-        image={image}
-        backgroundColor={backgroundColor}
-      />
-    );
+    return <CardCategory name={name} image={image} backgroundColor={backgroundColor} />;
   };
   const RenderCardVehicle = ({ vehicle }) => {
     const { name, image, price, rating, id } = vehicle.item;
-    return (
-      <CardVehicle
-        name={name}
-        image={image}
-        price={price}
-        rating={rating}
-        id={id}
-        navigation={navigation}
-      />
-    );
+    return <CardVehicle name={name} image={image} price={price} rating={rating} id={id} navigation={navigation} />;
   };
   return (
     <View style={styles.container}>
       <View style={styles.mastheadContainer}>
         <View style={styles.searchContainer}>
           <Ionicons name="ios-search-sharp" color="#17799A" size={25} />
-          <TextInput
-            placeholder="Search"
-            value={searchValue}
-            style={{ flex: 1 }}
-            onChangeText={(text) => setSearchValue(text)}
-            onSubmitEditing={() => handleInputSubmit(searchValue)}
-          />
+          <TextInput placeholder="Search" value={searchValue} style={{ flex: 1 }} onChangeText={(text) => setSearchValue(text)} onSubmitEditing={() => handleInputSubmit(searchValue)} />
         </View>
         <Pressable style={styles.filterContainer}>
           <Entypo name="chat" size={25} color="white" />
@@ -220,30 +176,13 @@ function Home({ navigation }) {
               {/* category */}
               <View style={[styles.categoryContainer, styles.shadowProp]}>
                 <Text style={styles.categoryTitle}>Categories</Text>
-                <FlatList
-                  style={{ marginTop: 10 }}
-                  data={categories}
-                  renderItem={(category) => (
-                    <RenderCategories category={category} />
-                  )}
-                  keyExtractor={(category) => category.id}
-                  horizontal={true}
-                />
+                <FlatList style={{ marginTop: 10 }} data={categories} renderItem={(category) => <RenderCategories category={category} />} keyExtractor={(category) => category.id} horizontal={true} />
               </View>
               {/* end category */}
               {/* Trending */}
               <View style={styles.itemsContainer}>
                 <Text style={styles.itemTitle}>Trending</Text>
-                <FlatList
-                  style={{ marginTop: 10 }}
-                  data={trending}
-                  renderItem={(vehicle) => (
-                    <RenderCardVehicle vehicle={vehicle} />
-                  )}
-                  keyExtractor={(vehicle) => vehicle.id}
-                  horizontal={true}
-                  showsHorizontalScrollIndicator={false}
-                />
+                <FlatList style={{ marginTop: 10 }} data={trending} renderItem={(vehicle) => <RenderCardVehicle vehicle={vehicle} />} keyExtractor={(vehicle) => vehicle.id} horizontal={true} showsHorizontalScrollIndicator={false} />
               </View>
               {/* end Trending */}
 
@@ -251,16 +190,7 @@ function Home({ navigation }) {
               <View style={styles.itemsContainer}>
                 <Text style={styles.itemTitle}>History</Text>
                 {order.length ? (
-                  <FlatList
-                    style={{ marginTop: 10 }}
-                    data={order}
-                    renderItem={(vehicle) => (
-                      <RenderTrending vehicle={vehicle} />
-                    )}
-                    keyExtractor={(vehicle) => vehicle.id}
-                    horizontal={true}
-                    showsHorizontalScrollIndicator={false}
-                  />
+                  <FlatList style={{ marginTop: 10 }} data={order} renderItem={(vehicle) => <RenderTrending vehicle={vehicle} />} keyExtractor={(vehicle) => vehicle.id} horizontal={true} showsHorizontalScrollIndicator={false} />
                 ) : (
                   <View
                     style={{
@@ -273,14 +203,8 @@ function Home({ navigation }) {
                     }}
                   >
                     <FontAwesome name="history" size={24} color="black" />
-                    <Text style={{ fontWeight: 500, fontSize: 18 }}>
-                      Your History is empty
-                    </Text>
-                    <Text
-                      style={{ fontWeight: 500, fontSize: 14, marginTop: 10 }}
-                    >
-                      Looks like you've never done a rental before
-                    </Text>
+                    <Text style={{ fontWeight: 500, fontSize: 18 }}>Your History is empty</Text>
+                    <Text style={{ fontWeight: 500, fontSize: 14, marginTop: 10 }}>Looks like you've never done a rental before</Text>
                     <Pressable
                       style={{
                         backgroundColor: "#17799A",
@@ -306,8 +230,7 @@ function Home({ navigation }) {
               >
                 <View
                   style={{
-                    backgroundColor:
-                      filteredData.length !== 0 ? "whitesmoke" : "white",
+                    backgroundColor: filteredData.length !== 0 ? "whitesmoke" : "white",
                     height: filteredData.length !== 0 ? "75%" : "45%",
                     padding: 20,
                     paddingVertical: 50,
@@ -317,22 +240,10 @@ function Home({ navigation }) {
                   }}
                 >
                   {filteredData.length !== 0 ? (
-                    <FlatList
-                      style={{ marginTop: 10 }}
-                      data={filteredData}
-                      renderItem={(vehicle) => (
-                        <RenderModalItems vehicle={vehicle} />
-                      )}
-                      keyExtractor={(vehicle) => vehicle.id}
-                      showsHorizontalScrollIndicator={false}
-                    />
+                    <FlatList style={{ marginTop: 10 }} data={filteredData} renderItem={(vehicle) => <RenderModalItems vehicle={vehicle} />} keyExtractor={(vehicle) => vehicle.id} showsHorizontalScrollIndicator={false} />
                   ) : (
                     <View style={{ flex: 1, justifyContent: "center" }}>
-                      <Image
-                        source={notFound}
-                        style={{ flex: 1, width: null, height: null }}
-                        resizeMode="cover"
-                      />
+                      <Image source={notFound} style={{ flex: 1, width: null, height: null }} resizeMode="cover" />
                       <View style={{ flex: 1 }}>
                         <Text
                           style={{
@@ -347,10 +258,7 @@ function Home({ navigation }) {
                     </View>
                   )}
 
-                  <Pressable
-                    style={{ position: "absolute", top: 10, right: 20 }}
-                    onPress={() => toggleSearch(false)}
-                  >
+                  <Pressable style={{ position: "absolute", top: 10, right: 20 }} onPress={() => toggleSearch(false)}>
                     <MaterialIcons name="cancel" size={30} color="red" />
                   </Pressable>
                 </View>
