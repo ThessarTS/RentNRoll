@@ -30,8 +30,8 @@ class OrderController {
           ],
         });
         if (orders.length == 0) {
-                throw { name: 'not_found' }
-            }
+          throw { name: "not_found" };
+        }
         userOrders = orders;
       }
       res.json(userOrders);
@@ -172,7 +172,7 @@ class OrderController {
 
   static async fetchTrending(req, res, next) {
     try {
-      const trendingData = await redis.get("trendingDataFinalProject");
+      let trendingData = await redis.get("trendingDataFinalProject");
       if (!trendingData) {
         const results = await Order.findAll({
           attributes: ["VehicleId", [Sequelize.fn("COUNT", "VehicleId"), "orderCount"]],
