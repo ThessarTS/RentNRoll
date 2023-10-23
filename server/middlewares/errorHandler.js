@@ -20,6 +20,9 @@ const errorHandler = (error, req, res, next) => {
   } else if (error.name == "KTP is required!") {
     code = 400;
     message = error.name;
+  } else if (error.name == "Profile Picture is required!") {
+    code = 400;
+    message = error.name
   } else if (error.name == "invalid_otp") {
     code = 401;
     message = "Invalid otp code!";

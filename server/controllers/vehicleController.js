@@ -4,8 +4,7 @@ class VehicleController {
   static async fetchVehicle(req, res, next) {
     try {
       const { location, startdate, enddate } = req.query
-
-      const vehicles = await Vehicle.findAll({
+      let options = {
         include: [
           {
             model: Category,
@@ -21,23 +20,31 @@ class VehicleController {
             model: Review,
           },
         ],
-        where: { location }
-      });
+      }
+      if (location) {
+        options.where = { location }
+      }
+      const vehicles = await Vehicle.findAll(options);
 
       if (vehicles.length == 0) {
         throw { name: 'not_found' }
       }
-      let filteredVehicles = vehicles.filter(vehicle => {
-        let isNotIncluded = true
-        vehicle.Orders.forEach(el => {
-          if (startdate < el.endDate && enddate > el.startDate) {
-            isNotIncluded = false
+      let filteredVehicles;
+      if (startdate && enddate) {
+        filteredVehicles = vehicles.filter(vehicle => {
+          let isNotIncluded = true
+          vehicle.Orders.forEach(el => {
+            if (startdate < el.endDate && enddate > el.startDate) {
+              isNotIncluded = false
+            }
+          })
+          if (isNotIncluded) {
+            return vehicle
           }
         })
-        if (isNotIncluded) {
-          return vehicle
-        }
-      })
+      } else {
+        filteredVehicles = vehicles
+      }
       const vehicleData = filteredVehicles.map((vehicle) => {
         const { name, image, price, Reviews, Orders, location, id } = vehicle;
         const totalReviews = Reviews.length;
@@ -144,6 +151,7 @@ class VehicleController {
       });
       res.status(200).json({ message: `Success Delete Vehicle With Id ${id}` });
     } catch (err) {
+      console.log(err);
       next(err);
     }
   }
