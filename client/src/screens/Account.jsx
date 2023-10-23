@@ -18,11 +18,15 @@ import { AntDesign } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import Modal from "react-native-modal";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchProfile } from "../../store/actions/userAction";
+import {
+  fetchProfile,
+  profilesFetchSuccess,
+} from "../../store/actions/userAction";
 
 function Account({ navigation }) {
   const [user, setUser] = useState(null);
   const [settings, setSettings] = useState(false);
+  const { profile } = useSelector((state) => state.userReducer);
   const dispatch = useDispatch();
   async function getUser() {
     try {
@@ -30,12 +34,10 @@ function Account({ navigation }) {
       if (!newUser) {
         throw new Error("userNotFound");
       }
-      // console.log(newUser);
       const newValue = {
         access_token: newUser,
       };
       dispatch(fetchProfile(newValue)).then((data) => {
-        console.log(data, "<<< screen");
         setUser(data);
       });
     } catch (error) {
@@ -60,7 +62,7 @@ function Account({ navigation }) {
   useEffect(() => {
     getUser();
   }, []);
-
+  console.log(profile);
   return (
     <View style={styles.container}>
       <View style={styles.mastheadContainer}>
@@ -97,22 +99,25 @@ function Account({ navigation }) {
                     gap: 15,
                   }}
                 >
-                  <Image
-                    source={{
-                      uri: "https://media.licdn.com/dms/image/C4E03AQGnouyn_2vSgw/profile-displayphoto-shrink_800_800/0/1646808937817?e=1703116800&v=beta&t=BZT5fOu-gScDu4h9GkegSv74GG0pSt47-0QAZOQHOeE",
-                    }}
-                    style={styles.profileImage}
-                  />
+                  {profile.UserProfile && (
+                    <Image
+                      source={{
+                        uri: profile.UserProfile.profilePicture,
+                      }}
+                      style={styles.profileImage}
+                    />
+                  )}
+
                   <View>
                     <Text style={styles.profileName}>
-                      {user ? user.fullName : ""}
+                      {profile ? profile.fullName : ""}
                     </Text>
                     <View style={{ gap: 2 }}>
                       <Text style={styles.profileInfo}>
-                        {user ? user.email : ""}
+                        {profile ? profile.email : ""}
                       </Text>
                       <Text style={styles.profileInfo}>
-                        {user ? user.Orders.length : 0} Orders
+                        {profile.UserProfile ? profile.Orders.length : 0} Orders
                       </Text>
                     </View>
                   </View>

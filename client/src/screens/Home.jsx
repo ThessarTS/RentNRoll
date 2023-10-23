@@ -11,6 +11,7 @@ import {
   ScrollView,
   ImageBackground,
   ActivityIndicator,
+  Image,
 } from "react-native";
 
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -28,8 +29,12 @@ import { useDispatch, useSelector } from "react-redux";
 import Modal from "react-native-modal";
 import { MaterialIcons } from "@expo/vector-icons";
 import { fetchCategory } from "../../store/actions/categoryAction";
-import { fetchVehicles, fetchTrending } from "../../store/actions/vehicleAction";
+import {
+  fetchVehicles,
+  fetchTrending,
+} from "../../store/actions/vehicleAction";
 import { AntDesign } from "@expo/vector-icons";
+// import notFound from "../../assets/image/not-found.jpg";
 import notFound from "../../assets/image/not-found.jpg";
 function Home({ navigation }) {
   const { vehicles, trending, loading } = useSelector(
@@ -37,7 +42,6 @@ function Home({ navigation }) {
   );
   const categories = useSelector((state) => state.categoryReducer.categories);
   const dispatch = useDispatch();
-
   const [loadingCategory, setLoadingCategory] = useState(false);
 
   const [search, setSearch] = useState(false);
@@ -70,16 +74,18 @@ function Home({ navigation }) {
   };
 
   const fPrice = (price) => {
-    return price.toLocaleString("id-ID", { style: "currency", currency: "IDR" });
+    return price.toLocaleString("id-ID", {
+      style: "currency",
+      currency: "IDR",
+    });
   };
 
-
   useEffect(() => {
-    // setLoadingCategory(true);
     dispatch(fetchVehicles());
     dispatch(fetchCategory());
     dispatch(fetchTrending());
   }, []);
+  // console.log(vehicles.item, "<<<<");
 
   // console.log(loading);
   if (loading) {
@@ -92,7 +98,7 @@ function Home({ navigation }) {
   }
 
   const RenderModalItems = ({ vehicle }) => {
-    const { image, name, price, id } = vehicle.item;
+    const { image, name, price, averageRating, totalReviews } = vehicle.item;
     const goDetail = () => {
       navigation.navigate("detail", {
         name: name,
@@ -104,9 +110,20 @@ function Home({ navigation }) {
     return (
       <Pressable style={styles.modalContainer} onPress={goDetail}>
         <Text style={styles.itemsDetailTitle}>{name}</Text>
-        <View style={{ flexDirection: "row", gap: 10, alignItems: "center", marginTop: 5 }}>
+        <View
+          style={{
+            flexDirection: "row",
+            gap: 10,
+            alignItems: "center",
+            marginTop: 5,
+          }}
+        >
           <View>
-            <Image source={{ uri: `${image}` }} style={{ width: 90, height: 65 }} resizeMode="contain" />
+            <Image
+              source={{ uri: `${image}` }}
+              style={{ width: 90, height: 65 }}
+              resizeMode="contain"
+            />
           </View>
           <View style={{ flex: 6, marginStart: 10, gap: 3 }}>
             <View style={[styles.headerItemContainer]}>
@@ -115,11 +132,15 @@ function Home({ navigation }) {
             </View>
             <View style={[styles.headerItemContainer, { marginStart: 2 }]}>
               <AntDesign name="star" size={13} color="#F8B84E" />
-              <Text style={[styles.itemsDetailInfo, { marginStart: 2 }]}>4.5 (1000 Reviews)</Text>
+              <Text style={[styles.itemsDetailInfo, { marginStart: 2 }]}>
+                {averageRating} ({totalReviews} Reviews)
+              </Text>
             </View>
             <View style={[styles.headerItemContainer, { marginStart: 2 }]}>
               <Entypo name="price-tag" size={15} color="#17799A" />
-              <Text style={[styles.itemsDetailInfo, { marginStart: 2 }]}>{fPrice(price)}/day</Text>
+              <Text style={[styles.itemsDetailInfo, { marginStart: 2 }]}>
+                {fPrice(price)} /day
+              </Text>
             </View>
           </View>
           <View>
@@ -170,13 +191,18 @@ function Home({ navigation }) {
       />
     );
   };
-
   return (
     <View style={styles.container}>
       <View style={styles.mastheadContainer}>
         <View style={styles.searchContainer}>
           <Ionicons name="ios-search-sharp" color="#17799A" size={25} />
-          <TextInput placeholder="Search" value={searchValue} style={{ flex: 1 }} onChangeText={(text) => setSearchValue(text)} onSubmitEditing={() => handleInputSubmit(searchValue)} />
+          <TextInput
+            placeholder="Search"
+            value={searchValue}
+            style={{ flex: 1 }}
+            onChangeText={(text) => setSearchValue(text)}
+            onSubmitEditing={() => handleInputSubmit(searchValue)}
+          />
         </View>
         <Pressable style={styles.filterContainer}>
           <Entypo name="chat" size={25} color="white" />
@@ -280,7 +306,8 @@ function Home({ navigation }) {
               >
                 <View
                   style={{
-                    backgroundColor: filteredData.length !== 0 ? "whitesmoke" : "white",
+                    backgroundColor:
+                      filteredData.length !== 0 ? "whitesmoke" : "white",
                     height: filteredData.length !== 0 ? "75%" : "45%",
                     padding: 20,
                     paddingVertical: 50,
@@ -290,17 +317,40 @@ function Home({ navigation }) {
                   }}
                 >
                   {filteredData.length !== 0 ? (
-                    <FlatList style={{ marginTop: 10 }} data={filteredData} renderItem={(vehicle) => <RenderModalItems vehicle={vehicle} />} keyExtractor={(vehicle) => vehicle.id} showsHorizontalScrollIndicator={false} />
+                    <FlatList
+                      style={{ marginTop: 10 }}
+                      data={filteredData}
+                      renderItem={(vehicle) => (
+                        <RenderModalItems vehicle={vehicle} />
+                      )}
+                      keyExtractor={(vehicle) => vehicle.id}
+                      showsHorizontalScrollIndicator={false}
+                    />
                   ) : (
                     <View style={{ flex: 1, justifyContent: "center" }}>
-                      <Image source={notFound} style={{ flex: 1, width: null, height: null }} resizeMode="cover" />
+                      <Image
+                        source={notFound}
+                        style={{ flex: 1, width: null, height: null }}
+                        resizeMode="cover"
+                      />
                       <View style={{ flex: 1 }}>
-                        <Text style={{ textAlign: "center", fontSize: 20, fontWeight: 500 }}>Vehicle not Found</Text>
+                        <Text
+                          style={{
+                            textAlign: "center",
+                            fontSize: 20,
+                            fontWeight: 500,
+                          }}
+                        >
+                          Vehicle not Found
+                        </Text>
                       </View>
                     </View>
                   )}
 
-                  <Pressable style={{ position: "absolute", top: 10, right: 20 }} onPress={() => toggleSearch(false)}>
+                  <Pressable
+                    style={{ position: "absolute", top: 10, right: 20 }}
+                    onPress={() => toggleSearch(false)}
+                  >
                     <MaterialIcons name="cancel" size={30} color="red" />
                   </Pressable>
                 </View>
