@@ -19,8 +19,8 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { fetchCategory } from "../../store/actions/categoryAction";
 import { fetchVehicles, fetchTrending } from "../../store/actions/vehicleAction";
 import { AntDesign } from "@expo/vector-icons";
-// import notFound from "../../assets/image/not-found.jpg";
-import notFound from "../../assets/image/not-found.jpg";
+import notFound from "../../assets/image/zzz.png";
+
 function Home({ navigation }) {
   const { vehicles, trending, loading } = useSelector((state) => state.vehicleReducer);
   const categories = useSelector((state) => state.categoryReducer.categories);
@@ -243,18 +243,16 @@ function Home({ navigation }) {
                     <FlatList style={{ marginTop: 10 }} data={filteredData} renderItem={(vehicle) => <RenderModalItems vehicle={vehicle} />} keyExtractor={(vehicle) => vehicle.id} showsHorizontalScrollIndicator={false} />
                   ) : (
                     <View style={{ flex: 1, justifyContent: "center" }}>
-                      <Image source={notFound} style={{ flex: 1, width: null, height: null }} resizeMode="cover" />
-                      <View style={{ flex: 1 }}>
-                        <Text
-                          style={{
-                            textAlign: "center",
-                            fontSize: 20,
-                            fontWeight: 500,
-                          }}
-                        >
-                          Vehicle not Found
-                        </Text>
-                      </View>
+                      <Image source={notFound} style={{ flex: 1, width: null, height: null }} resizeMode="contain" />
+                      <Text
+                        style={{
+                          textAlign: "center",
+                          fontSize: 20,
+                          fontWeight: 500,
+                        }}
+                      >
+                        Vehicle not Found
+                      </Text>
                     </View>
                   )}
 

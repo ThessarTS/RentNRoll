@@ -1,7 +1,7 @@
 import { TRENDING_FETCH_FAIL, TRENDING_FETCH_REQUEST, TRENDING_FETCH_SUCCESS, VEHICLE_FETCH_BY_ID_SUCCESS, VEHICLE_FETCH_FAIL, VEHICLE_FETCH_REQUEST, VEHICLE_FETCH_SUCCESS } from "./actionType";
 import axios from "axios";
 
-const baseUrl = "https://4ed3-114-122-143-178.ngrok-free.app";
+const baseUrl = "https://2f5c-114-122-143-178.ngrok-free.app";
 
 // FETCH VEHICLES
 export const vehicleFetchRequest = () => {
