@@ -13,3 +13,7 @@ export const TRENDING_FETCH_FAIL = "trending/fetchFail";
 export const CATEGORIES_FETCH_SUCCESS = "categories/fetchSuccess";
 
 export const PROFILES_FETCH_SUCCESS = "profiles/fetchProfiles";
+
+export const ORDER_FETCH_REQUEST = "order/fetchRequest";
+export const ORDER_FETCH_SUCCESS = "order/fetchSuccess";
+export const ORDER_FETCH_FAIL = "order/fetchFail";

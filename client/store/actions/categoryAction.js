@@ -1,7 +1,7 @@
 import { CATEGORIES_FETCH_SUCCESS, TRENDING_FETCH_FAIL } from "./actionType";
 import axios from "axios";
 
-const baseUrl = "https://4ed3-114-122-143-178.ngrok-free.app";
+const baseUrl = "https://2f5c-114-122-143-178.ngrok-free.app";
 
 // FETCH CATEGORIES
 export const categoriesFetchSuccess = (payload) => {
