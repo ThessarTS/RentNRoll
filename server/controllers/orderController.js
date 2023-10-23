@@ -1,4 +1,4 @@
-const { Order, Vehicle, User, Review } = require("../models/index");
+const { Order, Vehicle, User, Review, Balance } = require("../models/index");
 const midtransClient = require("midtrans-client");
 const { Sequelize } = require("sequelize");
 const redis = require("../helpers/redis");
@@ -121,6 +121,9 @@ class OrderController {
           where: { id },
         }
       );
+      if (status === "returned") {
+        await Balance.create({ OrderId: id, UserId: req.user.id, amount: findOrder.totalPrice });
+      }
       await redis.del("orderDetailFinalProject:" + id);
       await redis.del("userOrderFinalProject:" + req.user.id);
       await redis.del("vehicleOrderFinalProject");

@@ -23,6 +23,7 @@ module.exports = {
     const categories = require("../data/category.json");
     const dataCategories = categories.map((el) => {
       el.createdAt = el.updatedAt = new Date();
+      el.specifications = JSON.stringify(el.specifications);
       return el;
     });
     await queryInterface.bulkInsert("Categories", dataCategories, {});

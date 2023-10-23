@@ -8,6 +8,7 @@ module.exports = (sequelize, DataTypes) => {
       User.hasOne(models.UserProfile);
       User.hasMany(models.Review);
       User.hasMany(models.Order);
+      User.hasMany(models.Balance);
     }
   }
   User.init(

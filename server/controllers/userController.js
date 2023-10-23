@@ -2,7 +2,7 @@ const { comparePassword } = require("../helpers/bcrypt");
 const { signToken } = require("../helpers/jwt");
 const { generateOTP, sendOTPByEmail } = require("../helpers/nodemailer");
 const redis = require("../helpers/redis");
-const { User, UserProfile, Order, Vehicle } = require("../models");
+const { User, UserProfile, Order, Vehicle, Balance } = require("../models");
 const { OAuth2Client } = require("google-auth-library");
 class UserController {
   static async register(req, res, next) {
@@ -115,6 +115,9 @@ class UserController {
           include: [
             {
               model: UserProfile,
+            },
+            {
+              model: Balance,
             },
             {
               model: Order,
