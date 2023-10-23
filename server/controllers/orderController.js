@@ -29,6 +29,9 @@ class OrderController {
             },
           ],
         });
+        if (orders.length == 0) {
+                throw { name: 'not_found' }
+            }
         userOrders = orders;
       }
       res.json(userOrders);

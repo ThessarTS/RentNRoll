@@ -26,9 +26,15 @@ beforeAll(async () => {
   dataVehicle.forEach((el) => {
     el.createdAt = el.updatedAt = new Date();
   });
+  let dataReviews = require("../data/reviews.json");
+  dataReviews.forEach((el) => {
+    el.createdAt = el.updatedAt = new Date();
+  });
+
   await sequelize.queryInterface.bulkInsert("Users", dataUsers);
   await sequelize.queryInterface.bulkInsert("Categories", dataCategories);
   await sequelize.queryInterface.bulkInsert("Vehicles", dataVehicle);
+  await sequelize.queryInterface.bulkInsert("Reviews", dataReviews);
   const userToken = await User.findOne({
     where: {
       email: "pablo@mail.com",
@@ -56,13 +62,13 @@ afterAll(async () => {
 });
 
 describe("Test get data Vehicle endpoint /vehicles", () => {
-  it("Successfully get Products (without access_token) without using query filter parameters /pub/products", async function () {
+  it("Successfully get vehicles (without access_token) without using query filter parameters /vehicles", async function () {
     const response = await request(app).get("/vehicles");
 
     expect(response.status).toBe(200);
     expect(response.body).toBeInstanceOf(Array);
   });
-  it("Successfully get Products (with access_token) without using query filter parameters /pub/products", async function () {
+  it("Successfully get vehicles (with access_token) without using query filter parameters /vehicles", async function () {
     const response = await request(app)
       .get("/vehicles")
       .set("access_token", access_token);
@@ -70,15 +76,61 @@ describe("Test get data Vehicle endpoint /vehicles", () => {
     expect(response.status).toBe(200);
     expect(response.body).toBeInstanceOf(Array);
   });
+  it("Successfully get vehicles with using query filter parameters /vehicles", async function () {
+    let startdate = new Date('2023-01-02')
+    let enddate = new Date('2023-01-03')
+    const response = await request(app)
+      .get(`/vehicles?location=Jakarta&startdate=${startdate}&enddate=${enddate}`)
+
+    expect(response.status).toBe(200);
+    expect(response.body).toBeInstanceOf(Array);
+    expect(response.body[0]).toHaveProperty('name', expect.any(String));
+    expect(response.body[0]).toHaveProperty('location', expect.any(String));
+    expect(response.body[0]).toHaveProperty('totalOrders', expect.any(Number));
+  });
+  it("fetch vehicles using query startdate and enddate /vehicles", async function () {
+    let startdate = new Date('2023-09-01')
+    let enddate = new Date('2023-09-03')
+    const response = await request(app)
+      .get(`/vehicles?startdate=${startdate}&enddate=${enddate}`)
+
+    expect(response.status).toBe(200);
+    expect(response.body).toBeInstanceOf(Array);
+
+  });
+  it("failed fetch using query filter parameters because cannot find result /vehicles", async function () {
+    await sequelize.queryInterface.bulkDelete("Vehicles", null, {
+      truncate: true,
+      cascade: true,
+      restartIdentity: true,
+    })
+
+    let startdate = new Date('2023-01-02')
+    let enddate = new Date('2023-01-03')
+    const response = await request(app)
+      .get(`/vehicles?location=Jakarta&startdate=${startdate}&enddate=${enddate}`)
+
+    expect(response.status).toBe(404);
+    expect(response.body).toBeInstanceOf(Object);
+    expect(response.body).toHaveProperty('message', 'Not Found');
+  });
+
 });
 
 describe("Test get data detail vehicle endpoint /vehicles/:id", () => {
   it("Successfully obtained 1 Main Entity according to the ID params provided", async function () {
+    let dataVehicle = require("../data/vehicle.json");
+    dataVehicle.forEach((el) => {
+      el.createdAt = el.updatedAt = new Date();
+    })
+    await sequelize.queryInterface.bulkInsert("Vehicles", dataVehicle);
     const response = await request(app).get("/vehicles/2");
+
+    console.log(response.body);
     expect(response.status).toBe(200);
     expect(response.body).toBeInstanceOf(Object);
-    expect(response.body).toHaveProperty("Category", expect.any(Object));
-    expect(response.body).toHaveProperty("User", expect.any(Object));
+    expect(response.body).toHaveProperty("vehicle", expect.any(Object));
+    expect(response.body).toHaveProperty("rating");
   });
   it("Failed to get Main Entity because the given id params does not exist in the database / is invalid", async function () {
     const response = await request(app).get("/vehicles/200");
@@ -87,7 +139,7 @@ describe("Test get data detail vehicle endpoint /vehicles/:id", () => {
   });
 });
 
-// JANGAN DIHAPUS
+
 describe("Test add vehicle endpoint /vehicles method POST", () => {
   it("Successfully added a vehicle", async function () {
     const response = await request(app)
@@ -96,6 +148,7 @@ describe("Test add vehicle endpoint /vehicles method POST", () => {
       .field('name', 'Toyota Rush')
       .field('CategoryId', '1')
       .field('price', '270000')
+      .field('location', 'Bandung')
       .attach('image', './data/testingImage.png')
 
     expect(response.status).toBe(201);
@@ -111,12 +164,13 @@ describe("Test add vehicle endpoint /vehicles method POST", () => {
       .field('name', '')
       .field('CategoryId', '1')
       .field('price', '270000')
+      .field('location', 'Bandung')
       .attach('image', './data/testingImage.png')
 
     expect(response.status).toBe(400);
     expect(response.body).toBeInstanceOf(Object);
     expect(response.body).toHaveProperty("message", "Name is required!");
-  });
+  }, 7000);
 
   it("Faild added a vehicle without price feild", async function () {
     const response = await request(app)
@@ -124,13 +178,14 @@ describe("Test add vehicle endpoint /vehicles method POST", () => {
       .set("access_token", access_token)
       .field('name', 'Toyota Rush')
       .field('CategoryId', '1')
+      .field('location', 'Bandung')
       .field('price', '')
       .attach('image', './data/testingImage.png')
 
     expect(response.status).toBe(400);
     expect(response.body).toBeInstanceOf(Object);
     expect(response.body).toHaveProperty("message", "Price is required!");
-  });
+  }, 7000);
 
   it("Faild added a vehicle with empty image feild", async function () {
     const response = await request(app)
@@ -148,7 +203,7 @@ describe("Test add vehicle endpoint /vehicles method POST", () => {
 });
 
 describe("Test delete vehicle endpoint /vehicles/:id", () => {
-  it("Successfully added a vehicle", async function () {
+  it("Successfully delete a vehicle", async function () {
     const response = await request(app)
       .delete("/vehicles/2")
       .set("access_token", access_token);
