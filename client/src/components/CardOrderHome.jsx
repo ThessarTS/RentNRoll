@@ -2,7 +2,7 @@ import React from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 
-function CardOrder({ orders, navigation }) {
+function CardOrderHome({ orders, navigation }) {
   const maxLength = 18;
   console.log(orders.Vehicle.name, "<<<<");
   const truncateName = (name) => {
@@ -88,4 +88,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CardOrder;
+export default CardOrderHome;

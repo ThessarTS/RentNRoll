@@ -1,10 +1,43 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, TextInput, View, ScrollView } from "react-native";
-// import { TextInput } from "react-native-gesture-handler";
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  select,
+  View,
+  ScrollView,
+} from "react-native";
+import { useSelector } from "react-redux";
 import Dropdown from "react-native-input-select";
 function AddVehicle() {
   const [country, setCountry] = useState();
+  const { categories } = useSelector((state) => state.categoryReducer);
+  const category = [
+    {
+      name: "car",
+      specifications: "['color','transmission','seat','year']",
+    },
+    {
+      name: "motorcycle",
+      specifications: "['color','transmission','year']",
+    },
+    {
+      name: "bicycle",
+      specifications: "['color']",
+    },
+    {
+      name: "scooter",
+      specifications: "['color']",
+    },
+  ];
   console.log(country);
+  console.log(categories.specifications);
+
+  function categoryInput(category) {
+    if (category == 1) {
+      return;
+    }
+  }
   return (
     <ScrollView>
       <View style={styles.container}>
@@ -30,17 +63,16 @@ function AddVehicle() {
             <Dropdown
               style={styles.textInput}
               label="Country"
-              placeholder="Select an option..."
+              placeholder="Car..."
               options={[
-                { label: "Nigeria", value: "NG" },
-                { label: "Åland Islands", value: "AX" },
-                { label: "Algeria", value: "DZ" },
-                { label: "American Samoa", value: "AS" },
-                { label: "Andorra", value: "AD" },
+                { label: "Car", value: 1 },
+                { label: "Motorcycle", value: 2 },
+                { label: "Bicycle", value: 3 },
+                { label: "Scooter", value: 4 },
               ]}
               selectedValue={country}
               onValueChange={(value) => setCountry(value)}
-              primaryColor={"green"}
+              primaryColor={"#22A6B3"}
               dropdownStyle={{
                 borderWidth: 0, // To remove border, set borderWidth to 0
               }}

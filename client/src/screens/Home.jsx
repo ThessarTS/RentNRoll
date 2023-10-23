@@ -35,7 +35,9 @@ import {
 } from "../../store/actions/vehicleAction";
 import { AntDesign } from "@expo/vector-icons";
 import notFound from "../../assets/image/not-found.jpg";
-import CardOrder from "../components/CardOrder";
+import CardOrderHome from "../components/CardOrderHome";
+// import CardOrderHome from "../components/CardOrderHome";
+
 function Home({ navigation }) {
   const { vehicles, trending, loading } = useSelector(
     (state) => state.vehicleReducer
@@ -271,7 +273,10 @@ function Home({ navigation }) {
                       data={profile.Orders}
                       renderItem={({ item }) => {
                         return (
-                          <CardOrder orders={item} navigation={navigation} />
+                          <CardOrderHome
+                            orders={item}
+                            navigation={navigation}
+                          />
                         );
                       }}
                       keyExtractor={(item) => item.id}
