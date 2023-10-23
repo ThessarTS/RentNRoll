@@ -1,7 +1,7 @@
 import axios from "axios";
 import { ORDER_FETCH_FAIL, ORDER_FETCH_REQUEST, ORDER_FETCH_SUCCESS } from "./actionType";
 
-const baseUrl = "https://2f5c-114-122-143-178.ngrok-free.app";
+const baseUrl = "https://0187-2001-448a-1021-5f44-11c3-740a-ea80-49d6.ngrok-free.app";
 
 export const orderFetchReq = () => {
   return { type: ORDER_FETCH_REQUEST };

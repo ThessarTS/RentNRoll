@@ -2,6 +2,9 @@ export const VEHICLE_FETCH_REQUEST = "vehicle/fetchRequest";
 export const VEHICLE_FETCH_SUCCESS = "vehicle/fetchSuccess";
 export const VEHICLE_FETCH_FAIL = "vehicle/fetchFail";
 
+export const VEHICLE_QUERY_FETCH_SUCCESS = "vehicle/fetchQuerySuccess";
+export const VEHICLE_QUERY_FETCH_REQUEST = "vehicle/fetchQueryRequest";
+
 // export const VEHICLE_FETCH_BY_ID_REQUEST = "vehicle/fetchByIdRequest";
 export const VEHICLE_FETCH_BY_ID_SUCCESS = "vehicle/fetchByIdSuccess";
 // export const VEHICLE_FETCH_BY_ID_FAIL = "vehicle/fetchByIdFail";

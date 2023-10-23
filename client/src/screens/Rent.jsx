@@ -1,125 +1,171 @@
-import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, SafeAreaView, ImageBackground, ScrollView, View, Image, Pressable } from "react-native";
-import bg from "../../assets/image/bg-home.png";
-import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-import { Ionicons } from "@expo/vector-icons";
-import { Entypo } from "@expo/vector-icons";
-import { MaterialIcons } from "@expo/vector-icons";
+import React, { useCallback, useRef, useState } from "react";
+import { StyleSheet, Text, SafeAreaView, ScrollView, View, Pressable, ActivityIndicator, Alert } from "react-native";
+import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import SelectDropdown from "react-native-select-dropdown";
-import { AntDesign } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import Modal from "react-native-modal";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchVehicles } from "../../store/actions/vehicleAction";
+import CardVehicleRent from "../components/CardVehicleRent";
+import { useFocusEffect } from "@react-navigation/native";
+import NavIcon from "../components/NavIcon";
+import { errorAlert } from "../helpers/alert";
 
 function Account({ navigation }) {
-  const [startDate, setSelectedStartDate] = useState(new Date());
-  const [endDate, setSelectedEndDate] = useState(new Date());
-  const [settings, setSettings] = useState(false);
+  const dispatch = useDispatch();
+  const [startdate, setSelectedstartdate] = useState(new Date());
+  const [endate, setSelectedendate] = useState(new Date());
   const countries = ["Jakarta", "Bandung", "Medan", "Batam", "Bali", "Aceh", "Bogor"];
+  const [searched, setSearched] = useState(false);
+  const { vehiclesQuery, loading } = useSelector((state) => state.vehicleReducer);
+  const dropdownRef = useRef(null);
+  const [errMsg, setErrMsg] = useState("");
 
-  const handleStartDateChange = (event, date) => {
+  const [handleInput, setHandleInput] = useState({
+    location: "",
+    startdate: new Date(),
+    endate: new Date(),
+  });
+
+  const search = () => {
+    if (handleInput.location !== "") {
+      dispatch(fetchVehicles(handleInput)).then(() => {
+        setSearched(true);
+        setErrMsg("");
+      });
+    } else {
+      setErrMsg("Input Location!");
+      errorAlert(errMsg);
+    }
+  };
+
+  const handlestartdateChange = (event, date) => {
     if (date !== undefined) {
       const today = new Date();
       if (date >= today) {
-        setSelectedStartDate(date);
-        setSelectedEndDate(date);
+        setSelectedstartdate(date);
+        setSelectedendate(date);
+        setHandleInput((prevState) => ({
+          ...prevState,
+          startdate: date.toISOString(),
+          endate: date.toISOString(),
+        }));
       }
     }
   };
 
-  const handleEndDateChange = (event, date) => {
+  const handleendateChange = (event, date) => {
     if (date !== undefined) {
-      if (date >= setSelectedStartDate) {
-        setSelectedEndDate(date);
+      if (date >= startdate) {
+        setSelectedendate(date);
+        setHandleInput((prevState) => ({
+          ...prevState,
+          endate: date.toISOString(),
+        }));
       }
     }
   };
-  const toggleSettings = () => {
-    setSettings(!settings);
-  };
+
+  useFocusEffect(
+    useCallback(() => {
+      setSearched(false);
+      setHandleInput((prevState) => ({
+        ...prevState,
+        location: "",
+      }));
+      dropdownRef.current.reset();
+    }, [])
+  );
 
   return (
     <View style={styles.container}>
-      <View style={styles.mastheadContainer}>
-        <View style={{ marginEnd: 10, paddingBottom: 10, alignSelf: "flex-end" }}>
-          <View style={{ flexDirection: "row", justifyContent: "center", gap: 10 }}>
-            <Pressable style={styles.iconContainer}>
-              <Entypo name="chat" size={25} color="white" />
-            </Pressable>
-            <Pressable style={styles.iconContainer}>
-              <Icon name="bell-badge" size={25} color="white" />
-            </Pressable>
-            <Pressable style={styles.iconContainer} onPress={toggleSettings}>
-              <Ionicons name="settings" size={25} color="white" />
-            </Pressable>
-          </View>
-        </View>
-      </View>
+      <NavIcon />
       <SafeAreaView style={{ flex: 1 }}>
-        <ImageBackground source={bg} style={{ flex: 1 }}>
-          <ScrollView style={styles.scrollViewContainer}>
-            <View style={styles.itemContainer}>
-              <View style={styles.top}></View>
+        <View style={styles.scrollViewContainer}>
+          <View style={styles.itemContainer}>
+            <View style={styles.top}></View>
 
-              <View style={{ backgroundColor: "white", marginHorizontal: 10, padding: 20, borderRadius: 8, gap: 20, shadowColor: "#171717", shadowOffset: { width: -2, height: 4 }, shadowOpacity: 0.2, shadowRadius: 3 }}>
-                <View style={{ flexDirection: "row", alignItems: "center", gap: 20 }}>
-                  <View style={{ backgroundColor: "#17799A", width: 35, height: 35, alignItems: "center", justifyContent: "center", borderRadius: "50%" }}>
-                    <MaterialIcons name="car-rental" size={25} color="white" />
-                  </View>
-                  <View>
-                    <Text>A convenient way to travel in and out town</Text>
-                  </View>
+            <View style={{ backgroundColor: "white", marginHorizontal: 10, padding: 20, borderRadius: 8, gap: 20, shadowColor: "#171717", shadowOffset: { width: -2, height: 4 }, shadowOpacity: 0.2, shadowRadius: 3, flex: 1 }}>
+              <View style={{ flexDirection: "row", alignItems: "center", gap: 20 }}>
+                <View style={{ backgroundColor: "#17799A", width: 35, height: 35, alignItems: "center", justifyContent: "center", borderRadius: "50%" }}>
+                  <MaterialIcons name="car-rental" size={25} color="white" />
                 </View>
-
-                <View style={{ gap: 10 }}>
-                  <SelectDropdown
-                    dropdownStyle={{ borderRadius: 8 }}
-                    buttonStyle={{
-                      backgroundColor: "white",
-                      borderWidth: 1,
-                      borderColor: "gray",
-                      borderRadius: 8,
-                      padding: 0,
-                    }}
-                    buttonTextStyle={{
-                      fontSize: 15,
-                    }}
-                    defaultButtonText="Select Location"
-                    data={countries}
-                    onSelect={(selectedItem, index) => {
-                      console.log(selectedItem, index);
-                    }}
-                    buttonTextAfterSelection={(selectedItem, index) => {
-                      return selectedItem;
-                    }}
-                    rowTextForSelection={(item, index) => {
-                      return item;
-                    }}
-                  />
-
-                  <View style={styles.rentContainer}>
-                    <View style={styles.rentStartContainer}>
-                      <Text>Pick-up Date</Text>
-                      <View style={styles.rentStartDate}>
-                        <AntDesign name="calendar" size={24} color="black" />
-                        <DateTimePicker value={startDate} mode="date" is24Hour={true} display="default" minimumDate={new Date()} onChange={handleStartDateChange} />
-                      </View>
-                    </View>
-                    <View style={styles.rentEndContainer}>
-                      <Text>Drop-off Date</Text>
-                      <View style={styles.rendEndDate}>
-                        <DateTimePicker value={endDate} mode="date" is24Hour={true} display="default" minimumDate={startDate} onChange={handleEndDateChange} />
-                        <AntDesign name="calendar" size={24} color="black" />
-                      </View>
-                    </View>
-                  </View>
-                  <Pressable style={styles.rentButton}>
-                    <Text style={styles.rentAction}>Search</Text>
-                  </Pressable>
+                <View>
+                  <Text>A convenient way to travel in and out town</Text>
                 </View>
               </View>
+
+              <View style={{ gap: 10 }}>
+                <SelectDropdown
+                  ref={dropdownRef}
+                  dropdownStyle={{ borderRadius: 8 }}
+                  buttonStyle={{
+                    backgroundColor: "white",
+                    borderWidth: 1,
+                    borderColor: "gray",
+                    borderRadius: 8,
+                    padding: 0,
+                  }}
+                  buttonTextStyle={{
+                    fontSize: 15,
+                  }}
+                  defaultButtonText="Select Location"
+                  data={countries}
+                  onSelect={(selectedItem, index) => {
+                    setHandleInput((prevState) => ({
+                      ...prevState,
+                      location: selectedItem,
+                    }));
+                  }}
+                  buttonTextAfterSelection={(selectedItem, index) => {
+                    return selectedItem;
+                  }}
+                  rowTextForSelection={(item, index) => {
+                    return item;
+                  }}
+                />
+
+                <View style={styles.rentContainer}>
+                  <View style={styles.rentStartContainer}>
+                    <Text>Pick-up Date</Text>
+                    <View style={styles.rentstartdate}>
+                      <AntDesign name="calendar" size={24} color="black" />
+                      <DateTimePicker value={startdate} mode="date" is24Hour={true} display="default" minimumDate={new Date()} onChange={handlestartdateChange} />
+                    </View>
+                  </View>
+                  <View style={styles.rentEndContainer}>
+                    <Text>Drop-off Date</Text>
+                    <View style={styles.rendendate}>
+                      <DateTimePicker value={endate} mode="date" is24Hour={true} display="default" minimumDate={startdate} onChange={handleendateChange} />
+                      <AntDesign name="calendar" size={24} color="black" />
+                    </View>
+                  </View>
+                </View>
+                {/* {errMsg && (
+                  <View style={{ marginVertical: 5 }}>
+                    <Text style={{ textAlign: "center", color: "red", fontWeight: 700 }}>{errMsg}</Text>
+                  </View>
+                )} */}
+                <Pressable style={styles.rentButton} onPress={search}>
+                  <Text style={styles.rentAction}>Search</Text>
+                </Pressable>
+              </View>
+
+              <ScrollView showsVerticalScrollIndicator={false}>
+                {loading && (
+                  <View style={{ flex: 1, justifyContent: "center", alignItems: "center", marginTop: 30 }}>
+                    <ActivityIndicator size="large" />
+                    <Text style={{ marginTop: 16, fontSize: 18 }}>Loading...</Text>
+                  </View>
+                )}
+
+                {searched &&
+                  vehiclesQuery.map((e) => {
+                    return <CardVehicleRent vehicle={e} startdate={handleInput.startdate} key={e.id} />;
+                  })}
+              </ScrollView>
             </View>
-          </ScrollView>
-        </ImageBackground>
+          </View>
+        </View>
       </SafeAreaView>
     </View>
   );
@@ -130,22 +176,14 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "whitesmoke",
   },
-  mastheadContainer: {
-    flexDirection: "row",
-    gap: 5,
-    paddingHorizontal: 20,
-    paddingTop: 70,
-    paddingBottom: 10,
-    backgroundColor: "#17799A",
-    justifyContent: "flex-end",
-  },
+
   scrollViewContainer: {
     position: "relative",
     zIndex: 0,
   },
   itemContainer: {
-    backgroundColor: "whitesmoke",
-    height: "500%",
+    backgroundColor: "white",
+    height: "100%",
     paddingBottom: 20,
   },
   top: {
@@ -169,7 +207,7 @@ const styles = StyleSheet.create({
     gap: 10,
     padding: 5,
   },
-  rentStartDate: {
+  rentstartdate: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
@@ -180,7 +218,7 @@ const styles = StyleSheet.create({
     padding: 5,
     borderBottomColor: "gray",
   },
-  rendEndDate: {
+  rendendate: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
@@ -197,6 +235,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 10,
+  },
+  error: {
+    color: "red",
   },
 });
 

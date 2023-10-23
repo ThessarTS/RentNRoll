@@ -1,37 +1,72 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useState } from "react";
 import { StyleSheet, Text, SafeAreaView, ImageBackground, ScrollView, View, Image, Pressable, FlatList } from "react-native";
 import bg from "../../assets/image/bg-home.png";
-import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-import { MaterialIcons, Entypo } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 import notFound from "../../assets/image/zzz.png";
 import { useSelector } from "react-redux";
 import CardOrder from "../components/CardOrder";
+import NavIcon from "../components/NavIcon";
 
 function Account({ navigation }) {
   const { profile } = useSelector((state) => state.userReducer);
+  const [selectedStatus, setSelectedStatus] = useState("All");
+  const status = [
+    {
+      status: "All",
+    },
+    {
+      status: "Pending",
+    },
+    {
+      status: "Payment",
+    },
+    {
+      status: "Ongoing",
+    },
+    {
+      status: "Returned",
+    },
+  ];
+
+  const filterOrderByStatus = (status) => {
+    setSelectedStatus(status.toLowerCase() === "all" ? "All" : status);
+  };
+
+  const filteredOrders = profile && profile.Orders ? (selectedStatus === "All" ? profile.Orders : profile.Orders.filter((order) => order.status.toLowerCase() === selectedStatus.toLowerCase())) : [];
+
+  const ButtonStatus = ({ status }) => {
+    const isSelected = status.status === selectedStatus || (selectedStatus === null && status.status === "all");
+
+    return (
+      <Pressable
+        onPress={() => filterOrderByStatus(status.status)}
+        style={{
+          marginEnd: 3,
+          paddingBottom: 5,
+          flex: 1,
+          height: 30,
+          alignItems: "center",
+          justifyContent: "center",
+          borderBottomWidth: 2,
+          borderBottomColor: isSelected ? "#17799A" : "transparent",
+        }}
+      >
+        <Text style={{ fontSize: 11 }}>{status.status}</Text>
+      </Pressable>
+    );
+  };
 
   return (
     <View style={styles.container}>
-      <View style={styles.mastheadContainer}>
-        <View style={{ marginEnd: 10, paddingBottom: 10, alignSelf: "flex-end" }}>
-          <View style={{ flexDirection: "row", justifyContent: "center", gap: 10 }}>
-            <Pressable>
-              <Entypo name="chat" size={25} color="white" />
-            </Pressable>
-            <Pressable>
-              <Icon name="bell-badge" size={25} color="white" />
-            </Pressable>
-          </View>
-        </View>
-      </View>
+      <NavIcon />
       <SafeAreaView style={{ flex: 1 }}>
-        {profile && profile.Orders.length !== 0 ? (
+        {profile && profile.Orders && profile.Orders.length !== 0 ? (
           <ImageBackground source={bg} style={{ flex: 1 }}>
-            <ScrollView style={styles.scrollViewContainer}>
+            <View style={styles.scrollViewContainer}>
               <View style={styles.itemContainer}>
                 <View style={styles.top}></View>
 
-                <View style={{ backgroundColor: "white", marginHorizontal: 10, padding: 20, borderRadius: 8, gap: 20, shadowColor: "#171717", shadowOffset: { width: -2, height: 4 }, shadowOpacity: 0.2, shadowRadius: 3 }}>
+                <View style={{ backgroundColor: "white", marginHorizontal: 10, padding: 20, borderRadius: 8, gap: 20, shadowColor: "#171717", shadowOffset: { width: -2, height: 4 }, shadowOpacity: 0.2, shadowRadius: 3, flex: 1 }}>
                   <View style={{ flexDirection: "row", alignItems: "center", gap: 20 }}>
                     <View style={{ backgroundColor: "#17799A", width: 35, height: 35, alignItems: "center", justifyContent: "center", borderRadius: "50%" }}>
                       <MaterialIcons name="car-rental" size={25} color="white" />
@@ -41,14 +76,35 @@ function Account({ navigation }) {
                     </View>
                   </View>
 
-                  <View>
-                    {profile.Orders.map((order) => (
-                      <CardOrder order={order} key={order.id} />
+                  <View style={{ flexDirection: "row", gap: 5, alignItems: "center", justifyContent: "center" }}>
+                    {status.map((e) => (
+                      <ButtonStatus status={e} key={e.status} />
                     ))}
                   </View>
+
+                  <ScrollView>
+                    <View>
+                      {filteredOrders.length !== 0 ? (
+                        filteredOrders.map((order) => <CardOrder order={order} key={order.id} />)
+                      ) : (
+                        <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+                          <Image source={notFound} style={{ width: 200, height: 200 }} resizeMode="contain" />
+                          <Text
+                            style={{
+                              textAlign: "center",
+                              fontSize: 15,
+                              fontWeight: 500,
+                            }}
+                          >
+                            No orders found
+                          </Text>
+                        </View>
+                      )}
+                    </View>
+                  </ScrollView>
                 </View>
               </View>
-            </ScrollView>
+            </View>
           </ImageBackground>
         ) : (
           <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
@@ -100,7 +156,7 @@ const styles = StyleSheet.create({
   },
   itemContainer: {
     backgroundColor: "white",
-    height: "500%",
+    height: "100%",
     paddingBottom: 20,
   },
   top: {
