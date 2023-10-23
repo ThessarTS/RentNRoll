@@ -13,6 +13,7 @@ import store from "./store/reducers";
 import Rent from "./src/screens/Rent";
 import MyOrder from "./src/screens/MyOrder";
 import { AlertNotificationRoot } from "react-native-alert-notification";
+import Profile from "./src/screens/Profile";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -114,6 +115,14 @@ export default function App() {
                 },
                 tabBarStyle: { display: "none" },
                 title: route.params.name,
+              })}
+            />
+            <Stack.Screen
+              name="myprofile"
+              component={Profile}
+              options={({ route }) => ({
+                headerShown: false,
+                tabBarStyle: { display: "none" },
               })}
             />
           </Stack.Navigator>
