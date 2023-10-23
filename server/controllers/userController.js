@@ -85,7 +85,7 @@ class UserController {
   }
   static async createProfile(req, res, next) {
     try {
-      console.log(req.ktp, "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<><><><>");
+      
       if (!req.profilePicture) {
         throw { name: "Profile Picture is required!" };
       }
