@@ -68,7 +68,7 @@ class VehicleController {
       });
       res.status(200).json(vehicleData);
     } catch (err) {
-      console.log(err);
+      console.log(err, '<<<<<<<<<<');
       next(err);
     }
   }
@@ -234,9 +234,13 @@ class VehicleController {
   static async getCategories(req, res, next) {
     try {
       let dataCategories = await redis.get("categoryFinalProject");
+      let testRedis = await redis.keys('*')
       if (!dataCategories) {
         const data = await Category.findAll();
         dataCategories = data;
+        await redis.set("categoryFinalProject", JSON.stringify(data))
+      } else {
+        dataCategories = JSON.parse(dataCategories)
       }
       res.json(dataCategories);
     } catch (error) {
