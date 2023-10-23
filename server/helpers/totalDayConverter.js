@@ -7,7 +7,7 @@ const totalDayConverter = (sDate, eDate) => {
   const timeDifference = endDate - startDate;
   const totalDays = Math.floor(timeDifference / millisecondsPerDay);
 
-  return totalDays;
+  return totalDays + 1;
 };
 
 module.exports = totalDayConverter;
