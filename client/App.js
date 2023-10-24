@@ -8,20 +8,27 @@ import LoginRegister from "./src/screens/LoginRegister";
 import Account from "./src/screens/Account";
 import Detail from "./src/screens/Detail";
 import AddVehicle from "./src/screens/AddVehicle";
-import { Provider, useSelector } from "react-redux";
+import { Provider, useDispatch, useSelector } from "react-redux";
 import store from "./store/reducers";
 import Rent from "./src/screens/Rent";
 import MyOrder from "./src/screens/MyOrder";
 import { AlertNotificationRoot } from "react-native-alert-notification";
 import Profile from "./src/screens/Profile";
 import MyVehicle from "./src/screens/My Vehicle";
+import { useCallback } from "react";
+import { getUser } from "./store/actions";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const HomeTab = () => {
+  const dispatch = useDispatch();
   const { profile } = useSelector((state) => state.userReducer);
-
+  useFocusEffect(
+    useCallback(() => {
+      dispatch(getUser());
+    }, [])
+  );
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -45,15 +52,11 @@ const HomeTab = () => {
           } else if (route.name === "Video") {
             iconName = focused ? "play-circle-sharp" : "play-circle-outline";
           } else if (route.name === "You") {
-            iconName = focused
-              ? "person-circle-sharp"
-              : "person-circle-outline";
+            iconName = focused ? "person-circle-sharp" : "person-circle-outline";
           } else if (route.name === "Rent Now") {
             iconName = focused ? "bicycle-sharp" : "bicycle-outline";
           } else if (route.name === "Add Vehicle") {
-            iconName = focused
-              ? "ios-add-circle-sharp"
-              : "ios-add-circle-outline";
+            iconName = focused ? "ios-add-circle-sharp" : "ios-add-circle-outline";
           }
 
           return <Ionicons name={iconName} size={20} color={color} />;
@@ -139,8 +142,6 @@ export default function App() {
                 headerStyle: {
                   backgroundColor: "#17799A",
                 },
-                tabBarStyle: { display: "none" },
-                title: "My Vehicle",
               })}
             />
           </Stack.Navigator>
