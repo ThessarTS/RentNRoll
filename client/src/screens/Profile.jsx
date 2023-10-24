@@ -1,5 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, SafeAreaView, ImageBackground, ScrollView, View, Image, Pressable } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  SafeAreaView,
+  ImageBackground,
+  ScrollView,
+  View,
+  Image,
+  Pressable,
+  Alert,
+} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import bg from "../../assets/image/bg-home.png";
 import { Ionicons, Feather } from "@expo/vector-icons";
@@ -8,6 +18,7 @@ import NavIcon from "../components/NavIcon";
 import { fetchMyVehicles } from "../../store/actions";
 import * as ImagePicker from "expo-image-picker";
 import { addProfile, editProfile } from "../../store/actions/userAction";
+import { successAlert } from "../helpers/alert";
 
 function Profile({ navigation }) {
   const { profile } = useSelector((state) => state.userReducer);
@@ -122,26 +133,22 @@ function Profile({ navigation }) {
         uri: inputSIMCImage,
       });
     }
-    // setLoading(true);
-    if (profile.UserProfile.profilePicture) {
-      //edit
 
+    if (profile?.UserProfile.profilePicture) {
       dispatch(editProfile(formData, access_token, profile.id))
         .then((data) => {
           setToggleEdit(false);
-          // setLoading(false);
-          Alert.alert(data.message);
+          successAlert(data.message);
           navigation.goBack();
         })
         .catch((error) => {
-          // setLoading(false);
           Alert.alert(error.message);
         });
     } else {
       dispatch(addProfile(formData, access_token))
         .then((data) => {
           // setToggleEdit(false);
-          Alert.alert(data.message);
+          successAlert(data.message);
           // setLoading(false);
         })
         .catch((error) => {
@@ -173,7 +180,9 @@ function Profile({ navigation }) {
         <Pressable onPress={() => navigation.navigate("You")}>
           <Ionicons name="arrow-back-sharp" size={24} color="white" />
         </Pressable>
-        <Text style={{ color: "white", fontSize: 20 }}>{profile.fullName}</Text>
+        <Text style={{ color: "white", fontSize: 20 }}>
+          {profile?.fullName}
+        </Text>
       </View>
       <SafeAreaView style={{ flex: 1 }}>
         <ImageBackground source={bg} style={{ flex: 1 }}>
