@@ -13,6 +13,7 @@ import {
   VEHICLE_QUERY_FETCH_SUCCESS,
 } from "./actionType";
 import axios from "axios";
+import { baseUrl } from "./categoryAction";
 
 const baseUrl = "https://1545-118-96-109-120.ngrok-free.app";
 

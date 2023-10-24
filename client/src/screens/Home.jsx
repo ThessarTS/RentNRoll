@@ -45,7 +45,6 @@ function Home({ navigation }) {
     setFilteredCategory(dataByCategory);
     setTogleCategory(true);
   };
-  // console.log(filteredCategory, "<<");
   const toggleSearch = (value) => {
     setSearch(value);
   };

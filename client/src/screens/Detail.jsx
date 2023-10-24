@@ -25,13 +25,13 @@ function Detail({ route, navigation }) {
   const [endDate, setSelectedEndDate] = useState(new Date(startDate.getTime() + 24 * 60 * 60 * 1000));
   const dispatch = useDispatch();
 
-  console.log(detail.vehicle.User.UserProfile.profilePicture);
-
   useEffect(() => {
     setLoadingDetail(true);
     dispatch(fetchOrderByVehicleId(id));
     dispatch(fetchDetail(id)).then(() => {
-      setLoadingDetail(false);
+      setLoadingDetail(false).catch((error) => {
+        console.log(error);
+      });
     });
   }, []);
 
