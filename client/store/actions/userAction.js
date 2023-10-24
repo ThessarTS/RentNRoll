@@ -81,7 +81,7 @@ export const fetchProfile = (value) => {
       });
       dispatch(profilesFetchSuccess(data));
     } catch (error) {
-      console.log(error);
+      console.log(error, "ini loh");
     }
   };
 };
