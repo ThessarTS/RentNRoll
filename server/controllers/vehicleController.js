@@ -77,14 +77,14 @@ class VehicleController {
   }
   static async fetchMyVehicle(req, res, next) {
     try {
-      let dataVehicle = await redis.get("myVehicleFinalProject:" + req.user.id);
-      if (!dataVehicle) {
-        const vehicle = await Vehicle.findAll({ where: { UserId: req.user.id } });
-        if (!vehicle) {
-          throw { name: "You don't have any vehicle" };
-        }
-        dataVehicle = vehicle;
+      // let dataVehicle = await redis.get("myVehicleFinalProject:" + req.user.id);
+      // if (!dataVehicle) {
+      const vehicle = await Vehicle.findAll({ where: { UserId: req.user.id } });
+      if (vehicle.length == 0) {
+        throw { name: "not_found" };
       }
+      let dataVehicle = vehicle;
+      // }
       res.json(dataVehicle);
     } catch (error) {
       next(error);
@@ -92,13 +92,13 @@ class VehicleController {
   }
   static async fetchLocation(req, res, next) {
     try {
-      let locationsData = await redis.get("locationFinalProject");
-      if (!locationsData) {
-        const vehicles = await Vehicle.findAll();
-        const locations = [...new Set(vehicles.map((vehicle) => vehicle.location))];
-        locationsData = locations;
-      }
-      res.status(200).json(locationsData);
+      // let locationsData = await redis.get("locationFinalProject");
+      // if (!locationsData) {
+      const vehicles = await Vehicle.findAll();
+      const locations = [...new Set(vehicles.map((vehicle) => vehicle.location))];
+      //   locationsData = locations;
+      // }
+      res.status(200).json(locations);
     } catch (error) {
       next(error);
     }

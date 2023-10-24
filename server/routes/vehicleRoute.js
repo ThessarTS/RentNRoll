@@ -4,7 +4,7 @@ const VehicleController = require("../controllers/vehicleController");
 const authentication = require("../middlewares/loginAuthentication");
 const uploadMulti = require("../middlewares/uploadImage");
 
-router.get("/myVehicle", authentication, VehicleController.fetchMyVehicle);
+router.get("/my-vehicles", authentication, VehicleController.fetchMyVehicle);
 router.get("/", VehicleController.fetchVehicle);
 router.get("/locations", VehicleController.fetchLocation);
 router.get("/:id/", VehicleController.detailVehicle);

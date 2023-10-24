@@ -1,4 +1,4 @@
-const { Order, Vehicle, User, Review, Balance } = require("../models/index");
+const { Order, Vehicle, User, Review, Balance, UserProfile } = require("../models/index");
 const midtransClient = require("midtrans-client");
 const { Sequelize } = require("sequelize");
 const redis = require("../helpers/redis");
@@ -89,6 +89,17 @@ class OrderController {
             if (vehicle.UserId == req.user.id) {
                 throw { name: "same-user" };
             }
+            let profile = await UserProfile.findOne({
+                where: { UserId: req.user.id }
+            })
+            console.log(vehicle, '<<<<<<<<<<<<<<<<<<<<<<<<<');
+            console.log(profile, '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<');
+            if (vehicle.CategoryId == 1 && !profile.simA) {
+                throw { name: 'sim_a_null' }
+            }
+            if (vehicle.CategoryId == 2 && !profile.simC) {
+                throw { name: 'sim_c_null' }
+            }
             const totalDay = totalDayConverter(startDate, endDate);
             const totalPrice = totalDay * vehicle.price;
             await Order.create({
@@ -99,9 +110,6 @@ class OrderController {
                 ownerId: vehicle.UserId,
                 totalPrice,
             });
-            await redis.del("userOrderFinalProject:" + req.user.id);
-            await redis.del("vehicleOrderFinalProject");
-            await redis.del("trendingDataFinalProject");
             res.status(201).json({ message: "Success create new order" });
         } catch (error) {
             console.log(error);

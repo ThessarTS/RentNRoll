@@ -1,5 +1,7 @@
 const request = require("supertest");
 const app = require("../app");
+const nodemailer = require('nodemailer');
+const nodemailerMock = require('nodemailer-mock');
 const { sequelize, User } = require("../models/index");
 const {
   describe,
@@ -612,4 +614,22 @@ describe("DELETE users profile /profiles", function () {
 
 
 // });
-// // ya29.a0AfB_byDF-eLc7QzybkL56UzYLYHuPNoQJXjNmR2t0dOYTOAwpXyPww6xKSx3t6hHIu18CyF5MDLjXt9RCZMuX6aPGZwvPn0IBuBTtSOj5gtG6Sc1KPjScNZ7Ampnd_TtDwyNzyeUA9PHCA0lmVtiPuOY0qtebGvKmF7UaCgYKAQcSARASFQGOcNnCTds9ZxKIZhPVtWoQCM_u8g0171
+// const emailService = require('../helpers/nodemailer');
+
+// jest.mock('../helpers/nodemailer');
+
+// describe('POST /otp', () => {
+//   it('should respond with a server error (500) on Nodemailer error', async function () {
+//     // Mock the asynchronous function to reject with an error
+//     emailService.sendOTPByEmail.mockRejectedValue(new Error('Nodemailer error'));
+
+//     const response = await request(app).post('/otp').send({
+//       email: 'test2@mail.com',
+//       password: '123123123',
+//     });
+
+//     expect(response.status).toEqual(500);
+//     expect(response.body).toBeInstanceOf(Object);
+//     expect(response.body).toHaveProperty('message', 'Internal server error');
+//   });
+// });
