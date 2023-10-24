@@ -1,16 +1,5 @@
-import React, { useCallback, useEffect, useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  SafeAreaView,
-  ImageBackground,
-  ScrollView,
-  View,
-  Image,
-  Pressable,
-  Alert,
-  ActivityIndicator,
-} from "react-native";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, Text, SafeAreaView, ImageBackground, ScrollView, View, Image, Pressable } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import bg from "../../assets/image/bg-home.png";
 import { Ionicons, Feather } from "@expo/vector-icons";

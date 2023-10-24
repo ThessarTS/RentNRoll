@@ -1,19 +1,5 @@
 import React, { useEffect, useState } from "react";
-
-import {
-  SafeAreaView,
-  StyleSheet,
-  View,
-  Text,
-  Pressable,
-  TextInput,
-  FlatList,
-  ScrollView,
-  ImageBackground,
-  ActivityIndicator,
-  Image,
-} from "react-native";
-
+import { SafeAreaView, StyleSheet, View, Text, Pressable, TextInput, FlatList, ScrollView, ImageBackground, ActivityIndicator, Image } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import carIcon from "../../assets/vector/car.png";
@@ -23,30 +9,20 @@ import scooterIcon from "../../assets/vector/scooter.png";
 import CardCategory from "../components/CardCategory";
 import CardVehicle from "../components/CardVehicle";
 import { FontAwesome } from "@expo/vector-icons";
-import { Entypo } from "@expo/vector-icons";
+import { Entypo, MaterialIcons, AntDesign } from "@expo/vector-icons";
 import bg from "../../assets/image/bg-home.png";
 import { useDispatch, useSelector } from "react-redux";
 import Modal from "react-native-modal";
-import { MaterialIcons } from "@expo/vector-icons";
-import { fetchCategory } from "../../store/actions/categoryAction";
-import {
-  fetchVehicles,
-  fetchTrending,
-} from "../../store/actions/vehicleAction";
-import { AntDesign } from "@expo/vector-icons";
+import { fetchVehicles, fetchTrending, fetchCategory, getUser } from "../../store/actions";
 import CardOrderHome from "../components/CardOrderHome";
 import notFound from "../../assets/image/zzz.png";
-import { getUser } from "../../store/actions/userAction";
+import { fPrice } from "../helpers/fPrice";
 
 function Home({ navigation }) {
-  const { vehicles, trending, loading } = useSelector(
-    (state) => state.vehicleReducer
-  );
-
+  const { vehicles, trending, loading } = useSelector((state) => state.vehicleReducer);
   const { profile } = useSelector((state) => state.userReducer);
   const { categories } = useSelector((state) => state.categoryReducer);
   const dispatch = useDispatch();
-  const [loadingCategory, setLoadingCategory] = useState(false);
   const [search, setSearch] = useState(false);
   const [togleCategory, setTogleCategory] = useState(false);
   const [searchValue, setSearchValue] = useState("");
@@ -83,13 +59,6 @@ function Home({ navigation }) {
       setFilteredData(vehicles);
       toggleSearch(false);
     }
-  };
-
-  const fPrice = (price) => {
-    return price.toLocaleString("id-ID", {
-      style: "currency",
-      currency: "IDR",
-    });
   };
 
   useEffect(() => {
@@ -150,9 +119,7 @@ function Home({ navigation }) {
             </View>
             <View style={[styles.headerItemContainer, { marginStart: 2 }]}>
               <Entypo name="price-tag" size={15} color="#17799A" />
-              <Text style={[styles.itemsDetailInfo, { marginStart: 2 }]}>
-                {fPrice(price)} /Day
-              </Text>
+              <Text style={[styles.itemsDetailInfo, { marginStart: 2 }]}>{fPrice(price)}/Day</Text>
             </View>
           </View>
           <View>
@@ -187,26 +154,13 @@ function Home({ navigation }) {
           filterDataByCategory(name);
         }}
       >
-        <CardCategory
-          name={name}
-          image={image}
-          backgroundColor={backgroundColor}
-        />
+        <CardCategory name={name} image={image} backgroundColor={backgroundColor} />
       </Pressable>
     );
   };
   const RenderCardVehicle = ({ vehicle }) => {
     const { name, image, price, averageRating, id } = vehicle.item;
-    return (
-      <CardVehicle
-        name={name}
-        image={image}
-        price={price}
-        rating={averageRating}
-        id={id}
-        navigation={navigation}
-      />
-    );
+    return <CardVehicle name={name} image={image} price={price} rating={averageRating} id={id} navigation={navigation} />;
   };
 
   return (
@@ -238,16 +192,7 @@ function Home({ navigation }) {
               {/* category */}
               <View style={[styles.categoryContainer, styles.shadowProp]}>
                 <Text style={styles.categoryTitle}>Categories</Text>
-
-                <FlatList
-                  style={{ marginTop: 10 }}
-                  data={categories}
-                  renderItem={(category) => (
-                    <RenderCategories category={category} />
-                  )}
-                  keyExtractor={(category) => category.id}
-                  horizontal={true}
-                />
+                <FlatList style={{ marginTop: 10 }} data={categories} renderItem={(category) => <RenderCategories category={category} />} keyExtractor={(category) => category.id} horizontal={true} />
               </View>
               {/* end category */}
               {/* Trending */}
@@ -298,15 +243,10 @@ function Home({ navigation }) {
                       }}
                     >
                       <FontAwesome name="history" size={24} color="black" />
-                      <Text style={{ fontWeight: 500, fontSize: 18 }}>
-                        Your History is empty
-                      </Text>
-                      <Text
-                        style={{ fontWeight: 500, fontSize: 14, marginTop: 10 }}
-                      >
-                        Looks like you've never done a rental before
-                      </Text>
+                      <Text style={{ fontWeight: 500, fontSize: 18, marginTop: 5 }}>Your History is empty</Text>
+                      <Text style={{ fontWeight: 500, fontSize: 14, marginTop: 10 }}>Looks like you've never done a rental before</Text>
                       <Pressable
+                        onPress={() => navigation.navigate("Rent Now")}
                         style={{
                           backgroundColor: "#17799A",
                           padding: 10,
@@ -331,15 +271,10 @@ function Home({ navigation }) {
                     }}
                   >
                     <FontAwesome name="history" size={24} color="black" />
-                    <Text style={{ fontWeight: 500, fontSize: 18 }}>
-                      Your History is empty
-                    </Text>
-                    <Text
-                      style={{ fontWeight: 500, fontSize: 14, marginTop: 10 }}
-                    >
-                      Looks like you've never done a rental before
-                    </Text>
+                    <Text style={{ fontWeight: 500, fontSize: 18, marginTop: 5 }}>Your History is empty</Text>
+                    <Text style={{ fontWeight: 500, fontSize: 14, marginTop: 10 }}>It seems like you haven't logged in yet.</Text>
                     <Pressable
+                      onPress={() => navigation.navigate("You")}
                       style={{
                         backgroundColor: "#17799A",
                         padding: 10,
@@ -348,7 +283,7 @@ function Home({ navigation }) {
                         marginTop: 10,
                       }}
                     >
-                      <Text style={{ color: "white" }}>Rent Now</Text>
+                      <Text style={{ color: "white" }}>Login Now</Text>
                     </Pressable>
                   </View>
                 )}
@@ -364,93 +299,20 @@ function Home({ navigation }) {
               >
                 <View
                   style={{
-                    backgroundColor:
-                      filteredData.length !== 0 ? "whitesmoke" : "white",
-                    height:
-                      filteredData.length !== 0 || filteredCategory.length !== 0
-                        ? "75%"
-                        : "45%",
+                    backgroundColor: filteredData.length !== 0 ? "whitesmoke" : "white",
+                    height: filteredData.length !== 0 || filteredCategory.length !== 0 ? "75%" : "45%",
                     padding: 20,
                     paddingVertical: 50,
                     gap: 5,
-                    borderTopLeftRadius: 16,
-                    borderTopRightRadius: 16,
+                    borderTopEndRadius: 16,
+                    borderTopStartRadius: 16,
                   }}
                 >
                   {filteredData.length !== 0 ? (
-                    <FlatList
-                      style={{ marginTop: 10 }}
-                      data={filteredData}
-                      renderItem={(vehicle) => (
-                        <RenderModalItems vehicle={vehicle} />
-                      )}
-                      keyExtractor={(vehicle) => vehicle.id}
-                      showsHorizontalScrollIndicator={false}
-                    />
-                  ) : (
-                    <View style={{ flex: 1, justifyContent: "center" }}>
-                      <Image
-                        source={notFound}
-                        style={{ flex: 1, width: null, height: null }}
-                        resizeMode="cover"
-                      />
-                      <View style={{ flex: 1 }}>
-                        <Text
-                          style={{
-                            textAlign: "center",
-                            fontSize: 20,
-                            fontWeight: 500,
-                          }}
-                        >
-                          Vehicle not Found
-                        </Text>
-                      </View>
-                    </View>
-                  )}
-
-                  <Pressable
-                    style={{ position: "absolute", top: 10, right: 20 }}
-                    onPress={() => toggleSearch(false)}
-                  >
-                    <MaterialIcons name="cancel" size={30} color="red" />
-                  </Pressable>
-                </View>
-              </Modal>
-
-              {/* Modal Ctegory filter */}
-              <Modal
-                isVisible={togleCategory}
-                onBackdropPress={toggleSearch}
-                style={{
-                  justifyContent: "flex-end",
-                  margin: 0,
-                }}
-              >
-                <View
-                  style={{
-                    backgroundColor:
-                      filteredData.length !== 0 ? "whitesmoke" : "white",
-                    height:
-                      filteredData.length !== 0 || filteredCategory.length !== 0
-                        ? "75%"
-                        : "45%",
-                    padding: 20,
-                    paddingVertical: 50,
-                    gap: 5,
-                    borderTopLeftRadius: 16,
-                    borderTopRightRadius: 16,
-                  }}
-                >
-                  {filteredCategory.length !== 0 ? (
-                    <FlatList
-                      style={{ marginTop: 10 }}
-                      data={filteredCategory}
-                      renderItem={(vehicle) => (
-                        <RenderModalItems vehicle={vehicle} />
-                      )}
-                      keyExtractor={(vehicle) => vehicle.id}
-                      showsHorizontalScrollIndicator={false}
-                    />
+                    <FlatList style={{ marginTop: 10 }} data={filteredData} renderItem={(vehicle) => <RenderModalItems vehicle={vehicle} />} keyExtractor={(vehicle) => vehicle.id} showsHorizontalScrollIndicator={false} />
+                  ) : filteredCategory.length !== 0 ? (
+                    // Display the FlatList when filteredCategory is not empty
+                    <FlatList style={{ marginTop: 10 }} data={filteredCategory} renderItem={(vehicle) => <RenderModalItems vehicle={vehicle} />} keyExtractor={(vehicle) => vehicle.id} showsHorizontalScrollIndicator={false} />
                   ) : (
                     <View style={{ flex: 1, justifyContent: "center" }}>
                       <Image
@@ -573,13 +435,14 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
   },
   modalContainer: {
-    backgroundColor: "white",
     elevation: 2,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.2,
     shadowRadius: 3,
     padding: 10,
+    borderBottomWidth: 0.5,
+    borderBottomColor: "gray",
   },
   itemsDetailTitle: {
     fontSize: 14,

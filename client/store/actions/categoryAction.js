@@ -1,8 +1,8 @@
-import { CATEGORIES_FETCH_SUCCESS, TRENDING_FETCH_FAIL } from "./actionType";
+import { errorAlert } from "../../src/helpers/alert";
+import { CATEGORIES_FETCH_SUCCESS } from "./actionType";
 import axios from "axios";
 
-export const baseUrl =
-  "https://76fe-2001-448a-6021-5c1-479e-df66-2222-ad93.ngrok-free.app";
+const baseUrl = "https://1545-118-96-109-120.ngrok-free.app";
 
 // FETCH CATEGORIES
 export const categoriesFetchSuccess = (payload) => {
@@ -18,7 +18,7 @@ export const fetchCategory = () => {
       dispatch(categoriesFetchSuccess(data));
     } catch (error) {
       console.log(error);
-      throw error;
+      errorAlert(error.response.data.message);
     }
   };
 };
