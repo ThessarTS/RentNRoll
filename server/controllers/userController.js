@@ -86,7 +86,6 @@ class UserController {
   // }
   static async createProfile(req, res, next) {
     try {
-
       if (!req.profilePicture) {
         throw { name: "Profile Picture is required!" };
       }
@@ -108,28 +107,42 @@ class UserController {
   }
   static async getProfile(req, res, next) {
     try {
-      let users = await redis.get("userFinalProject:" + req.user.id);
-      if (!users) {
-        const data = await User.findOne({
-          where: { email: req.user.email },
-          attributes: { exclude: ["password"] },
-          include: [
-            {
-              model: UserProfile,
-            },
-            {
-              model: Balance,
-            },
-            {
-              model: Order,
-              include: Vehicle,
-            },
-          ],
-        });
-        const totalOrders = data.Orders.length;
-        data.dataValues.totalOrders = totalOrders;
-        users = data;
-      }
+      let users; //= await redis.get("userFinalProject:" + req.user.id);
+      // if (!users) {
+      const data = await User.findOne({
+        where: { email: req.user.email },
+        attributes: { exclude: ["password"] },
+        include: [
+          {
+            model: UserProfile,
+          },
+          {
+            model: Balance,
+          },
+          {
+            model: Order,
+            include: Vehicle,
+          },
+        ],
+      });
+
+      const totalOrders = data.Orders.length;
+      data.dataValues.totalOrders = totalOrders;
+
+      // Calculate the total amount from all Balance records using reduce
+      const totalAmount = data.Balances.reduce((sum, balance) => sum + balance.amount, 0);
+
+      // Insert the total amount into the user object
+      data.dataValues.totalAmount = totalAmount;
+
+      // Remove the Balance from the data object
+      data.dataValues.Balances = undefined;
+      console.log(totalAmount);
+      users = data;
+      //   await redis.set("userFinalProject:" + req.user.id, JSON.stringify(users));
+      // } else {
+      //   users = JSON.parse(users);
+      // }
       res.json(users);
     } catch (error) {
       console.log(error);
