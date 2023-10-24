@@ -2,8 +2,7 @@ import { PROFILES_FETCH_SUCCESS } from "./actionType";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { errorAlert, successAlert } from "../../src/helpers/alert";
-
-const baseUrl = "https://1545-118-96-109-120.ngrok-free.app";
+import { baseUrl } from "./categoryAction";
 
 export const registerHandler = (value) => {
   return async () => {
@@ -102,7 +101,6 @@ export const handleLogout = () => {
 };
 
 export const addProfile = (value, access_token) => {
-  console.log(value, "<<<<action");
   return async (dispatch) => {
     try {
       const { data } = await axios({
@@ -114,6 +112,11 @@ export const addProfile = (value, access_token) => {
         "Content-Type": "multipart/form-data",
         data: value,
       });
+      await dispatch(
+        fetchProfile({
+          access_token: access_token,
+        })
+      );
       return data;
     } catch (error) {
       throw error.response.data;
@@ -122,7 +125,6 @@ export const addProfile = (value, access_token) => {
 };
 
 export const editProfile = (value, access_token) => {
-  console.log(value, access_token, "<<<<action");
   return async (dispatch) => {
     try {
       const { data } = await axios({
@@ -134,7 +136,6 @@ export const editProfile = (value, access_token) => {
         "Content-Type": "multipart/form-data",
         data: value,
       });
-      console.log("msuk sini");
       dispatch(
         fetchProfile({
           access_token: access_token,
