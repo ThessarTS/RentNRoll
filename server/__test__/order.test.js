@@ -13,7 +13,7 @@ const { hashPassword } = require("../helpers/bcrypt");
 const { signToken } = require("../helpers/jwt");
 
 let access_token;
-let invalidId = signToken({ id: 200 });
+
 beforeAll(async () => {
   let dataReview = [
     {
@@ -46,11 +46,16 @@ beforeAll(async () => {
     el.createdAt = el.updatedAt = new Date();
     el.password = hashPassword(el.password);
   });
+  let dataUserProfile = require("../data/userProfiles.json");
+  dataUserProfile.forEach((el) => {
+    el.createdAt = el.updatedAt = new Date();
+  });
   let dataOrder = require("../data/orders.json");
   dataOrder.forEach((el) => {
     el.createdAt = el.updatedAt = new Date();
   });
   await sequelize.queryInterface.bulkInsert("Users", dataUser);
+  await sequelize.queryInterface.bulkInsert("UserProfiles", dataUserProfile);
   await sequelize.queryInterface.bulkInsert("Categories", dataCategory);
   await sequelize.queryInterface.bulkInsert("Vehicles", dataVehicle);
   // await sequelize.queryInterface.bulkInsert("Reviews", dataReview);
@@ -149,7 +154,7 @@ describe("Test get data orders endpoint /orders/:id", () => {
 describe("Test add orders endpoint /orders", () => {
   it("Successfully add order", async function () {
     const response = await request(app)
-      .post("/orders/2")
+      .post("/orders/1")
       .send({
         startDate: "2025-01-20T15:55:00.375Z",
         endDate: "2025-01-21T15:55:00.375Z",
@@ -213,6 +218,30 @@ describe("Test add orders endpoint /orders", () => {
     expect(response.status).toBe(403);
     expect(response.body).toBeInstanceOf(Object);
     expect(response.body).toHaveProperty("message", 'Cannot order your own vehicle');
+  });
+
+  it("Failed to add order because simA null", async function () {
+    let access_token_post_order = signToken({ id: 5 });
+    const response = await request(app).post("/orders/5").send({
+      startDate: "2025-01-20T15:55:00.375Z",
+      endDate: "2025-01-21T15:55:00.375Z",
+    })
+      .set("access_token", access_token_post_order);
+    expect(response.status).toBe(403);
+    expect(response.body).toBeInstanceOf(Object);
+    expect(response.body).toHaveProperty("message", 'SIM A required, please upload the required document');
+  });
+
+  it("Failed to add order because simC null", async function () {
+    let access_token_post_order = signToken({ id: 5 });
+    const response = await request(app).post("/orders/7").send({
+      startDate: "2025-01-20T15:55:00.375Z",
+      endDate: "2025-01-21T15:55:00.375Z",
+    })
+      .set("access_token", access_token_post_order);
+    expect(response.status).toBe(403);
+    expect(response.body).toBeInstanceOf(Object);
+    expect(response.body).toHaveProperty("message", 'SIM C required, please upload the required document');
   });
 });
 

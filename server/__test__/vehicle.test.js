@@ -12,12 +12,6 @@ const { sequelize, Vehicle, User } = require("../models/index");
 const { hashPassword } = require("../helpers/bcrypt");
 const { signToken } = require("../helpers/jwt");
 
-const Redis = require("ioredis");
-const redis = new Redis({
-  port: 15470,
-  host: process.env.REDIS_HOST,
-  password: process.env.REDIS_PASSWORD,
-});
 
 let access_token;
 beforeAll(async () => {
@@ -134,11 +128,6 @@ describe("Test get data Vehicle endpoint /vehicles", () => {
 
 describe("Test get data detail vehicle endpoint /vehicles/:id", () => {
   it("Successfully obtained 1 Main Entity according to the ID params provided", async function () {
-    let dataVehicle = require("../data/vehicle.json");
-    dataVehicle.forEach((el) => {
-      el.createdAt = el.updatedAt = new Date();
-    })
-    await sequelize.queryInterface.bulkInsert("Vehicles", dataVehicle);
     const response = await request(app).get("/vehicles/2");
 
     console.log(response.body);
@@ -275,13 +264,48 @@ describe("PUT edit vehicle endpoint /vehicles/:id", () => {
 });
 
 
-describe("GET all categories /categories/:id", () => {
+describe("GET all categories /categories", () => {
   it("Successfully get all categories", async function () {
     const response = await request(app)
       .get("/categories")
 
     expect(response.status).toBe(200);
     expect(response.body).toBeInstanceOf(Array);
+  });
+
+});
+
+describe("GET all vehicles location vehicles/locations", () => {
+  it("should responds 200 with body array", async function () {
+    const response = await request(app)
+      .get("/vehicles/locations")
+
+    expect(response.status).toBe(200);
+    expect(response.body).toBeInstanceOf(Array);
+  });
+
+});
+
+
+describe("GET all vehicle owned by current logged in user /vehicles/my-vehicles", () => {
+  it("should responds 200 with body array of object", async function () {
+    const response = await request(app)
+      .get("/vehicles/my-vehicles")
+      .set("access_token", access_token)
+
+    expect(response.status).toBe(200);
+    expect(response.body).toBeInstanceOf(Array);
+  });
+
+  it("should responds 404 with body message", async function () {
+    let access_token_myvehicles = signToken({ id: 4 })
+    const response = await request(app)
+      .get("/vehicles/my-vehicles")
+      .set("access_token", access_token_myvehicles)
+
+    expect(response.status).toBe(404);
+    expect(response.body).toBeInstanceOf(Object);
+    expect(response.body).toHaveProperty('message', 'Not Found');
   });
 
 });

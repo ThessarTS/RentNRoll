@@ -41,9 +41,12 @@ const errorHandler = (error, req, res, next) => {
   } else if (error.name == 'amount_blank') {
     code = 400
     message = 'Amount required'
-  } else if (error.name == "Profile Picture is required!") {
-    code = 400
-    message = error.name
+  } else if (error.name == 'sim_a_null') {
+    code = 403
+    message = 'SIM A required, please upload the required document'
+  } else if (error.name == 'sim_c_null') {
+    code = 403
+    message = 'SIM C required, please upload the required document'
   }
 
   res.status(code).json({ message });

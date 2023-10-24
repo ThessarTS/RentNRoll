@@ -11,14 +11,14 @@ module.exports = {
       el.createdAt = el.updatedAt = new Date();
       return el;
     });
-    // await queryInterface.bulkInsert("Users", dataUsers, {});
+    await queryInterface.bulkInsert("Users", dataUsers, {});
 
     const userProfiles = require("../data/userProfiles.json");
     const dataProfiles = userProfiles.map((el) => {
       el.createdAt = el.updatedAt = new Date();
       return el;
     });
-    // await queryInterface.bulkInsert("UserProfiles", dataProfiles, {});
+    await queryInterface.bulkInsert("UserProfiles", dataProfiles, {});
 
     const categories = require("../data/category.json");
     const dataCategories = categories.map((el) => {
@@ -26,28 +26,27 @@ module.exports = {
       el.specifications = JSON.stringify(el.specifications);
       return el;
     });
-    console.log(dataCategories);
-    // await queryInterface.bulkInsert("Categories", dataCategories, {});
+    await queryInterface.bulkInsert("Categories", dataCategories, {});
 
     const vehicles = require("../data/vehicle.json");
     const dataVehicles = vehicles.map((el) => {
       el.createdAt = el.updatedAt = new Date();
       return el;
     });
-    // await queryInterface.bulkInsert("Vehicles", dataVehicles, {});
+    await queryInterface.bulkInsert("Vehicles", dataVehicles, {});
 
     const orders = require("../data/orders.json");
     const dataOrders = orders.map((el) => {
       el.createdAt = el.updatedAt = new Date();
       return el;
     });
-    // await queryInterface.bulkInsert("Orders", dataOrders, {});
+    await queryInterface.bulkInsert("Orders", dataOrders, {});
     const reviews = require("../data/reviews.json");
     const dataReviews = reviews.map((el) => {
       el.createdAt = el.updatedAt = new Date();
       return el;
     });
-    // await queryInterface.bulkInsert("Reviews", dataReviews, {});
+    await queryInterface.bulkInsert("Reviews", dataReviews, {});
   },
 
   async down(queryInterface, Sequelize) {

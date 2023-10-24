@@ -1,4 +1,4 @@
-const { Order, Vehicle, User, Review, Balance } = require("../models/index");
+const { Order, Vehicle, User, Review, Balance, UserProfile } = require("../models/index");
 const midtransClient = require("midtrans-client");
 const { Sequelize } = require("sequelize");
 const redis = require("../helpers/redis");
@@ -78,35 +78,43 @@ class OrderController {
     }
   }
 
-  static async createOrder(req, res, next) {
-    try {
-      const { VehicleId } = req.params;
-      const { startDate, endDate } = req.body;
-      let vehicle = await Vehicle.findByPk(VehicleId);
-      if (!vehicle) {
-        throw { name: "not_found" };
-      }
-      if (vehicle.UserId == req.user.id) {
-        throw { name: "same-user" };
-      }
-      const totalDay = totalDayConverter(startDate, endDate);
-      const totalPrice = totalDay * vehicle.price;
-      await Order.create({
-        VehicleId,
-        startDate,
-        endDate,
-        UserId: req.user.id,
-        ownerId: vehicle.UserId,
-        totalPrice,
-      });
-      await redis.del("userOrderFinalProject:" + req.user.id);
-      await redis.del("vehicleOrderFinalProject");
-      await redis.del("trendingDataFinalProject");
-      res.status(201).json({ message: "Success create new order" });
-    } catch (error) {
-      console.log(error);
-      next(error);
-    }
+    static async createOrder(req, res, next) {
+        try {
+            const { VehicleId } = req.params;
+            const { startDate, endDate } = req.body;
+            let vehicle = await Vehicle.findByPk(VehicleId);
+            if (!vehicle) {
+                throw { name: "not_found" };
+            }
+            if (vehicle.UserId == req.user.id) {
+                throw { name: "same-user" };
+            }
+            let profile = await UserProfile.findOne({
+                where: { UserId: req.user.id }
+            })
+            console.log(vehicle, '<<<<<<<<<<<<<<<<<<<<<<<<<');
+            console.log(profile, '<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<');
+            if (vehicle.CategoryId == 1 && !profile.simA) {
+                throw { name: 'sim_a_null' }
+            }
+            if (vehicle.CategoryId == 2 && !profile.simC) {
+                throw { name: 'sim_c_null' }
+            }
+            const totalDay = totalDayConverter(startDate, endDate);
+            const totalPrice = totalDay * vehicle.price;
+            await Order.create({
+                VehicleId,
+                startDate,
+                endDate,
+                UserId: req.user.id,
+                ownerId: vehicle.UserId,
+                totalPrice,
+            });
+            res.status(201).json({ message: "Success create new order" });
+        } catch (error) {
+            console.log(error);
+            next(error);
+        }
   }
 
   static async updateOrderStatus(req, res, next) {
