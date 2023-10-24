@@ -4,7 +4,11 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import bg from "../../assets/image/bg-home.png";
 import { Ionicons, Entypo, MaterialIcons } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchProfile } from "../../store/actions/userAction";
+import {
+  fetchProfile,
+  getUser,
+  profilesFetchSuccess,
+} from "../../store/actions/userAction";
 import { useFocusEffect } from "@react-navigation/native";
 import NavIcon from "../components/NavIcon";
 

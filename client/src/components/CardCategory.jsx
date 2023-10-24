@@ -1,14 +1,16 @@
 import React from "react";
-import { View, Image, Text, StyleSheet } from "react-native";
+import { View, Image, Text, StyleSheet, Pressable } from "react-native";
 
 function CardCategory({ name, image, backgroundColor }) {
   return (
+    // <Pressable>
     <View style={styles.container}>
       <View style={[styles.cardContainer, { backgroundColor }]}>
         <Image source={image} style={{ width: 25, height: 25 }} />
       </View>
       <Text>{name}</Text>
     </View>
+    // </Pressable>
   );
 }
 

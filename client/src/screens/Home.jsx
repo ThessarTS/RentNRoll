@@ -30,10 +30,10 @@ function Home({ navigation }) {
   const { categories } = useSelector((state) => state.categoryReducer);
   const dispatch = useDispatch();
   const [loadingCategory, setLoadingCategory] = useState(false);
-
   const [search, setSearch] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [filteredData, setFilteredData] = useState(vehicles);
+  const [filteredCategory, setFilteredCategory] = useState(vehicles);
 
   const filterDataByName = (text) => {
     const newData = vehicles.filter((item) => {
@@ -44,6 +44,13 @@ function Home({ navigation }) {
     setFilteredData(newData);
   };
 
+  const filterDataByCategory = (name) => {
+    const dataByCategory = vehicles.filter((item) => {
+      return item.Category.name === name;
+    });
+    setFilteredCategory(dataByCategory);
+    setSearch(true);
+  };
   const toggleSearch = (value) => {
     setSearch(value);
   };
@@ -148,11 +155,33 @@ function Home({ navigation }) {
     const { name } = category.item;
     const backgroundColor = getCategoryBackgroundColor(name);
     const image = getCategoryImage(name);
-    return <CardCategory name={name} image={image} backgroundColor={backgroundColor} />;
+
+    return (
+      <Pressable
+        onPress={() => {
+          filterDataByCategory(name);
+        }}
+      >
+        <CardCategory
+          name={name}
+          image={image}
+          backgroundColor={backgroundColor}
+        />
+      </Pressable>
+    );
   };
   const RenderCardVehicle = ({ vehicle }) => {
-    const { name, image, price, averageRating, totalReviews, id } = vehicle.item;
-    return <CardVehicle name={name} image={image} price={price} rating={averageRating} totalReviews={totalReviews} id={id} navigation={navigation} />;
+    const { name, image, price, averageRating, id } = vehicle.item;
+    return (
+      <CardVehicle
+        name={name}
+        image={image}
+        price={price}
+        rating={averageRating}
+        id={id}
+        navigation={navigation}
+      />
+    );
   };
 
   return (
@@ -178,7 +207,17 @@ function Home({ navigation }) {
               {/* category */}
               <View style={[styles.categoryContainer, styles.shadowProp]}>
                 <Text style={styles.categoryTitle}>Categories</Text>
-                <FlatList style={{ marginTop: 10 }} data={categories} renderItem={(category) => <RenderCategories category={category} />} keyExtractor={(category) => category.id} horizontal={true} />
+
+                <FlatList
+                  style={{ marginTop: 10 }}
+                  data={categories}
+                  renderItem={(category) => (
+                    <RenderCategories category={category} />
+                  )}
+                  keyExtractor={(category) => category.id}
+                  horizontal={true}
+                />
+
               </View>
               {/* end category */}
               {/* Trending */}
@@ -269,8 +308,12 @@ function Home({ navigation }) {
               >
                 <View
                   style={{
-                    backgroundColor: filteredData.length !== 0 ? "whitesmoke" : "white",
-                    height: filteredData.length !== 0 ? "75%" : "45%",
+                    backgroundColor:
+                      filteredData.length !== 0 ? "whitesmoke" : "white",
+                    height:
+                      filteredData.length !== 0 || filteredCategory.length !== 0
+                        ? "75%"
+                        : "45%",
                     padding: 20,
                     paddingVertical: 50,
                     gap: 5,
@@ -279,7 +322,27 @@ function Home({ navigation }) {
                   }}
                 >
                   {filteredData.length !== 0 ? (
-                    <FlatList style={{ marginTop: 10 }} data={filteredData} renderItem={(vehicle) => <RenderModalItems vehicle={vehicle} />} keyExtractor={(vehicle) => vehicle.id} showsHorizontalScrollIndicator={false} />
+                    <FlatList
+                      style={{ marginTop: 10 }}
+                      data={filteredData}
+                      renderItem={(vehicle) => (
+                        <RenderModalItems vehicle={vehicle} />
+                      )}
+                      keyExtractor={(vehicle) => vehicle.id}
+                      showsHorizontalScrollIndicator={false}
+                    />
+                  ) : filteredCategory.length !== 0 ? (
+                    // Display the FlatList when filteredCategory is not empty
+                    <FlatList
+                      style={{ marginTop: 10 }}
+                      data={filteredCategory}
+                      renderItem={(vehicle) => (
+                        <RenderModalItems vehicle={vehicle} />
+                      )}
+                      keyExtractor={(vehicle) => vehicle.id}
+                      showsHorizontalScrollIndicator={false}
+                    />
+
                   ) : (
                     <View style={{ flex: 1, justifyContent: "center" }}>
                       <Image source={notFound} style={{ flex: 1, width: null, height: null }} resizeMode="cover" />

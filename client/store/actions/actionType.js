@@ -24,3 +24,5 @@ export const PROFILES_FETCH_SUCCESS = "profiles/fetchProfiles";
 export const ORDER_FETCH_REQUEST = "order/fetchRequest";
 export const ORDER_FETCH_SUCCESS = "order/fetchSuccess";
 export const ORDER_FETCH_FAIL = "order/fetchFail";
+
+export const ADD_FETCH_SUCCESS = "vehicle/addSuccess";

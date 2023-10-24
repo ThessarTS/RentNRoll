@@ -1,7 +1,11 @@
 import {
+
+  ADD_FETCH_SUCCESS,
+
   MY_VEHICLE_FETCH_FAIL,
   MY_VEHICLE_FETCH_REQUEST,
   MY_VEHICLE_FETCH_SUCCESS,
+
   TRENDING_FETCH_FAIL,
   TRENDING_FETCH_REQUEST,
   TRENDING_FETCH_SUCCESS,
@@ -85,6 +89,11 @@ const vehicleReducer = (state = initialState, action) => {
         loading: false,
       };
 
+    case ADD_FETCH_SUCCESS:
+      return {
+        ...state,
+        vehicle: action.payload,
+        
     case MY_VEHICLE_FETCH_REQUEST:
       return {
         ...state,

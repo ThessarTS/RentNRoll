@@ -2,7 +2,8 @@ import { CATEGORIES_FETCH_SUCCESS, PROFILES_FETCH_SUCCESS, TRENDING_FETCH_FAIL }
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const baseUrl = "https://0187-2001-448a-1021-5f44-11c3-740a-ea80-49d6.ngrok-free.app";
+const baseUrl =
+  "https://5a7c-2001-448a-6021-5c1-d3d5-fb4c-3050-5644.ngrok-free.app";
 
 export const registerHandler = (value) => {
   return async () => {
