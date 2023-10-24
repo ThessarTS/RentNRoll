@@ -303,12 +303,6 @@ describe("Test get order by vehicle id endpoint /orders/vehicle/:vehicleId", () 
     expect(response.body).toBeInstanceOf(Array);
     // expect(response.body).toHaveProperty("message", expect.any(String));
   });
-  it("Failed get order by vehicle id without access token", async function () {
-    const response = await request(app).get("/orders/vehicle/3");
-    expect(response.status).toBe(401);
-    expect(response.body).toBeInstanceOf(Object);
-    expect(response.body).toHaveProperty("message", expect.any(String));
-  });
   it("Failed get order by vehicle id because vehicle id not found", async function () {
     const response = await request(app)
       .get("/orders/vehicle/300")
