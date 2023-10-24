@@ -1,22 +1,8 @@
 import React, { useCallback, useEffect, useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  SafeAreaView,
-  ImageBackground,
-  ScrollView,
-  View,
-  Image,
-  Pressable,
-} from "react-native";
+import { StyleSheet, Text, SafeAreaView, ImageBackground, ScrollView, View, Image, Pressable } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import bg from "../../assets/image/bg-home.png";
-import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-import { Ionicons } from "@expo/vector-icons";
-import { Entypo } from "@expo/vector-icons";
-import { AntDesign } from "@expo/vector-icons";
-import { MaterialIcons } from "@expo/vector-icons";
-import Modal from "react-native-modal";
+import { Ionicons, Entypo, MaterialIcons } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchProfile,
@@ -24,10 +10,10 @@ import {
   profilesFetchSuccess,
 } from "../../store/actions/userAction";
 import { useFocusEffect } from "@react-navigation/native";
+import NavIcon from "../components/NavIcon";
 
 function Account({ navigation }) {
   const [user, setUser] = useState(null);
-  const [settings, setSettings] = useState(false);
   const { profile } = useSelector((state) => state.userReducer);
   const dispatch = useDispatch();
   async function getUser() {
@@ -47,23 +33,6 @@ function Account({ navigation }) {
     }
   }
 
-  async function logout() {
-    try {
-      await AsyncStorage.removeItem("access_token");
-      await navigation.navigate("loginRegister");
-      dispatch({
-        type: "logout/success",
-      });
-      toggleSettings();
-    } catch (error) {
-      console.error("Error while logging out:", error);
-    }
-  }
-
-  const toggleSettings = () => {
-    setSettings(!settings);
-  };
-
   useFocusEffect(
     useCallback(() => {
       getUser();
@@ -72,25 +41,7 @@ function Account({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.mastheadContainer}>
-        <View
-          style={{ marginEnd: 10, paddingBottom: 10, alignSelf: "flex-end" }}
-        >
-          <View
-            style={{ flexDirection: "row", justifyContent: "center", gap: 10 }}
-          >
-            <Pressable style={styles.iconContainer}>
-              <Entypo name="chat" size={25} color="white" />
-            </Pressable>
-            <Pressable style={styles.iconContainer}>
-              <Icon name="bell-badge" size={25} color="white" />
-            </Pressable>
-            <Pressable style={styles.iconContainer} onPress={toggleSettings}>
-              <Ionicons name="settings" size={25} color="white" />
-            </Pressable>
-          </View>
-        </View>
-      </View>
+      <NavIcon />
       <SafeAreaView style={{ flex: 1 }}>
         <ImageBackground source={bg} style={{ flex: 1 }}>
           <ScrollView style={styles.scrollViewContainer}>
@@ -109,33 +60,31 @@ function Account({ navigation }) {
                   {profile && (
                     <Image
                       source={{
-                        uri: profile.UserProfile
-                          ? `${profile.UserProfile.profilePicture}`
-                          : "",
+                        uri: profile.UserProfile ? `${profile.UserProfile.profilePicture}` : "https://www.copaster.com/wp-content/uploads/2023/03/pp-kosong-wa-default.jpeg",
                       }}
                       style={styles.profileImage}
                     />
                   )}
 
                   <View>
-                    <Text style={styles.profileName}>
-                      {profile ? profile.fullName : ""}
-                    </Text>
+                    <Text style={styles.profileName}>{profile ? profile.fullName : ""}</Text>
                     <View style={{ gap: 2 }}>
-                      <Text style={styles.profileInfo}>
-                        {profile ? profile.email : ""}
-                      </Text>
-                      <Text style={styles.profileInfo}>
-                        {profile ? profile.Orders.length : 0} Orders
-                      </Text>
+                      <Text style={{ fontSize: 15 }}>Balance: {profile ? profile.Balances : ""}</Text>
+                      <Text style={styles.profileInfo}>{profile ? profile.email : ""}</Text>
+                      {profile && profile.Orders && <Text style={styles.profileInfo}>{profile ? profile.Orders.length : 0} Orders</Text>}
                     </View>
                   </View>
                 </View>
                 <View>
-                  <Pressable style={styles.profileButton}>
-                    <Text style={styles.profileButtonText}>
-                      View My Profile
-                    </Text>
+                  <Pressable
+                    style={styles.profileButton}
+                    onPress={() =>
+                      navigation.navigate("myprofile", {
+                        name: profile && profile.fullName,
+                      })
+                    }
+                  >
+                    <Text style={styles.profileButtonText}>View My Profile</Text>
                   </Pressable>
                 </View>
               </View>
@@ -150,16 +99,10 @@ function Account({ navigation }) {
                     </View>
                     <View style={{ gap: 2, flex: 6 }}>
                       <Text style={styles.itemsDetailTitle}>Order</Text>
-                      <Text style={styles.itemsDetailInfo}>
-                        Contains all of your order data.
-                      </Text>
+                      <Text style={styles.itemsDetailInfo}>Contains all of your order data.</Text>
                     </View>
                     <Pressable>
-                      <Ionicons
-                        name="chevron-forward"
-                        size={24}
-                        color="#17799A"
-                      />
+                      <Ionicons name="chevron-forward" size={24} color="#17799A" />
                     </Pressable>
                   </Pressable>
                 </View>
@@ -174,16 +117,10 @@ function Account({ navigation }) {
                     </View>
                     <View style={{ gap: 2, flex: 6 }}>
                       <Text style={styles.itemsDetailTitle}>Rent</Text>
-                      <Text style={styles.itemsDetailInfo}>
-                        View the details of your rent.
-                      </Text>
+                      <Text style={styles.itemsDetailInfo}>View the details of your rent.</Text>
                     </View>
                     <Pressable>
-                      <Ionicons
-                        name="chevron-forward"
-                        size={24}
-                        color="#17799A"
-                      />
+                      <Ionicons name="chevron-forward" size={24} color="#17799A" />
                     </Pressable>
                   </Pressable>
                 </View>
@@ -194,31 +131,16 @@ function Account({ navigation }) {
                   <Text style={styles.itemsTitle}>Member Features</Text>
                   <View style={styles.memberContainer}>
                     {/* add vehicle */}
-                    <Pressable
-                      style={styles.memberItemContainer}
-                      onPress={() => navigation.navigate("Add Vehicle")}
-                    >
+                    <Pressable style={styles.memberItemContainer} onPress={() => navigation.navigate("Add Vehicle")}>
                       <View style={{ flex: 1 }}>
-                        <Ionicons
-                          name="ios-add-circle-outline"
-                          size={25}
-                          color="gray"
-                        />
+                        <Ionicons name="ios-add-circle-outline" size={25} color="gray" />
                       </View>
                       <View style={{ gap: 2, flex: 6 }}>
                         <Text style={styles.itemsDetailTitle}>Add Vehicle</Text>
-                        <Text
-                          style={[styles.itemsDetailInfo, { color: "gray" }]}
-                        >
-                          Register your vehicle now.
-                        </Text>
+                        <Text style={[styles.itemsDetailInfo, { color: "gray" }]}>Register your vehicle now.</Text>
                       </View>
                       <View>
-                        <Ionicons
-                          name="chevron-forward"
-                          size={24}
-                          color="#17799A"
-                        />
+                        <Ionicons name="chevron-forward" size={24} color="#17799A" />
                       </View>
                     </Pressable>
                     {/* end add vehicle */}
@@ -230,48 +152,24 @@ function Account({ navigation }) {
                       </View>
                       <View style={{ gap: 2, flex: 6 }}>
                         <Text style={styles.itemsDetailTitle}>My Vehicle</Text>
-                        <Text
-                          style={[styles.itemsDetailInfo, { color: "gray" }]}
-                        >
-                          View your vehicle now.
-                        </Text>
+                        <Text style={[styles.itemsDetailInfo, { color: "gray" }]}>View your vehicle now.</Text>
                       </View>
                       <View>
-                        <Ionicons
-                          name="chevron-forward"
-                          size={24}
-                          color="#17799A"
-                        />
+                        <Ionicons name="chevron-forward" size={24} color="#17799A" />
                       </View>
                     </Pressable>
                     {/* end my vehicle */}
 
                     {/* setting */}
-                    <Pressable
-                      style={styles.memberItemContainer}
-                      onPress={toggleSettings}
-                    >
+                    <Pressable style={styles.memberItemContainer}>
                       <View style={{ flex: 1 }}>
-                        <Ionicons
-                          name="settings-outline"
-                          size={25}
-                          color="gray"
-                        />
+                        <MaterialIcons name="logout" size={25} color="gray" />
                       </View>
-                      <View style={{ gap: 2, flex: 6 }}>
-                        <Text style={styles.itemsDetailTitle}>Settings</Text>
-                        <Text
-                          style={[styles.itemsDetailInfo, { color: "gray" }]}
-                        >
-                          View and set your account preferences.
-                        </Text>
+                      <View style={{ flex: 6, justifyContent: "center" }}>
+                        <Text style={styles.itemsDetailTitle}>Logout</Text>
                       </View>
                       <View>
-                        <Ionicons
-                          name="chevron-forward"
-                          size={24}
-                          color="#17799A"
-                        />
+                        <Ionicons name="chevron-forward" size={24} color="#17799A" />
                       </View>
                     </Pressable>
                     {/* end setting */}
@@ -282,34 +180,6 @@ function Account({ navigation }) {
             </View>
           </ScrollView>
         </ImageBackground>
-        <Modal
-          isVisible={settings}
-          onBackdropPress={toggleSettings}
-          style={{
-            justifyContent: "flex-end",
-            margin: 0,
-          }}
-        >
-          <View style={styles.modalSettingContainer}>
-            <Pressable style={styles.logoutButton} onPress={logout}>
-              <View style={{ flex: 1 }}>
-                <AntDesign name="logout" size={24} color="gray" />
-              </View>
-              <View style={{ flex: 6 }}>
-                <Text style={{ fontWeight: 500, color: "gray" }}>Log Out</Text>
-              </View>
-              <View>
-                <Ionicons name="chevron-forward" size={24} color="gray" />
-              </View>
-            </Pressable>
-            <Pressable
-              style={styles.cancelModalButton}
-              onPress={toggleSettings}
-            >
-              <MaterialIcons name="cancel" size={30} color="red" />
-            </Pressable>
-          </View>
-        </Modal>
       </SafeAreaView>
     </View>
   );
@@ -432,39 +302,11 @@ const styles = StyleSheet.create({
     color: "green",
   },
 
-  modalSettingContainer: {
-    position: "relative",
-    backgroundColor: "whitesmoke",
-    height: "20%",
-    padding: 20,
-    alignItems: "center",
-    justifyContent: "center",
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
-  },
-
-  logoutButton: {
-    backgroundColor: "white",
-    padding: 20,
-    width: "100%",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    elevation: 2,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
-    borderRadius: 5,
-  },
-
   memberItemContainer: {
     flexDirection: "row",
     padding: 20,
     backgroundColor: "white",
   },
-
-  cancelModalButton: { position: "absolute", top: 10, right: 20 },
 });
 
 export default Account;

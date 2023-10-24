@@ -7,13 +7,13 @@ import Splash from "./src/screens/Splash";
 import LoginRegister from "./src/screens/LoginRegister";
 import Account from "./src/screens/Account";
 import Detail from "./src/screens/Detail";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import AddVehicle from "./src/screens/AddVehicle";
-import { useState, useEffect, useCallback } from "react";
 import { Provider, useSelector } from "react-redux";
 import store from "./store/reducers";
 import Rent from "./src/screens/Rent";
 import MyOrder from "./src/screens/MyOrder";
+import { AlertNotificationRoot } from "react-native-alert-notification";
+import Profile from "./src/screens/Profile";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -44,15 +44,11 @@ const HomeTab = () => {
           } else if (route.name === "Video") {
             iconName = focused ? "play-circle-sharp" : "play-circle-outline";
           } else if (route.name === "You") {
-            iconName = focused
-              ? "person-circle-sharp"
-              : "person-circle-outline";
+            iconName = focused ? "person-circle-sharp" : "person-circle-outline";
           } else if (route.name === "Rent Now") {
             iconName = focused ? "bicycle-sharp" : "bicycle-outline";
           } else if (route.name === "Add Vehicle") {
-            iconName = focused
-              ? "ios-add-circle-sharp"
-              : "ios-add-circle-outline";
+            iconName = focused ? "ios-add-circle-sharp" : "ios-add-circle-outline";
           }
 
           return <Ionicons name={iconName} size={20} color={color} />;
@@ -73,55 +69,65 @@ const HomeTab = () => {
 export default function App() {
   return (
     <Provider store={store}>
-      <NavigationContainer>
-        <Stack.Navigator
-          screenOptions={{
-            headerShown: true,
-            headerTintColor: "white",
-            headerStyle: {
-              backgroundColor: "#282424",
-            },
-          }}
-        >
-          <Stack.Screen
-            name="splash"
-            component={Splash}
-            options={{
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name="home"
-            component={HomeTab}
-            options={{
-              headerShown: false,
-            }}
-          />
-          <Stack.Screen
-            name="loginRegister"
-            component={LoginRegister}
-            options={{
-              headerShown: false,
-              tabBarStyle: {
-                display: "none",
-              },
-            }}
-          />
-          <Stack.Screen
-            name="detail"
-            component={Detail}
-            options={({ route }) => ({
+      <AlertNotificationRoot>
+        <NavigationContainer>
+          <Stack.Navigator
+            screenOptions={{
               headerShown: true,
               headerTintColor: "white",
               headerStyle: {
-                backgroundColor: "#17799A",
+                backgroundColor: "#282424",
               },
-              tabBarStyle: { display: "none" },
-              title: route.params.name,
-            })}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
+            }}
+          >
+            <Stack.Screen
+              name="splash"
+              component={Splash}
+              options={{
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name="home"
+              component={HomeTab}
+              options={{
+                headerShown: false,
+              }}
+            />
+            <Stack.Screen
+              name="loginRegister"
+              component={LoginRegister}
+              options={{
+                headerShown: false,
+                tabBarStyle: {
+                  display: "none",
+                },
+              }}
+            />
+            <Stack.Screen
+              name="detail"
+              component={Detail}
+              options={({ route }) => ({
+                headerShown: true,
+                headerTintColor: "white",
+                headerStyle: {
+                  backgroundColor: "#17799A",
+                },
+                tabBarStyle: { display: "none" },
+                title: route.params.name,
+              })}
+            />
+            <Stack.Screen
+              name="myprofile"
+              component={Profile}
+              options={({ route }) => ({
+                headerShown: false,
+                tabBarStyle: { display: "none" },
+              })}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </AlertNotificationRoot>
     </Provider>
   );
 }

@@ -4,7 +4,7 @@ import { AntDesign } from "@expo/vector-icons";
 
 function CardOrderHome({ orders, navigation }) {
   const maxLength = 18;
-  console.log(orders.Vehicle.name, "<<<<");
+
   const truncateName = (name) => {
     if (name.length > maxLength) {
       return name.substring(0, maxLength) + "...";
@@ -29,11 +29,7 @@ function CardOrderHome({ orders, navigation }) {
   return (
     <Pressable style={styles.container} onPress={goDetail}>
       <View style={styles.innerContainer}>
-        <Image
-          source={{ uri: `${orders.Vehicle.image}` }}
-          style={styles.image}
-          resizeMode="cover"
-        />
+        <Image source={{ uri: `${orders.Vehicle.image}` }} style={styles.image} resizeMode="cover" />
         <View style={styles.cardContainer}>
           <Text style={styles.title}>{truncateName(orders.Vehicle.name)}</Text>
           <Text style={styles.price}>{fPrice(orders.Vehicle.price)}</Text>

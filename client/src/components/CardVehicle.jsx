@@ -2,7 +2,7 @@ import React from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 
-function CardVehicle({ id, image, name, price, rating, navigation }) {
+function CardVehicle({ id, image, name, price, rating, navigation, totalReviews }) {
   const maxLength = 18;
   const truncateName = (name) => {
     if (name.length > maxLength) {
@@ -28,16 +28,14 @@ function CardVehicle({ id, image, name, price, rating, navigation }) {
   return (
     <Pressable style={styles.container} onPress={goDetail}>
       <View style={styles.innerContainer}>
-        <Image
-          source={{ uri: `${image}` }}
-          style={styles.image}
-          resizeMode="cover"
-        />
+        <Image source={{ uri: `${image}` }} style={styles.image} resizeMode="cover" />
         <View style={styles.cardContainer}>
           <Text style={styles.title}>{truncateName(name)}</Text>
           <Text style={styles.price}>{fPrice(price)}</Text>
           <Text style={styles.rating}>
-            <AntDesign name="star" size={15} color="#F8B84E" /> {rating}
+
+            <AntDesign name="star" size={15} color="#F8B84E" />({rating}) ({totalReviews} reviews)
+
           </Text>
         </View>
       </View>

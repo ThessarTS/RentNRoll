@@ -1,8 +1,4 @@
-import {
-  CATEGORIES_FETCH_SUCCESS,
-  PROFILES_FETCH_SUCCESS,
-  TRENDING_FETCH_FAIL,
-} from "./actionType";
+import { CATEGORIES_FETCH_SUCCESS, PROFILES_FETCH_SUCCESS, TRENDING_FETCH_FAIL } from "./actionType";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -33,7 +29,6 @@ export const createOtp = (value) => {
         method: "POST",
         data: value,
       });
-      console.log(data);
       return data;
     } catch (error) {
       // console.log(error.response.data);
@@ -58,6 +53,22 @@ export const handleLogin = (value) => {
 };
 
 // FETCH PROFILES
+export const getUser = () => {
+  return async (dispatch) => {
+    try {
+      const newUser = await AsyncStorage.getItem("access_token");
+      if (!newUser) {
+        throw new Error("userNotFound");
+      }
+      const newValue = {
+        access_token: newUser,
+      };
+      dispatch(fetchProfile(newValue));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
 
 export const profilesFetchSuccess = (payload) => {
   return { type: PROFILES_FETCH_SUCCESS, payload };
@@ -79,40 +90,15 @@ export const fetchProfile = (value) => {
   };
 };
 
-// export const getUser = () => {
-//   return async (dispatch) => {
-//     console.log("asas");
-//     try {
-//       const newUser = await AsyncStorage.getItem("access_token");
-//       if (!newUser) {
-//         console.log("masuk sini");
-//         throw new Error("userNotFound");
-//       }
-//       const newValue = {
-//         access_token: newUser,
-//       };
-//       console.log(newValue);
-//       console.log("masuk");
-//       // dispatch(fetchProfile(newValue));
-//     } catch (err) {
-//       console.log(err);
-//       throw err;
-//     }
-//   };
-// };
-// async function as() {
-//   try {
-//     const newUser = await AsyncStorage.getItem("access_token");
-//     if (!newUser) {
-//       throw new Error("userNotFound");
-//     }
-//     const newValue = {
-//       access_token: newUser,
-//     };
-//     dispatch(fetchProfile(newValue));
-//   } catch (error) {
-//     await navigation.navigate("loginRegister");
-//   }
-// }
-
-// END FETCH CATEGORIES
+export const handleLogout = () => {
+  return async (dispatch) => {
+    try {
+      await AsyncStorage.removeItem("access_token");
+      dispatch({
+        type: "logout/success",
+      });
+    } catch (error) {
+      console.error("Error while logging out:", error);
+    }
+  };
+};

@@ -1,4 +1,7 @@
 import {
+  MY_VEHICLE_FETCH_FAIL,
+  MY_VEHICLE_FETCH_REQUEST,
+  MY_VEHICLE_FETCH_SUCCESS,
   TRENDING_FETCH_FAIL,
   TRENDING_FETCH_REQUEST,
   TRENDING_FETCH_SUCCESS,
@@ -6,6 +9,8 @@ import {
   VEHICLE_FETCH_FAIL,
   VEHICLE_FETCH_REQUEST,
   VEHICLE_FETCH_SUCCESS,
+  VEHICLE_QUERY_FETCH_REQUEST,
+  VEHICLE_QUERY_FETCH_SUCCESS,
 } from "./actionType";
 import axios from "axios";
 
@@ -25,14 +30,35 @@ export const vehicleFetchFail = (payload) => {
   return { type: VEHICLE_FETCH_FAIL, payload };
 };
 
-export const fetchVehicles = () => {
+export const vehicleFetchQuerySuccess = (payload) => {
+  return { type: VEHICLE_QUERY_FETCH_SUCCESS, payload };
+};
+
+export const vehicleFetchQueryRequest = () => {
+  return { type: VEHICLE_QUERY_FETCH_REQUEST };
+};
+
+export const fetchVehicles = (query) => {
   return async (dispatch) => {
     dispatch(vehicleFetchRequest());
+    dispatch(vehicleFetchQueryRequest());
+
     try {
-      const { data } = await axios({
-        url: baseUrl + "/vehicles",
-      });
-      dispatch(vehicleFetchSuccess(data));
+      let params;
+      if (query) {
+        params = {
+          location: query.location,
+          startdate: query.startdate,
+          enddate: query.enddate,
+        };
+      }
+      if (query) {
+        const { data } = await axios.get(`${baseUrl}/vehicles`, { params });
+        dispatch(vehicleFetchQuerySuccess(data));
+      } else {
+        const { data } = await axios.get(`${baseUrl}/vehicles`);
+        dispatch(vehicleFetchSuccess(data));
+      }
     } catch (error) {
       console.log(error);
       dispatch(vehicleFetchFail(error));
@@ -92,6 +118,7 @@ export const fetchTrending = () => {
   };
 };
 // END TRENDING
+
 // ADD VEHICLE
 export const addVehicleSuccess = (payload) => {
   return { type: ADD_FETCH_SUCCESS, payload };
@@ -105,14 +132,43 @@ export const addVehicle = (value, access_token) => {
         method: "POST",
         data: value,
         "Content-Type": "multipart/form-data",
-        headers: {
-          access_token: access_token,
-        },
-      });
-      dispatch(fetchVehicles());
+      })
+dispatch(fetchVehicles());
       return data;
     } catch (error) {
       throw error.response.data;
     }
   };
 };
+
+// MY VEHICLE
+export const myVehiclefetchRequest = () => {
+  return { type: MY_VEHICLE_FETCH_REQUEST };
+};
+
+export const myVehiclefetchSuccess = (payload) => {
+  return { type: MY_VEHICLE_FETCH_SUCCESS, payload };
+};
+
+export const myVehiclefetchFail = (payload) => {
+  return { type: MY_VEHICLE_FETCH_FAIL, payload };
+};
+
+export const fetchMyVehicles = (access_token) => {
+  return async (dispatch) => {
+    try {
+      const { data } = await axios({
+        url: baseUrl + "/vehicles/myVehicle",
+
+        headers: {
+          access_token: access_token,
+        },
+      });
+      dispatch(myVehiclefetchSuccess(data));
+    } catch (error) {
+      dispatch(myVehiclefetchFail(error));
+    }
+  };
+};
+
+// END MY VEHICLE

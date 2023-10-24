@@ -13,8 +13,13 @@ module.exports = {
         type: Sequelize.ENUM,
         values: ["accepted", "ongoing", "available", "returned"],
       },
+      totalPrice: {
+        type: Sequelize.FLOAT,
+      },
       VehicleId: {
         type: Sequelize.INTEGER,
+        onDelete: "SET NULL",
+        onUpdate: "CASCADE",
         references: {
           model: "Vehicles",
           key: "id",
