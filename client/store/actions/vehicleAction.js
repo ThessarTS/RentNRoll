@@ -130,11 +130,11 @@ export const addVehicle = (value, access_token) => {
       const { data } = await axios({
         url: baseUrl + "/vehicles",
         method: "POST",
-        data: value,
-        "Content-Type": "multipart/form-data",
         headers: {
           access_token: access_token,
         },
+        data: value,
+        "Content-Type": "multipart/form-data",
       });
       dispatch(fetchVehicles());
       return data;

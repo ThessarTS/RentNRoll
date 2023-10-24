@@ -91,6 +91,7 @@ const vehicleReducer = (state = initialState, action) => {
         ...state,
         vehicle: action.payload,
       };
+
     case MY_VEHICLE_FETCH_REQUEST:
       return {
         ...state,

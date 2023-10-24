@@ -1,18 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  select,
-  View,
-  ScrollView,
-  SafeAreaView,
-  Pressable,
-  Button,
-  Image,
-  Alert,
-  ActivityIndicator,
-} from "react-native";
+import { StyleSheet, Text, TextInput, View, ScrollView, SafeAreaView, Pressable, Image, Alert, ActivityIndicator } from "react-native";
 import { useSelector } from "react-redux";
 import Dropdown from "react-native-input-select";
 import * as ImagePicker from "expo-image-picker";
@@ -35,8 +22,7 @@ function AddVehicle({ navigation }) {
 
   useEffect(() => {
     (async () => {
-      const { status } =
-        await ImagePicker.requestMediaLibraryPermissionsAsync();
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
       if (status !== "granted") {
         alert("Permission to access the camera roll is required!");
@@ -131,9 +117,7 @@ function AddVehicle({ navigation }) {
             justifyContent: "center",
           }}
         >
-          <Text style={{ fontStyle: "italic", fontSize: 16 }}>
-            Please Choose Category First
-          </Text>
+          <Text style={{ fontStyle: "italic", fontSize: 16 }}>Please Choose Category First</Text>
         </View>
       );
     }
@@ -198,31 +182,15 @@ function AddVehicle({ navigation }) {
         <View style={styles.form}>
           <View style={{ gap: 5 }}>
             <Text style={styles.label}>Name Vehicle</Text>
-            <TextInput
-              style={styles.textInput}
-              value={input.name}
-              onChangeText={(text) => handleChangeInput("name", text)}
-              placeholder="Honda Brio"
-            />
+            <TextInput style={styles.textInput} value={input.name} onChangeText={(text) => handleChangeInput("name", text)} placeholder="Honda Brio" />
           </View>
           <View style={{ gap: 5 }}>
             <Text style={styles.label}>City Location</Text>
-            <TextInput
-              style={styles.textInput}
-              value={input.location}
-              onChangeText={(text) => handleChangeInput("location", text)}
-              placeholder="Bandung"
-            />
+            <TextInput style={styles.textInput} value={input.location} onChangeText={(text) => handleChangeInput("location", text)} placeholder="Bandung" />
           </View>
           <View style={{ gap: 5, marginBottom: 10 }}>
             <Text style={styles.label}>Price</Text>
-            <TextInput
-              style={styles.textInput}
-              placeholder="250000"
-              keyboardType="numeric"
-              value={input.price}
-              onChangeText={(text) => handleChangeInput("price", text)}
-            />
+            <TextInput style={styles.textInput} placeholder="250000" keyboardType="numeric" value={input.price} onChangeText={(text) => handleChangeInput("price", text)} />
           </View>
           {loading && (
             <View
