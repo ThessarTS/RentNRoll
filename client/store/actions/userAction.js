@@ -5,9 +5,9 @@ import {
 } from "./actionType";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { baseUrl } from "./categoryAction";
 
-const baseUrl =
-  "https://a4f5-2001-448a-6021-5c1-b906-b625-3660-d512.ngrok-free.app";
+// const baseUrl = "https://1545-118-96-109-120.ngrok-free.app";
 
 export const registerHandler = (value) => {
   return async () => {
@@ -86,7 +86,6 @@ export const fetchProfile = (value) => {
         method: "GET",
         headers: value,
       });
-      // console.log(data);
       dispatch(profilesFetchSuccess(data));
     } catch (error) {
       throw error.response.data;
@@ -103,6 +102,53 @@ export const handleLogout = () => {
       });
     } catch (error) {
       console.error("Error while logging out:", error);
+    }
+  };
+};
+
+export const addProfile = (value, access_token) => {
+  console.log(value, "<<<<action");
+  return async (dispatch) => {
+    try {
+      const { data } = await axios({
+        url: baseUrl + "/profiles",
+        method: "POST",
+        headers: {
+          access_token: access_token,
+        },
+        "Content-Type": "multipart/form-data",
+        data: value,
+      });
+      return data;
+    } catch (error) {
+      throw error.response.data;
+    }
+  };
+};
+
+export const editProfile = (value, access_token) => {
+  console.log(value, access_token, "<<<<action");
+  return async (dispatch) => {
+    try {
+      const { data } = await axios({
+        url: baseUrl + "/profiles",
+        method: "PUT",
+        headers: {
+          access_token: access_token,
+        },
+        "Content-Type": "multipart/form-data",
+        data: value,
+      });
+      console.log("msuk sini");
+      dispatch(
+        fetchProfile({
+          access_token: access_token,
+        })
+      );
+      return data;
+    } catch (error) {
+      console.log(error.response.data);
+      throw error.response.data;
     }
   };
 };

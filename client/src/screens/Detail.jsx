@@ -26,12 +26,12 @@ function Detail({ route }) {
   const [loadingDetail, setLoadingDetail] = useState(false);
   const dispatch = useDispatch();
 
-  console.log(detail.vehicle.User.UserProfile.profilePicture);
-
   useEffect(() => {
     setLoadingDetail(true);
     dispatch(fetchDetail(id)).then(() => {
-      setLoadingDetail(false);
+      setLoadingDetail(false).catch((error) => {
+        console.log(error);
+      });
     });
   }, []);
 
@@ -131,7 +131,7 @@ function Detail({ route }) {
             <View style={styles.ownerContainer}>
               <View style={styles.ownerItem}>
                 {/* di edit untuk munculkan foto profile */}
-                {detail.vehicle.User.UserProfile.profilePicture && (
+                {detail?.vehicle.User.UserProfile.profilePicture && (
                   <Image
                     source={{
                       uri: detail.vehicle.User.UserProfile.profilePicture,
