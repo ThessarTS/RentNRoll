@@ -26,6 +26,8 @@ function Detail({ route }) {
   const [loadingDetail, setLoadingDetail] = useState(false);
   const dispatch = useDispatch();
 
+  console.log(detail.vehicle.User.UserProfile.profilePicture);
+
   useEffect(() => {
     setLoadingDetail(true);
     dispatch(fetchDetail(id)).then(() => {
@@ -128,12 +130,16 @@ function Detail({ route }) {
             <Text style={styles.itemTitle}> Owner</Text>
             <View style={styles.ownerContainer}>
               <View style={styles.ownerItem}>
-                <Image
-                  source={{
-                    uri: "https://media.licdn.com/dms/image/C4E03AQGnouyn_2vSgw/profile-displayphoto-shrink_800_800/0/1646808937817?e=1703116800&v=beta&t=BZT5fOu-gScDu4h9GkegSv74GG0pSt47-0QAZOQHOeE",
-                  }}
-                  style={styles.ownerImage}
-                />
+                {/* di edit untuk munculkan foto profile */}
+                {detail.vehicle.User.UserProfile.profilePicture && (
+                  <Image
+                    source={{
+                      uri: detail.vehicle.User.UserProfile.profilePicture,
+                    }}
+                    style={styles.ownerImage}
+                  />
+                )}
+                {/* di edit untuk munculkan foto profile */}
                 <Text style={styles.itemTitle}>
                   {detail ? detail.vehicle.User.fullName : ""}
                 </Text>

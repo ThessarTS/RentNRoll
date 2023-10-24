@@ -15,7 +15,7 @@ import {
 import axios from "axios";
 
 const baseUrl =
-  "https://5a7c-2001-448a-6021-5c1-d3d5-fb4c-3050-5644.ngrok-free.app";
+  "https://a4f5-2001-448a-6021-5c1-b906-b625-3660-d512.ngrok-free.app";
 
 // FETCH VEHICLES
 export const vehicleFetchRequest = () => {
@@ -132,8 +132,11 @@ export const addVehicle = (value, access_token) => {
         method: "POST",
         data: value,
         "Content-Type": "multipart/form-data",
-      })
-dispatch(fetchVehicles());
+        headers: {
+          access_token: access_token,
+        },
+      });
+      dispatch(fetchVehicles());
       return data;
     } catch (error) {
       throw error.response.data;

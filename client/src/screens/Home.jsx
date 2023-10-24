@@ -1,6 +1,18 @@
 import React, { useEffect, useState } from "react";
 
-import { SafeAreaView, StyleSheet, View, Text, Pressable, TextInput, FlatList, ScrollView, ImageBackground, ActivityIndicator, Image } from "react-native";
+import {
+  SafeAreaView,
+  StyleSheet,
+  View,
+  Text,
+  Pressable,
+  TextInput,
+  FlatList,
+  ScrollView,
+  ImageBackground,
+  ActivityIndicator,
+  Image,
+} from "react-native";
 
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
@@ -17,20 +29,26 @@ import { useDispatch, useSelector } from "react-redux";
 import Modal from "react-native-modal";
 import { MaterialIcons } from "@expo/vector-icons";
 import { fetchCategory } from "../../store/actions/categoryAction";
-import { fetchVehicles, fetchTrending } from "../../store/actions/vehicleAction";
+import {
+  fetchVehicles,
+  fetchTrending,
+} from "../../store/actions/vehicleAction";
 import { AntDesign } from "@expo/vector-icons";
 import CardOrderHome from "../components/CardOrderHome";
 import notFound from "../../assets/image/zzz.png";
 import { getUser } from "../../store/actions/userAction";
 
 function Home({ navigation }) {
-  const { vehicles, trending, loading } = useSelector((state) => state.vehicleReducer);
+  const { vehicles, trending, loading } = useSelector(
+    (state) => state.vehicleReducer
+  );
 
   const { profile } = useSelector((state) => state.userReducer);
   const { categories } = useSelector((state) => state.categoryReducer);
   const dispatch = useDispatch();
   const [loadingCategory, setLoadingCategory] = useState(false);
   const [search, setSearch] = useState(false);
+  const [togleCategory, setTogleCategory] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [filteredData, setFilteredData] = useState(vehicles);
   const [filteredCategory, setFilteredCategory] = useState(vehicles);
@@ -49,8 +67,9 @@ function Home({ navigation }) {
       return item.Category.name === name;
     });
     setFilteredCategory(dataByCategory);
-    setSearch(true);
+    setTogleCategory(true);
   };
+  // console.log(filteredCategory, "<<");
   const toggleSearch = (value) => {
     setSearch(value);
   };
@@ -91,7 +110,8 @@ function Home({ navigation }) {
   }
 
   const RenderModalItems = ({ vehicle }) => {
-    const { image, name, price, averageRating, totalReviews, id } = vehicle.item;
+    const { image, name, price, averageRating, totalReviews, id } =
+      vehicle.item;
     const goDetail = () => {
       navigation.navigate("detail", {
         name: name,
@@ -112,7 +132,11 @@ function Home({ navigation }) {
           }}
         >
           <View>
-            <Image source={{ uri: `${image}` }} style={{ width: 90, height: 65 }} resizeMode="contain" />
+            <Image
+              source={{ uri: `${image}` }}
+              style={{ width: 90, height: 65 }}
+              resizeMode="contain"
+            />
           </View>
           <View style={{ flex: 6, marginStart: 10, gap: 3 }}>
             <View style={[styles.headerItemContainer]}>
@@ -127,7 +151,9 @@ function Home({ navigation }) {
             </View>
             <View style={[styles.headerItemContainer, { marginStart: 2 }]}>
               <Entypo name="price-tag" size={15} color="#17799A" />
-              <Text style={[styles.itemsDetailInfo, { marginStart: 2 }]}>{fPrice(price)} /Day</Text>
+              <Text style={[styles.itemsDetailInfo, { marginStart: 2 }]}>
+                {fPrice(price)} /Day
+              </Text>
             </View>
           </View>
           <View>
@@ -189,7 +215,13 @@ function Home({ navigation }) {
       <View style={styles.mastheadContainer}>
         <View style={styles.searchContainer}>
           <Ionicons name="ios-search-sharp" color="#17799A" size={25} />
-          <TextInput placeholder="Search" value={searchValue} style={{ flex: 1 }} onChangeText={(text) => setSearchValue(text)} onSubmitEditing={() => handleInputSubmit(searchValue)} />
+          <TextInput
+            placeholder="Search"
+            value={searchValue}
+            style={{ flex: 1 }}
+            onChangeText={(text) => setSearchValue(text)}
+            onSubmitEditing={() => handleInputSubmit(searchValue)}
+          />
         </View>
         <Pressable style={styles.filterContainer}>
           <Entypo name="chat" size={25} color="white" />
@@ -217,13 +249,21 @@ function Home({ navigation }) {
                   keyExtractor={(category) => category.id}
                   horizontal={true}
                 />
-
               </View>
               {/* end category */}
               {/* Trending */}
               <View style={styles.itemsContainer}>
                 <Text style={styles.itemTitle}>Trending</Text>
-                <FlatList style={{ marginTop: 10 }} data={trending} renderItem={(vehicle) => <RenderCardVehicle vehicle={vehicle} />} keyExtractor={(vehicle) => vehicle.id} horizontal={true} showsHorizontalScrollIndicator={false} />
+                <FlatList
+                  style={{ marginTop: 10 }}
+                  data={trending}
+                  renderItem={(vehicle) => (
+                    <RenderCardVehicle vehicle={vehicle} />
+                  )}
+                  keyExtractor={(vehicle) => vehicle.id}
+                  horizontal={true}
+                  showsHorizontalScrollIndicator={false}
+                />
               </View>
               {/* end Trending */}
 
@@ -236,7 +276,12 @@ function Home({ navigation }) {
                       style={{ marginTop: 10 }}
                       data={profile.Orders}
                       renderItem={({ item }) => {
-                        return <CardOrderHome orders={item} navigation={navigation} />;
+                        return (
+                          <CardOrderHome
+                            orders={item}
+                            navigation={navigation}
+                          />
+                        );
                       }}
                       keyExtractor={(item) => item.id}
                       horizontal={true}
@@ -254,8 +299,14 @@ function Home({ navigation }) {
                       }}
                     >
                       <FontAwesome name="history" size={24} color="black" />
-                      <Text style={{ fontWeight: 500, fontSize: 18 }}>Your History is empty</Text>
-                      <Text style={{ fontWeight: 500, fontSize: 14, marginTop: 10 }}>Looks like you've never done a rental before</Text>
+                      <Text style={{ fontWeight: 500, fontSize: 18 }}>
+                        Your History is empty
+                      </Text>
+                      <Text
+                        style={{ fontWeight: 500, fontSize: 14, marginTop: 10 }}
+                      >
+                        Looks like you've never done a rental before
+                      </Text>
                       <Pressable
                         style={{
                           backgroundColor: "#17799A",
@@ -281,8 +332,14 @@ function Home({ navigation }) {
                     }}
                   >
                     <FontAwesome name="history" size={24} color="black" />
-                    <Text style={{ fontWeight: 500, fontSize: 18 }}>Your History is empty</Text>
-                    <Text style={{ fontWeight: 500, fontSize: 14, marginTop: 10 }}>Looks like you've never done a rental before</Text>
+                    <Text style={{ fontWeight: 500, fontSize: 18 }}>
+                      Your History is empty
+                    </Text>
+                    <Text
+                      style={{ fontWeight: 500, fontSize: 14, marginTop: 10 }}
+                    >
+                      Looks like you've never done a rental before
+                    </Text>
                     <Pressable
                       style={{
                         backgroundColor: "#17799A",
@@ -331,21 +388,13 @@ function Home({ navigation }) {
                       keyExtractor={(vehicle) => vehicle.id}
                       showsHorizontalScrollIndicator={false}
                     />
-                  ) : filteredCategory.length !== 0 ? (
-                    // Display the FlatList when filteredCategory is not empty
-                    <FlatList
-                      style={{ marginTop: 10 }}
-                      data={filteredCategory}
-                      renderItem={(vehicle) => (
-                        <RenderModalItems vehicle={vehicle} />
-                      )}
-                      keyExtractor={(vehicle) => vehicle.id}
-                      showsHorizontalScrollIndicator={false}
-                    />
-
                   ) : (
                     <View style={{ flex: 1, justifyContent: "center" }}>
-                      <Image source={notFound} style={{ flex: 1, width: null, height: null }} resizeMode="cover" />
+                      <Image
+                        source={notFound}
+                        style={{ flex: 1, width: null, height: null }}
+                        resizeMode="cover"
+                      />
                       <View style={{ flex: 1 }}>
                         <Text
                           style={{
@@ -360,11 +409,79 @@ function Home({ navigation }) {
                     </View>
                   )}
 
-                  <Pressable style={{ position: "absolute", top: 10, right: 20 }} onPress={() => toggleSearch(false)}>
+                  <Pressable
+                    style={{ position: "absolute", top: 10, right: 20 }}
+                    onPress={() => toggleSearch(false)}
+                  >
                     <MaterialIcons name="cancel" size={30} color="red" />
                   </Pressable>
                 </View>
               </Modal>
+
+              {/* Modal Ctegory filter */}
+              <Modal
+                isVisible={togleCategory}
+                onBackdropPress={toggleSearch}
+                style={{
+                  justifyContent: "flex-end",
+                  margin: 0,
+                }}
+              >
+                <View
+                  style={{
+                    backgroundColor:
+                      filteredData.length !== 0 ? "whitesmoke" : "white",
+                    height:
+                      filteredData.length !== 0 || filteredCategory.length !== 0
+                        ? "75%"
+                        : "45%",
+                    padding: 20,
+                    paddingVertical: 50,
+                    gap: 5,
+                    borderTopLeftRadius: 16,
+                    borderTopRightRadius: 16,
+                  }}
+                >
+                  {filteredCategory.length !== 0 ? (
+                    <FlatList
+                      style={{ marginTop: 10 }}
+                      data={filteredCategory}
+                      renderItem={(vehicle) => (
+                        <RenderModalItems vehicle={vehicle} />
+                      )}
+                      keyExtractor={(vehicle) => vehicle.id}
+                      showsHorizontalScrollIndicator={false}
+                    />
+                  ) : (
+                    <View style={{ flex: 1, justifyContent: "center" }}>
+                      <Image
+                        source={notFound}
+                        style={{ flex: 1, width: null, height: null }}
+                        resizeMode="cover"
+                      />
+                      <View style={{ flex: 1 }}>
+                        <Text
+                          style={{
+                            textAlign: "center",
+                            fontSize: 20,
+                            fontWeight: 500,
+                          }}
+                        >
+                          Vehicle not Found
+                        </Text>
+                      </View>
+                    </View>
+                  )}
+
+                  <Pressable
+                    style={{ position: "absolute", top: 10, right: 20 }}
+                    onPress={() => setTogleCategory(false)}
+                  >
+                    <MaterialIcons name="cancel" size={30} color="red" />
+                  </Pressable>
+                </View>
+              </Modal>
+              {/* END Modal Ctegory filter */}
             </View>
           </ScrollView>
         </ImageBackground>
