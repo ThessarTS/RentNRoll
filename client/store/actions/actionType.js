@@ -9,9 +9,7 @@ export const MY_VEHICLE_FETCH_REQUEST = "myVehicle/fetchRequest";
 export const MY_VEHICLE_FETCH_SUCCESS = "myVehicle/fetchSuccess";
 export const MY_VEHICLE_FETCH_FAIL = "myVehicle/fetchFail";
 
-// export const VEHICLE_FETCH_BY_ID_REQUEST = "vehicle/fetchByIdRequest";
 export const VEHICLE_FETCH_BY_ID_SUCCESS = "vehicle/fetchByIdSuccess";
-// export const VEHICLE_FETCH_BY_ID_FAIL = "vehicle/fetchByIdFail";
 
 export const TRENDING_FETCH_REQUEST = "trending/fetchRequest";
 export const TRENDING_FETCH_SUCCESS = "trending/fetchSuccess";
@@ -24,5 +22,8 @@ export const PROFILES_FETCH_SUCCESS = "profiles/fetchProfiles";
 export const ORDER_FETCH_REQUEST = "order/fetchRequest";
 export const ORDER_FETCH_SUCCESS = "order/fetchSuccess";
 export const ORDER_FETCH_FAIL = "order/fetchFail";
+
+export const ORDER_FETCH_BY_VEHICLE_ID_REQUEST = "order/fetchByVehicleIdRequest";
+export const ORDER_FETCH_BY_VEHICLE_ID_SUCCESS = "order/fetchByVehicleIdSuccess";
 
 export const ADD_FETCH_SUCCESS = "vehicle/addSuccess";

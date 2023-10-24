@@ -61,7 +61,7 @@ const HomeTab = () => {
       <Tab.Screen name="Rent Now" component={Rent} />
       {profile && <Tab.Screen name="Add Vehicle" component={AddVehicle} />}
       <Tab.Screen name="Your Order" component={MyOrder} />
-      <Tab.Screen name="You" component={Account} />
+      {profile ? <Tab.Screen name="You" component={Account} /> : <Tab.Screen name="You" component={LoginRegister} />}
     </Tab.Navigator>
   );
 };

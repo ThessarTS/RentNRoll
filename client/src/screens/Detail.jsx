@@ -1,15 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  SafeAreaView,
-  Image,
-  View,
-  ScrollView,
-  StyleSheet,
-  Text,
-  FlatList,
-  Pressable,
-  ActivityIndicator,
-} from "react-native";
+import { SafeAreaView, Image, View, ScrollView, StyleSheet, Text, FlatList, Pressable, ActivityIndicator } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import CardSpecification from "../components/CardSpecification";
 import { Feather } from "@expo/vector-icons";
@@ -19,47 +9,88 @@ import { Entypo } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchDetail } from "../../store/actions";
+import { fetchOrderByVehicleId } from "../../store/actions/orderAction";
+import { fDate } from "../helpers/fDate";
+import { fPrice } from "../helpers/fPrice";
+import { errorAlert } from "../helpers/alert";
 
-function Detail({ route }) {
-  const { name, id } = route.params;
+function Detail({ route, navigation }) {
+  const { name, id, startdate, enddate } = route.params;
   const detail = useSelector((state) => state.vehicleReducer.vehicle);
+  const { profile } = useSelector((state) => state.userReducer);
+  const { orderByVehicles } = useSelector((state) => state.orderReducer);
+  const [isOrder, setIsOrder] = useState(false);
   const [loadingDetail, setLoadingDetail] = useState(false);
+  const [startDate, setSelectedStartDate] = useState(new Date());
+  const [endDate, setSelectedEndDate] = useState(new Date(startDate.getTime() + 24 * 60 * 60 * 1000));
   const dispatch = useDispatch();
 
   useEffect(() => {
     setLoadingDetail(true);
+    dispatch(fetchOrderByVehicleId(id));
     dispatch(fetchDetail(id)).then(() => {
       setLoadingDetail(false);
     });
   }, []);
 
-  const fPrice = (price) => {
-    return price.toLocaleString("id-ID", {
-      style: "currency",
-      currency: "IDR",
-    });
-  };
+  const [handleInput, setHandleInput] = useState({
+    location: "",
+    startDate: new Date(),
+    endDate: new Date(),
+  });
 
-  const [startDate, setSelectedStartDate] = useState(new Date());
-  const [endDate, setSelectedEndDate] = useState(new Date());
-
-  const handleStartDateChange = (event, date) => {
+  const handlestartdateChange = (event, date) => {
     if (date !== undefined) {
       const today = new Date();
       if (date >= today) {
         setSelectedStartDate(date);
-        setSelectedEndDate(date);
+
+        const nextDay = new Date(date.getTime() + 24 * 60 * 60 * 1000);
+        setSelectedEndDate(nextDay);
+
+        setHandleInput((prevState) => ({
+          ...prevState,
+          startDate: date,
+          endDate: nextDay,
+        }));
       }
     }
   };
 
-  const handleEndDateChange = (event, date) => {
+  const handleendateChange = (event, date) => {
     if (date !== undefined) {
-      if (date >= setSelectedStartDate) {
+      if (date >= startDate) {
         setSelectedEndDate(date);
+        setHandleInput((prevState) => ({
+          ...prevState,
+          endDate: date,
+        }));
       }
     }
   };
+
+  const createOrder = () => {
+    if (!profile) {
+      navigation.navigate("loginRegister");
+      errorAlert("Login First!");
+    } else console.log(berhasil);
+  };
+
+  useEffect(() => {
+    let isVehicleOrdered = false;
+
+    orderByVehicles.forEach((e, idx) => {
+      const orderStartDate = new Date(e.startDate);
+      const orderEndDate = new Date(e.endDate);
+
+      if (new Date(startDate) < orderEndDate && new Date(endDate) > orderStartDate) {
+        isVehicleOrdered = true;
+      }
+    });
+
+    setIsOrder(isVehicleOrdered);
+  }, [startDate, endDate, orderByVehicles]);
+
   if (loadingDetail) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -80,49 +111,32 @@ function Detail({ route }) {
         <View style={styles.container}>
           {/* header */}
           <View style={styles.headerContainer}>
-            {detail && (
-              <Image
-                source={{ uri: detail.vehicle.image }}
-                style={styles.imageCover}
-                resizeMode="cover"
-              />
-            )}
+            {detail && <Image source={{ uri: detail.vehicle.image }} style={styles.imageCover} resizeMode="cover" />}
             <View style={styles.headerItems}>
               <Text style={styles.headerTitle}> {name}</Text>
               <View style={[styles.headerItemContainer]}>
                 <Ionicons name="location" size={18} color="#17799A" />
-                <Text style={styles.location}>Location : Jakarta</Text>
+                <Text style={styles.location}>Location : {detail ? detail.vehicle.location : ""}</Text>
               </View>
               <View style={[styles.headerItemContainer, { marginStart: 2 }]}>
                 <AntDesign name="star" size={15} color="#F8B84E" />
                 <Text style={styles.rating}>
-                  Rating: {detail ? detail.rating : ""} (
-                  {detail ? detail.vehicle.Reviews.length : 0} Reviews)
+                  Rating: {detail ? detail.rating : ""} ({detail ? detail.vehicle.Reviews.length : 0} Reviews)
                 </Text>
               </View>
               <View style={[styles.headerItemContainer, { marginStart: 3 }]}>
                 <MaterialIcons name="category" size={15} color="#9B59B6" />
-                <Text style={styles.headerCategories}>
-                  Category: {detail ? detail.vehicle.Category.name : ""}
-                </Text>
+                <Text style={styles.headerCategories}>Category: {detail ? detail.vehicle.Category.name : ""}</Text>
               </View>
             </View>
           </View>
           {/* end header */}
-
           {/* spec */}
           <View style={styles.itemContainer}>
             <Text style={styles.itemTitle}> Specification</Text>
-            <FlatList
-              data={spec}
-              renderItem={(spec) => <RenderSpec spec={spec} />}
-              keyExtractor={(spec) => spec.id}
-              horizontal={true}
-              showsHorizontalScrollIndicator={false}
-            />
+            <FlatList data={spec} renderItem={(spec) => <RenderSpec spec={spec} />} keyExtractor={(spec) => spec.id} horizontal={true} showsHorizontalScrollIndicator={false} />
           </View>
           {/* end spec */}
-
           {/* owner */}
           <View style={styles.itemContainer}>
             <Text style={styles.itemTitle}> Owner</Text>
@@ -130,70 +144,76 @@ function Detail({ route }) {
               <View style={styles.ownerItem}>
                 <Image
                   source={{
-                    uri: "https://media.licdn.com/dms/image/C4E03AQGnouyn_2vSgw/profile-displayphoto-shrink_800_800/0/1646808937817?e=1703116800&v=beta&t=BZT5fOu-gScDu4h9GkegSv74GG0pSt47-0QAZOQHOeE",
+                    uri: detail ? `${detail.vehicle.User.UserProfile.profilePicture}` : "https://www.copaster.com/wp-content/uploads/2023/03/pp-kosong-wa-default.jpeg",
                   }}
                   style={styles.ownerImage}
                 />
-                <Text style={styles.itemTitle}>
-                  {detail ? detail.vehicle.User.fullName : ""}
-                </Text>
+                <Text style={styles.itemTitle}>{detail ? detail.vehicle.User.fullName : ""}</Text>
               </View>
               <View style={styles.ownerAction}>
                 <Feather name="phone-call" size={24} color="#17799A" />
-                <Ionicons
-                  name="ios-chatbox-ellipses-outline"
-                  size={25}
-                  color="#17799A"
-                />
+                <Ionicons name="ios-chatbox-ellipses-outline" size={25} color="#17799A" />
               </View>
             </View>
           </View>
           {/* end spec */}
-
           {/* Rent Action */}
           <View style={styles.itemContainer}>
             <View style={styles.rentHeaderContainer}>
               <Text style={styles.itemTitle}> Rent Now</Text>
               <View style={[styles.headerItemContainer]}>
                 <Entypo name="price-tag" size={24} color="#17799A" />
-                <Text style={styles.location}>
-                  {fPrice(detail ? detail.vehicle.price : "")}/day
-                </Text>
+                <Text style={styles.location}>{fPrice(detail ? detail.vehicle.price : "")}/day</Text>
               </View>
             </View>
-            <View style={styles.rentContainer}>
-              <View style={styles.rentStartContainer}>
-                <Text>Pick-up Date</Text>
-                <View style={styles.rentStartDate}>
-                  <AntDesign name="calendar" size={24} color="black" />
-                  <DateTimePicker
-                    value={startDate}
-                    mode="date"
-                    is24Hour={true}
-                    display="default"
-                    minimumDate={new Date()}
-                    onChange={handleStartDateChange}
-                  />
+            {!startdate && !enddate && (
+              <View style={styles.rentContainer}>
+                <View style={styles.rentStartContainer}>
+                  <Text>Pick-up Date</Text>
+                  <View style={styles.rentStartDate}>
+                    <AntDesign name="calendar" size={24} color="black" />
+                    <DateTimePicker value={startDate} mode="date" is24Hour={true} display="default" minimumDate={new Date()} onChange={handlestartdateChange} />
+                  </View>
+                </View>
+                <View style={styles.rentEndContainer}>
+                  <Text>Drop-off Date</Text>
+                  <View style={styles.rendEndDate}>
+                    <DateTimePicker value={endDate} mode="date" is24Hour={true} display="default" minimumDate={startDate} onChange={handleendateChange} />
+                    <AntDesign name="calendar" size={24} color="black" />
+                  </View>
                 </View>
               </View>
-              <View style={styles.rentEndContainer}>
-                <Text>Drop-off Date</Text>
-                <View style={styles.rendEndDate}>
-                  <DateTimePicker
-                    value={endDate}
-                    mode="date"
-                    is24Hour={true}
-                    display="default"
-                    minimumDate={startDate}
-                    onChange={handleEndDateChange}
-                  />
-                  <AntDesign name="calendar" size={24} color="black" />
+            )}
+
+            {startdate && enddate && (
+              <View style={[styles.rentContainer, { marginBottom: 15 }]}>
+                <View style={styles.rentStartContainer}>
+                  <Text>Pick-up Date</Text>
+                  <View style={styles.rentStartDate}>
+                    <AntDesign name="calendar" size={24} color="black" />
+                    <Text style={{ marginStart: 5 }}>{fDate(startdate)}</Text>
+                  </View>
+                </View>
+                <View style={styles.rentEndContainer}>
+                  <Text>Drop-off Date</Text>
+                  <View style={styles.rendEndDate}>
+                    <Text>{fDate(enddate)}</Text>
+                    <AntDesign name="calendar" size={24} color="black" />
+                  </View>
                 </View>
               </View>
-            </View>
-            <Pressable style={styles.rentButton}>
-              <Text style={styles.rentAction}>Rent</Text>
-            </Pressable>
+            )}
+
+            {isOrder ? (
+              <Pressable style={[styles.rentButton, { backgroundColor: "red" }]} disabled={true}>
+                <Text style={styles.rentAction}>Booked Out</Text>
+              </Pressable>
+            ) : (
+              <Pressable style={styles.rentButton} onPress={createOrder}>
+                <Text style={styles.rentAction}>Rent</Text>
+              </Pressable>
+            )}
+
             {/* end rent Action */}
           </View>
         </View>
@@ -329,6 +349,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     borderRadius: 10,
   },
+
   rentHeaderContainer: {
     flexDirection: "row",
     justifyContent: "space-between",

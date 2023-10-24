@@ -1,24 +1,20 @@
 import React from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { Ionicons, Entypo, AntDesign } from "@expo/vector-icons";
+import { fPrice } from "../helpers/fPrice";
 
-function CardVehicleRent({ vehicle, startDate }) {
-  const fPrice = (price) => {
-    return price.toLocaleString("id-ID", {
-      style: "currency",
-      currency: "IDR",
-    });
-  };
-
+function CardVehicleRent({ navigation, vehicle, startDate, endDate }) {
   const goDetail = () => {
     navigation.navigate("detail", {
       name: vehicle.name,
       id: vehicle.id,
+      startdate: startDate.toISOString(),
+      enddate: endDate.toISOString(),
     });
   };
 
   return (
-    <Pressable style={styles.container}>
+    <Pressable style={styles.container} onPress={goDetail}>
       <Text style={styles.itemsDetailTitle}>{vehicle.name}</Text>
       <View style={{ flexDirection: "row", gap: 10, alignItems: "center" }}>
         <View>

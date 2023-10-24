@@ -1,28 +1,14 @@
 import React from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 import { Ionicons, Entypo, FontAwesome } from "@expo/vector-icons";
+import { fPrice } from "../helpers/fPrice";
+import { fDate } from "../helpers/fDate";
 
 function CardOrder({ order }) {
-  function fDate(dateString) {
-    const date = new Date(dateString);
-    const day = date.getDate();
-    const year = date.getFullYear();
-    const month = date.toLocaleString("default", { month: "short" });
-
-    return `${day} ${month} ${year}`;
-  }
-  const fPrice = (price) => {
-    return price.toLocaleString("id-ID", {
-      style: "currency",
-      currency: "IDR",
-    });
-  };
-
   function getStatusBackgroundColor(status) {
     if (status === "returned") return "green";
     else return "#17799A";
   }
-
   return (
     <View style={styles.container}>
       <Text style={styles.itemsDetailTitle}>{order.Vehicle.name}</Text>

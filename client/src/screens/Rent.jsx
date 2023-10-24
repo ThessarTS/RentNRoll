@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { StyleSheet, Text, SafeAreaView, ScrollView, View, Pressable, ActivityIndicator, Alert } from "react-native";
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import SelectDropdown from "react-native-select-dropdown";
@@ -13,7 +13,7 @@ import { errorAlert } from "../helpers/alert";
 function Account({ navigation }) {
   const dispatch = useDispatch();
   const [startdate, setSelectedstartdate] = useState(new Date());
-  const [endate, setSelectedendate] = useState(new Date());
+  const [enddate, setSelectedendate] = useState(new Date(startdate.getTime() + 24 * 60 * 60 * 1000));
   const countries = ["Jakarta", "Bandung", "Medan", "Batam", "Bali", "Aceh", "Bogor"];
   const [searched, setSearched] = useState(false);
   const { vehiclesQuery, loading } = useSelector((state) => state.vehicleReducer);
@@ -23,7 +23,7 @@ function Account({ navigation }) {
   const [handleInput, setHandleInput] = useState({
     location: "",
     startdate: new Date(),
-    endate: new Date(),
+    enddate: new Date(startdate.getTime() + 24 * 60 * 60 * 1000),
   });
 
   const search = () => {
@@ -43,11 +43,14 @@ function Account({ navigation }) {
       const today = new Date();
       if (date >= today) {
         setSelectedstartdate(date);
-        setSelectedendate(date);
+
+        const nextDay = new Date(date.getTime() + 24 * 60 * 60 * 1000);
+        setSelectedendate(nextDay);
+
         setHandleInput((prevState) => ({
           ...prevState,
-          startdate: date.toISOString(),
-          endate: date.toISOString(),
+          startdate: date,
+          enddate: nextDay,
         }));
       }
     }
@@ -59,7 +62,7 @@ function Account({ navigation }) {
         setSelectedendate(date);
         setHandleInput((prevState) => ({
           ...prevState,
-          endate: date.toISOString(),
+          enddate: date,
         }));
       }
     }
@@ -71,7 +74,12 @@ function Account({ navigation }) {
       setHandleInput((prevState) => ({
         ...prevState,
         location: "",
+        startdate: new Date(),
+        enddate: new Date(startdate.getTime() + 24 * 60 * 60 * 1000),
       }));
+      setSelectedstartdate(new Date());
+      setSelectedendate(new Date(startdate.getTime() + 24 * 60 * 60 * 1000));
+
       dropdownRef.current.reset();
     }, [])
   );
@@ -135,16 +143,12 @@ function Account({ navigation }) {
                   <View style={styles.rentEndContainer}>
                     <Text>Drop-off Date</Text>
                     <View style={styles.rendendate}>
-                      <DateTimePicker value={endate} mode="date" is24Hour={true} display="default" minimumDate={startdate} onChange={handleendateChange} />
+                      <DateTimePicker value={enddate} mode="date" is24Hour={true} display="default" minimumDate={startdate} onChange={handleendateChange} />
                       <AntDesign name="calendar" size={24} color="black" />
                     </View>
                   </View>
                 </View>
-                {/* {errMsg && (
-                  <View style={{ marginVertical: 5 }}>
-                    <Text style={{ textAlign: "center", color: "red", fontWeight: 700 }}>{errMsg}</Text>
-                  </View>
-                )} */}
+
                 <Pressable style={styles.rentButton} onPress={search}>
                   <Text style={styles.rentAction}>Search</Text>
                 </Pressable>
@@ -160,7 +164,7 @@ function Account({ navigation }) {
 
                 {searched &&
                   vehiclesQuery.map((e) => {
-                    return <CardVehicleRent vehicle={e} startdate={handleInput.startdate} key={e.id} />;
+                    return <CardVehicleRent vehicle={e} navigation={navigation} startdate={handleInput.startdate} key={e.id} endDate={enddate} startDate={startdate} />;
                   })}
               </ScrollView>
             </View>

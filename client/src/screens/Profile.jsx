@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, SafeAreaView, ImageBackground, ScrollView, View, Image, Pressable } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import bg from "../../assets/image/bg-home.png";
@@ -17,7 +17,6 @@ function Profile({ navigation }) {
   const [inputSIMAImage, setInputSIMAImage] = useState(null);
   const [inputSIMCImage, setInputSIMCImage] = useState(null);
 
-  console.log(profile);
   const dispatch = useDispatch();
 
   const [access_token, setAccessToken] = useState("");

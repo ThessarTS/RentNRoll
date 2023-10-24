@@ -1,14 +1,10 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { StyleSheet, Text, SafeAreaView, ImageBackground, ScrollView, View, Image, Pressable } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import bg from "../../assets/image/bg-home.png";
 import { Ionicons, Entypo, MaterialIcons } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  fetchProfile,
-  getUser,
-  profilesFetchSuccess,
-} from "../../store/actions/userAction";
+import { fetchProfile } from "../../store/actions";
 import { useFocusEffect } from "@react-navigation/native";
 import NavIcon from "../components/NavIcon";
 
@@ -16,28 +12,6 @@ function Account({ navigation }) {
   const [user, setUser] = useState(null);
   const { profile } = useSelector((state) => state.userReducer);
   const dispatch = useDispatch();
-  async function getUser() {
-    try {
-      const newUser = await AsyncStorage.getItem("access_token");
-      if (!newUser) {
-        throw new Error("userNotFound");
-      }
-      const newValue = {
-        access_token: newUser,
-      };
-      dispatch(fetchProfile(newValue)).then((data) => {
-        setUser(data);
-      });
-    } catch (error) {
-      await navigation.navigate("loginRegister");
-    }
-  }
-
-  useFocusEffect(
-    useCallback(() => {
-      getUser();
-    }, [])
-  );
 
   return (
     <View style={styles.container}>

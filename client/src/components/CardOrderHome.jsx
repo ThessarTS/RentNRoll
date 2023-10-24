@@ -1,24 +1,9 @@
 import React from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
-import { AntDesign } from "@expo/vector-icons";
+import { fPrice } from "../helpers/fPrice";
+import { truncateName } from "../helpers/fName";
 
 function CardOrderHome({ orders, navigation }) {
-  const maxLength = 18;
-
-  const truncateName = (name) => {
-    if (name.length > maxLength) {
-      return name.substring(0, maxLength) + "...";
-    }
-    return name;
-  };
-
-  const fPrice = (price) => {
-    return price.toLocaleString("id-ID", {
-      style: "currency",
-      currency: "IDR",
-    });
-  };
-
   const goDetail = () => {
     navigation.navigate("detail", {
       name: orders.Vehicle.name,
