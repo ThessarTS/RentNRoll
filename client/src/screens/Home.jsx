@@ -24,6 +24,7 @@ function Home({ navigation }) {
   const { categories } = useSelector((state) => state.categoryReducer);
   const dispatch = useDispatch();
   const [search, setSearch] = useState(false);
+  const [togleCategory, setTogleCategory] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [filteredData, setFilteredData] = useState(vehicles);
   const [filteredCategory, setFilteredCategory] = useState(vehicles);
@@ -42,8 +43,9 @@ function Home({ navigation }) {
       return item.Category.name === name;
     });
     setFilteredCategory(dataByCategory);
-    setSearch(true);
+    setTogleCategory(true);
   };
+  // console.log(filteredCategory, "<<");
   const toggleSearch = (value) => {
     setSearch(value);
   };
@@ -77,7 +79,8 @@ function Home({ navigation }) {
   }
 
   const RenderModalItems = ({ vehicle }) => {
-    const { image, name, price, averageRating, totalReviews, id } = vehicle.item;
+    const { image, name, price, averageRating, totalReviews, id } =
+      vehicle.item;
     const goDetail = () => {
       navigation.navigate("detail", {
         name: name,
@@ -98,7 +101,11 @@ function Home({ navigation }) {
           }}
         >
           <View>
-            <Image source={{ uri: `${image}` }} style={{ width: 90, height: 65 }} resizeMode="contain" />
+            <Image
+              source={{ uri: `${image}` }}
+              style={{ width: 90, height: 65 }}
+              resizeMode="contain"
+            />
           </View>
           <View style={{ flex: 6, marginStart: 10, gap: 3 }}>
             <View style={[styles.headerItemContainer]}>
@@ -162,7 +169,13 @@ function Home({ navigation }) {
       <View style={styles.mastheadContainer}>
         <View style={styles.searchContainer}>
           <Ionicons name="ios-search-sharp" color="#17799A" size={25} />
-          <TextInput placeholder="Search" value={searchValue} style={{ flex: 1 }} onChangeText={(text) => setSearchValue(text)} onSubmitEditing={() => handleInputSubmit(searchValue)} />
+          <TextInput
+            placeholder="Search"
+            value={searchValue}
+            style={{ flex: 1 }}
+            onChangeText={(text) => setSearchValue(text)}
+            onSubmitEditing={() => handleInputSubmit(searchValue)}
+          />
         </View>
         <Pressable style={styles.filterContainer}>
           <Entypo name="chat" size={25} color="white" />
@@ -180,14 +193,22 @@ function Home({ navigation }) {
               {/* category */}
               <View style={[styles.categoryContainer, styles.shadowProp]}>
                 <Text style={styles.categoryTitle}>Categories</Text>
-
                 <FlatList style={{ marginTop: 10 }} data={categories} renderItem={(category) => <RenderCategories category={category} />} keyExtractor={(category) => category.id} horizontal={true} />
               </View>
               {/* end category */}
               {/* Trending */}
               <View style={styles.itemsContainer}>
                 <Text style={styles.itemTitle}>Trending</Text>
-                <FlatList style={{ marginTop: 10 }} data={trending} renderItem={(vehicle) => <RenderCardVehicle vehicle={vehicle} />} keyExtractor={(vehicle) => vehicle.id} horizontal={true} showsHorizontalScrollIndicator={false} />
+                <FlatList
+                  style={{ marginTop: 10 }}
+                  data={trending}
+                  renderItem={(vehicle) => (
+                    <RenderCardVehicle vehicle={vehicle} />
+                  )}
+                  keyExtractor={(vehicle) => vehicle.id}
+                  horizontal={true}
+                  showsHorizontalScrollIndicator={false}
+                />
               </View>
               {/* end Trending */}
 
@@ -200,7 +221,12 @@ function Home({ navigation }) {
                       style={{ marginTop: 10 }}
                       data={profile.Orders}
                       renderItem={({ item }) => {
-                        return <CardOrderHome orders={item} navigation={navigation} />;
+                        return (
+                          <CardOrderHome
+                            orders={item}
+                            navigation={navigation}
+                          />
+                        );
                       }}
                       keyExtractor={(item) => item.id}
                       horizontal={true}
@@ -290,7 +316,11 @@ function Home({ navigation }) {
                     <FlatList style={{ marginTop: 10 }} data={filteredCategory} renderItem={(vehicle) => <RenderModalItems vehicle={vehicle} />} keyExtractor={(vehicle) => vehicle.id} showsHorizontalScrollIndicator={false} />
                   ) : (
                     <View style={{ flex: 1, justifyContent: "center" }}>
-                      <Image source={notFound} style={{ flex: 1, width: null, height: null }} resizeMode="cover" />
+                      <Image
+                        source={notFound}
+                        style={{ flex: 1, width: null, height: null }}
+                        resizeMode="cover"
+                      />
                       <View style={{ flex: 1 }}>
                         <Text
                           style={{
@@ -305,11 +335,15 @@ function Home({ navigation }) {
                     </View>
                   )}
 
-                  <Pressable style={{ position: "absolute", top: 10, right: 20 }} onPress={() => toggleSearch(false)}>
+                  <Pressable
+                    style={{ position: "absolute", top: 10, right: 20 }}
+                    onPress={() => setTogleCategory(false)}
+                  >
                     <MaterialIcons name="cancel" size={30} color="red" />
                   </Pressable>
                 </View>
               </Modal>
+              {/* END Modal Ctegory filter */}
             </View>
           </ScrollView>
         </ImageBackground>

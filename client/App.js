@@ -14,6 +14,7 @@ import Rent from "./src/screens/Rent";
 import MyOrder from "./src/screens/MyOrder";
 import { AlertNotificationRoot } from "react-native-alert-notification";
 import Profile from "./src/screens/Profile";
+import MyVehicle from "./src/screens/My Vehicle";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -44,11 +45,15 @@ const HomeTab = () => {
           } else if (route.name === "Video") {
             iconName = focused ? "play-circle-sharp" : "play-circle-outline";
           } else if (route.name === "You") {
-            iconName = focused ? "person-circle-sharp" : "person-circle-outline";
+            iconName = focused
+              ? "person-circle-sharp"
+              : "person-circle-outline";
           } else if (route.name === "Rent Now") {
             iconName = focused ? "bicycle-sharp" : "bicycle-outline";
           } else if (route.name === "Add Vehicle") {
-            iconName = focused ? "ios-add-circle-sharp" : "ios-add-circle-outline";
+            iconName = focused
+              ? "ios-add-circle-sharp"
+              : "ios-add-circle-outline";
           }
 
           return <Ionicons name={iconName} size={20} color={color} />;
@@ -123,6 +128,19 @@ export default function App() {
               options={({ route }) => ({
                 headerShown: false,
                 tabBarStyle: { display: "none" },
+              })}
+            />
+            <Stack.Screen
+              name="myvehicle"
+              component={MyVehicle}
+              options={({ route }) => ({
+                headerShown: true,
+                headerTintColor: "white",
+                headerStyle: {
+                  backgroundColor: "#17799A",
+                },
+                tabBarStyle: { display: "none" },
+                title: "My Vehicle",
               })}
             />
           </Stack.Navigator>

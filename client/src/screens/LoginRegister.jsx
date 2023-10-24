@@ -1,5 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { ImageBackground, Pressable, StyleSheet, Text, TextInput, View, Image, ScrollView, Platform, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, ActivityIndicator } from "react-native";
+import {
+  ImageBackground,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  Image,
+  ScrollView,
+  Platform,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Keyboard,
+  ActivityIndicator,
+} from "react-native";
 import Checkbox from "expo-checkbox";
 import banner from "../../assets/image/banner.jpg";
 import googleIcon from "../../assets/vector/google.png";
@@ -145,15 +159,33 @@ function Login({ navigation }) {
         <View style={styles.formContainer}>
           <View style={{ gap: 5 }}>
             <Text style={styles.label}>Email</Text>
-            <TextInput placeholder="email" keyboardType="email-address" value={inputLogin.email} onChangeText={(text) => handleChangeLogin("email", text)} style={styles.textInput} />
+            <TextInput
+              placeholder="email"
+              keyboardType="email-address"
+              value={inputLogin.email}
+              onChangeText={(text) => handleChangeLogin("email", text)}
+              style={styles.textInput}
+            />
           </View>
           <View style={{ gap: 5 }}>
             <Text style={styles.label}>Password</Text>
-            <TextInput placeholder="password" secureTextEntry={true} name="password" value={inputLogin.password} onChangeText={(text) => handleChangeLogin("password", text)} style={styles.textInput} />
+            <TextInput
+              placeholder="password"
+              secureTextEntry={true}
+              name="password"
+              value={inputLogin.password}
+              onChangeText={(text) => handleChangeLogin("password", text)}
+              style={styles.textInput}
+            />
           </View>
           <View style={styles.checkboxContainer}>
             <View style={styles.checkBoxView}>
-              <Checkbox style={styles.checkbox} value={isChecked} onValueChange={toggleRememberMe} color={isChecked ? "#17799A" : undefined} />
+              <Checkbox
+                style={styles.checkbox}
+                value={isChecked}
+                onValueChange={toggleRememberMe}
+                color={isChecked ? "#17799A" : undefined}
+              />
               <Text style={{ paddingLeft: -50 }}>Remember Me</Text>
             </View>
           </View>
@@ -168,7 +200,11 @@ function Login({ navigation }) {
             <View style={styles.actionContainer}>
               <Text style={{ textAlign: "center" }}>Dont have account? </Text>
               <Pressable onPress={changePage}>
-                <Text style={{ textDecorationLine: "underline", color: "#17799A" }}>Register Now</Text>
+                <Text
+                  style={{ textDecorationLine: "underline", color: "#17799A" }}
+                >
+                  Register Now
+                </Text>
               </Pressable>
             </View>
             <Pressable style={styles.buttonAction} onPress={getOtp}>
@@ -181,7 +217,10 @@ function Login({ navigation }) {
             <View style={styles.line}></View>
           </View>
           <View>
-            <Pressable style={styles.buttonGoggle} onPress={() => navigation.navigate("register")}>
+            <Pressable
+              style={styles.buttonGoggle}
+              onPress={() => navigation.navigate("register")}
+            >
               <Image source={googleIcon} style={styles.googleIcon} />
               <Text style={styles.googleText}>Google</Text>
             </Pressable>
@@ -192,9 +231,14 @@ function Login({ navigation }) {
 
       {/* register */}
       {formRegister && (
-        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.registerContainer}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={styles.registerContainer}
+        >
           <ScrollView>
-            <View style={[styles.formContainer, { justifyContent: "space-around" }]}>
+            <View
+              style={[styles.formContainer, { justifyContent: "space-around" }]}
+            >
               <View style={{ gap: 10 }}>
                 <View style={{ gap: 5 }}>
                   <Text style={styles.label}>Full Name</Text>
