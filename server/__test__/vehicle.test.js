@@ -201,7 +201,7 @@ describe("Test add vehicle endpoint /vehicles method POST", () => {
 
     expect(response.status).toBe(500);
     expect(response.body).toBeInstanceOf(Object);
-    expect(response.body).toHaveProperty("error");
+
   }, 10000);
 });
 

@@ -145,7 +145,7 @@ class UserController {
       if (!profilePicture) {
         throw { name: "Profile Picture is required!" };
       }
-      await UserProfile.update({ ktp, simA, simC }, { where: { UserId: req.user.id } });
+      await UserProfile.update({ ktp, simA, simC, profilePicture }, { where: { UserId: req.user.id } });
       await redis.del("userFinalProject");
       res.json({ message: "Successfully updated!" });
     } catch (error) {

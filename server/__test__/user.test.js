@@ -469,6 +469,18 @@ describe("GET users profile /profiles", function () {
     expect(response.body).toBeInstanceOf(Object);
     expect(response.body).toHaveProperty("message", "Invalid Token");
   });
+
+  it("should responds with 401 and body object with message", async function () {
+    let access_token_get_profiles = signToken({ id: 200 });
+    const response = await request(app)
+      .get("/profiles")
+      .set("access_token", access_token_get_profiles);
+
+    expect(response.status).toEqual(401);
+    expect(response.body).toBeInstanceOf(Object);
+    expect(response.body).toHaveProperty("message", "Invalid Token");
+  });
+
 });
 
 describe("POST users profile /profiles", function () {
