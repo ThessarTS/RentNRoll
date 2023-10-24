@@ -7,7 +7,7 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const baseUrl =
-  "https://5a7c-2001-448a-6021-5c1-d3d5-fb4c-3050-5644.ngrok-free.app";
+  "https://570d-2001-448a-6021-5c1-b906-b625-3660-d512.ngrok-free.app";
 
 export const registerHandler = (value) => {
   return async () => {
