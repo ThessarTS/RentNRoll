@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, SafeAreaView, ImageBackground, ScrollView, View, Image, Pressable, FlatList } from "react-native";
+import { StyleSheet, Text, SafeAreaView, ImageBackground, ScrollView, View, Image, Pressable } from "react-native";
 import bg from "../../assets/image/bg-home.png";
 import { MaterialIcons } from "@expo/vector-icons";
 import notFound from "../../assets/image/zzz.png";
@@ -10,23 +10,7 @@ import NavIcon from "../components/NavIcon";
 function Account({ navigation }) {
   const { profile } = useSelector((state) => state.userReducer);
   const [selectedStatus, setSelectedStatus] = useState("All");
-  const status = [
-    {
-      status: "All",
-    },
-    {
-      status: "Pending",
-    },
-    {
-      status: "Payment",
-    },
-    {
-      status: "Ongoing",
-    },
-    {
-      status: "Returned",
-    },
-  ];
+  const status = [{ status: "All" }, { status: "Pending" }, { status: "Payment" }, { status: "Ongoing" }, { status: "Returned" }];
 
   const filterOrderByStatus = (status) => {
     setSelectedStatus(status.toLowerCase() === "all" ? "All" : status);

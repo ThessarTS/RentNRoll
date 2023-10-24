@@ -1,23 +1,10 @@
 import React from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
+import { truncateName } from "../helpers/fName";
+import { fPrice } from "../helpers/fPrice";
 
 function CardVehicle({ id, image, name, price, rating, navigation, totalReviews }) {
-  const maxLength = 18;
-  const truncateName = (name) => {
-    if (name.length > maxLength) {
-      return name.substring(0, maxLength) + "...";
-    }
-    return name;
-  };
-
-  const fPrice = (price) => {
-    return price.toLocaleString("id-ID", {
-      style: "currency",
-      currency: "IDR",
-    });
-  };
-
   const goDetail = () => {
     navigation.navigate("detail", {
       name: name,
@@ -33,9 +20,7 @@ function CardVehicle({ id, image, name, price, rating, navigation, totalReviews 
           <Text style={styles.title}>{truncateName(name)}</Text>
           <Text style={styles.price}>{fPrice(price)}</Text>
           <Text style={styles.rating}>
-
-            <AntDesign name="star" size={15} color="#F8B84E" />({rating}) ({totalReviews} reviews)
-
+            <AntDesign name="star" size={12} color="#F8B84E" />({rating}) ({totalReviews} reviews)
           </Text>
         </View>
       </View>
@@ -57,13 +42,12 @@ const styles = StyleSheet.create({
   },
   innerContainer: {
     backgroundColor: "white",
-    alignItems: "center",
     borderRadius: 10,
     overflow: "hidden",
   },
   cardContainer: {
     padding: 10,
-    paddingHorizontal: 15,
+    paddingHorizontal: 7,
     gap: 5,
   },
   title: {
@@ -80,7 +64,7 @@ const styles = StyleSheet.create({
     fontSize: 11,
   },
   rating: {
-    fontSize: 11,
+    fontSize: 10,
     fontWeight: "600",
   },
 });

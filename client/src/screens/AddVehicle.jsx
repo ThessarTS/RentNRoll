@@ -4,8 +4,9 @@ import { useSelector } from "react-redux";
 import Dropdown from "react-native-input-select";
 import * as ImagePicker from "expo-image-picker";
 import { useDispatch } from "react-redux";
-import { addVehicle } from "../../store/actions/vehicleAction";
+import { addVehicle } from "../../store/actions";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { errorAlert, successAlert } from "../helpers/alert";
 
 function AddVehicle({ navigation }) {
   const [selectedCategory, setSelectedCategory] = useState();
@@ -25,7 +26,7 @@ function AddVehicle({ navigation }) {
       const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
       if (status !== "granted") {
-        alert("Permission to access the camera roll is required!");
+        errorAlert("Permission to access the camera roll is required!");
       }
     })();
   }, []);
@@ -80,7 +81,7 @@ function AddVehicle({ navigation }) {
       dispatch(addVehicle(formData, access_token))
         .then((data) => {
           navigation.navigate("Home");
-          Alert.alert(data.message);
+          successAlert(data.message);
           setSelectedCategory();
           setSpecifications([
             {
@@ -98,11 +99,11 @@ function AddVehicle({ navigation }) {
           setLoading(false);
         })
         .catch((error) => {
-          Alert.alert(error.message);
+          errorAlert(error.message);
           setLoading(false);
         });
     } else {
-      Alert.alert("please upload your vehicle image");
+      errorAlert("please upload your vehicle image");
     }
   };
   function categoryInput() {

@@ -1,13 +1,9 @@
-import {
-  CATEGORIES_FETCH_SUCCESS,
-  PROFILES_FETCH_SUCCESS,
-  TRENDING_FETCH_FAIL,
-} from "./actionType";
+import { PROFILES_FETCH_SUCCESS } from "./actionType";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { errorAlert, successAlert } from "../../src/helpers/alert";
 
-const baseUrl =
-  "https://a4f5-2001-448a-6021-5c1-b906-b625-3660-d512.ngrok-free.app";
+const baseUrl = "https://1545-118-96-109-120.ngrok-free.app";
 
 export const registerHandler = (value) => {
   return async () => {
@@ -19,8 +15,7 @@ export const registerHandler = (value) => {
       });
       return data;
     } catch (error) {
-      // console.log(error.response.data);
-      throw error.response.data;
+      throw error.response.data.message;
     }
   };
 };
@@ -35,8 +30,7 @@ export const createOtp = (value) => {
       });
       return data;
     } catch (error) {
-      // console.log(error.response.data);
-      throw error.response.data;
+      throw error.response.data.message;
     }
   };
 };
@@ -51,7 +45,7 @@ export const handleLogin = (value) => {
       });
       return data;
     } catch (error) {
-      throw error.response.data;
+      throw error.response.data.message;
     }
   };
 };
@@ -69,7 +63,7 @@ export const getUser = () => {
       };
       dispatch(fetchProfile(newValue));
     } catch (error) {
-      console.log(error);
+      console.log(error, "user not found action");
     }
   };
 };
@@ -89,7 +83,7 @@ export const fetchProfile = (value) => {
       // console.log(data);
       dispatch(profilesFetchSuccess(data));
     } catch (error) {
-      throw error.response.data;
+      console.log(error);
     }
   };
 };
@@ -101,6 +95,7 @@ export const handleLogout = () => {
       dispatch({
         type: "logout/success",
       });
+      successAlert("Success Logout");
     } catch (error) {
       console.error("Error while logging out:", error);
     }
