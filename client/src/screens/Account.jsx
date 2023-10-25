@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import NavIcon from "../components/NavIcon";
 import { useFocusEffect } from "@react-navigation/native";
 import { getUser } from "../../store/actions";
+import { fPrice } from "../helpers/fPrice";
 
 function Account({ navigation }) {
   const dispatch = useDispatch();
@@ -47,7 +48,7 @@ function Account({ navigation }) {
                   <View>
                     <Text style={styles.profileName}>{profile ? profile.fullName : ""}</Text>
                     <View style={{ gap: 2 }}>
-                      <Text style={{ fontSize: 15 }}>Balance: {profile ? profile.Balances : ""}</Text>
+                      <Text style={{ fontSize: 15 }}>{profile && profile.totalAmount ? fPrice(profile.totalAmount) : "Rp 0"}</Text>
                       <Text style={styles.profileInfo}>{profile ? profile.email : ""}</Text>
                       {profile && profile.Orders && <Text style={styles.profileInfo}>{profile ? profile.Orders.length : 0} Orders</Text>}
                     </View>
@@ -124,7 +125,7 @@ function Account({ navigation }) {
                     {/* end add vehicle */}
 
                     {/* my vehicle */}
-                    <Pressable style={styles.memberItemContainer}>
+                    <Pressable style={styles.memberItemContainer} onPress={() => navigation.navigate("myvehicle")}>
                       <View style={{ flex: 1 }}>
                         <Ionicons name="bicycle-sharp" size={25} color="gray" />
                       </View>
@@ -166,7 +167,7 @@ function Account({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "whitesmoke",
+    backgroundColor: "white",
   },
   mastheadContainer: {
     flexDirection: "row",
@@ -182,7 +183,7 @@ const styles = StyleSheet.create({
     zIndex: 0,
   },
   itemContainer: {
-    backgroundColor: "whitesmoke",
+    backgroundColor: "white",
     height: "500%",
   },
   top: {
@@ -259,7 +260,7 @@ const styles = StyleSheet.create({
   },
 
   memberContainer: {
-    backgroundColor: "whitesmoke",
+    backgroundColor: "white",
     borderRadius: 5,
     alignItems: "center",
     justifyContent: "space-between",

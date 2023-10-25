@@ -17,6 +17,7 @@ import Profile from "./src/screens/Profile";
 import { useCallback } from "react";
 import { getUser } from "./store/actions";
 import MyRent from "./src/screens/MyRent";
+import MyVehicle from "./src/screens/MyVehicle";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -133,6 +134,7 @@ export default function App() {
                 tabBarStyle: { display: "none" },
               })}
             />
+            <Stack.Screen name="myvehicle" component={MyVehicle} options={{ headerShown: false }} />
             <Stack.Screen name="myrent" component={MyRent} options={{ headerShown: false }} />
           </Stack.Navigator>
         </NavigationContainer>

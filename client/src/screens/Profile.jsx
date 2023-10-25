@@ -2,13 +2,16 @@ import React, { useCallback, useEffect, useState } from "react";
 import { StyleSheet, Text, SafeAreaView, ImageBackground, ScrollView, View, Image, Pressable, ActivityIndicator } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import bg from "../../assets/image/bg-home.png";
-import { Ionicons, Feather } from "@expo/vector-icons";
+import { Ionicons, Feather, AntDesign } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
 import NavIcon from "../components/NavIcon";
 import { addProfile, editProfile, getUser } from "../../store/actions";
 import * as ImagePicker from "expo-image-picker";
 import { errorAlert, successAlert } from "../helpers/alert";
 import { useFocusEffect } from "@react-navigation/native";
+import { fPrice } from "../helpers/fPrice";
+import { generateStars } from "../helpers/fRating";
+import { fDate } from "../helpers/fDate";
 
 function Profile({ navigation }) {
   const { profile, loading } = useSelector((state) => state.userReducer);
@@ -20,7 +23,7 @@ function Profile({ navigation }) {
   const [inputSIMAImage, setInputSIMAImage] = useState(null);
   const [inputSIMCImage, setInputSIMCImage] = useState(null);
   const dispatch = useDispatch();
-  const [access_token, setAccessToken] = useState("");
+  const [review, setReview] = useState(false);
 
   const selectImage = async (setImageFunction) => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -61,6 +64,7 @@ function Profile({ navigation }) {
   };
 
   const submitProfile = async () => {
+    const access_token = await AsyncStorage.getItem("access_token");
     const formData = new FormData();
     if (inputProfileImage) {
       formData.append("profilePicture", {
@@ -103,18 +107,15 @@ function Profile({ navigation }) {
         uri: inputSIMCImage,
       });
     }
-    // setLoading(true);
     if (profile.UserProfile.profilePicture) {
       //edit
-
-      dispatch(editProfile(formData, access_token, profile.id))
+      dispatch(editProfile(formData, access_token))
         .then((data) => {
           setToggleEdit(false);
-          // setLoading(false);
           successAlert(data.message);
         })
         .catch((error) => {
-          // setLoading(false);
+          console.log(error);
           errorAlert(error.message);
         });
     } else {
@@ -129,6 +130,24 @@ function Profile({ navigation }) {
           // setLoading(false);
         });
     }
+  };
+
+  const CardReview = (review) => {
+    const { rating, message, createdAt, Vehicle } = review.review;
+
+    return (
+      <View style={{ backgroundColor: "white", elevation: 2, shadowColor: "black", shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.2, shadowRadius: 3, width: "100%", padding: 20 }}>
+        <View style={{ flexDirection: "row", gap: 10 }}>
+          <Image source={{ uri: Vehicle ? Vehicle.image : "https://www.copaster.com/wp-content/uploads/2023/03/pp-kosong-wa-default.jpeg" }} style={{ width: 30, height: 30, borderRadius: 50 }} />
+          <View style={{ gap: 5 }}>
+            <Text style={{ fontSize: 12, fontWeight: "700" }}>{Vehicle.name}</Text>
+            <Text>{generateStars(Math.round(rating * 2) / 2)}</Text>
+            <Text style={{ fontSize: 10 }}>{fDate(createdAt)}</Text>
+            <Text style={{ fontSize: 13, marginVertical: 7 }}>{message}</Text>
+          </View>
+        </View>
+      </View>
+    );
   };
 
   useFocusEffect(
@@ -157,7 +176,7 @@ function Profile({ navigation }) {
       </View>
       <SafeAreaView style={{ flex: 1 }}>
         <ImageBackground source={bg} style={{ flex: 1 }}>
-          <View style={styles.scrollViewContainer}>
+          <ScrollView style={styles.scrollViewContainer} showsVerticalScrollIndicator={false}>
             <View style={styles.itemContainer}>
               <View style={styles.top}></View>
 
@@ -222,7 +241,7 @@ function Profile({ navigation }) {
                   <View style={{ marginTop: -20, flex: 6 }}>
                     <Text style={styles.profileName}>{profile ? profile.fullName : ""}</Text>
                     <View style={{ gap: 2 }}>
-                      <Text style={{ fontSize: 15 }}>Balance: {profile ? profile.Balances : ""}</Text>
+                      <Text style={{ fontSize: 15 }}>{profile && profile.totalAmount ? fPrice(profile.totalAmount) : "Rp 0"}</Text>
                       <Text style={styles.profileInfo}>{profile ? profile.email : ""}</Text>
                       {profile && profile.Orders && <Text style={styles.profileInfo}>{profile ? profile.Orders.length : 0} Orders</Text>}
                     </View>
@@ -300,16 +319,37 @@ function Profile({ navigation }) {
               </View>
 
               {/* end profile */}
+              <View style={{ paddingHorizontal: 20, paddingBottom: 20 }}>
+                <View style={{ flexDirection: "row", gap: 10, marginTop: 10 }}>
+                  <Pressable
+                    onPress={() => {
+                      setReview(false);
+                    }}
+                  >
+                    <View style={{ borderBottomColor: !review ? "#17799A" : "whitesmoke", paddingVertical: 5, borderBottomWidth: !review ? 2 : 0, width: 70 }}>
+                      <Text style={{ color: "black", fontSize: 13, textAlign: "center" }}>Document</Text>
+                    </View>
+                  </Pressable>
+                  <Pressable
+                    onPress={() => {
+                      setReview(true);
+                    }}
+                  >
+                    <View style={{ borderBottomColor: review ? "#17799A" : "whitesmoke", paddingVertical: 5, borderBottomWidth: review ? 2 : 0, width: 70 }}>
+                      <Text style={{ color: "black", fontSize: 13, textAlign: "center" }}>Reviews</Text>
+                    </View>
+                  </Pressable>
+                </View>
+              </View>
 
               {/* document */}
-
               <ScrollView>
                 {loading ? (
                   <View style={[styles.itemsContainer, { flex: 1, justifyContent: "center", alignItems: "center", zIndex: 3, marginTop: 50 }]}>
                     <ActivityIndicator size="large" />
                     <Text style={{ marginTop: 16, fontSize: 18, zIndex: 3 }}>Loading...</Text>
                   </View>
-                ) : (
+                ) : !review ? (
                   <View style={styles.itemsContainer}>
                     {/* ktp */}
                     <View style={styles.itemsBackgroundContainer}>
@@ -600,12 +640,18 @@ function Profile({ navigation }) {
                     </View>
                     {/* end Sim C */}
                   </View>
+                ) : (
+                  <View style={[styles.itemsContainer, { paddingHorizontal: 20, paddingTop: 10 }]}>
+                    {userReviews.map((e) => (
+                      <CardReview review={e} key={e.id} />
+                    ))}
+                  </View>
                 )}
 
                 {/* end document */}
               </ScrollView>
             </View>
-          </View>
+          </ScrollView>
         </ImageBackground>
       </SafeAreaView>
     </View>
@@ -631,7 +677,7 @@ const styles = StyleSheet.create({
     zIndex: 0,
   },
   itemContainer: {
-    backgroundColor: "whitesmoke",
+    backgroundColor: "white",
     height: "500%",
   },
   top: {
@@ -649,13 +695,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 20,
     marginHorizontal: 10,
-    marginBottom: 20,
+
     gap: 15,
     zIndex: 2,
-    shadowColor: "#171717",
-    shadowOffset: { width: -2, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
   },
   profileButton: {
     backgroundColor: "#17799A",
@@ -698,11 +740,6 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     justifyContent: "flex-start",
-    elevation: 2,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
   },
 
   itemsDetailTitle: {

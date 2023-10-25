@@ -5,9 +5,9 @@ export const VEHICLE_FETCH_FAIL = "vehicle/fetchFail";
 export const VEHICLE_QUERY_FETCH_SUCCESS = "vehicle/fetchQuerySuccess";
 export const VEHICLE_QUERY_FETCH_REQUEST = "vehicle/fetchQueryRequest";
 
-export const MY_VEHICLE_FETCH_REQUEST = "myVehicle/fetchRequest";
-export const MY_VEHICLE_FETCH_SUCCESS = "myVehicle/fetchSuccess";
-export const MY_VEHICLE_FETCH_FAIL = "myVehicle/fetchFail";
+export const MY_RENT_FETCH_REQUEST = "myRent/fetchRequest";
+export const MY_RENT_FETCH_SUCCESS = "myRent/fetchSuccess";
+export const MY_RENT_FETCH_FAIL = "myRent/fetchFail";
 
 export const VEHICLE_FETCH_BY_ID_SUCCESS = "vehicle/fetchByIdSuccess";
 
@@ -38,3 +38,6 @@ export const FETCH_REVIEW_BY_VEHICLE_SUCCESS = "review/fetchByVehicleSuccess";
 
 export const ADD_PROFILE_REQUEST = "profile/addRequest";
 export const ADD_PROFILE_SUCCESS = "profile/addSuccess";
+
+export const MY_VEHICLE_FETCH_REQUEST = "myVehicle/fetchRequest";
+export const MY_VEHICLE_FETCH_SUCCESS = "myVehicle/fetchSuccess";

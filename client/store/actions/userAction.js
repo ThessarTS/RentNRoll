@@ -2,10 +2,10 @@ import { ADD_PROFILE_REQUEST, ADD_PROFILE_SUCCESS, PROFILES_FETCH_REQUEST, PROFI
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { errorAlert, successAlert } from "../../src/helpers/alert";
-import { fetchMyVehicles } from "./vehicleAction";
+import { fetchMyRent, fetchMyVehicle } from "./vehicleAction";
 import { fetchReviewByUser } from "./reviewAction";
 
-const baseUrl = "https://d467-118-96-109-120.ngrok-free.app";
+const baseUrl = "https://5ced-118-96-109-120.ngrok-free.app";
 
 export const registerHandler = (value) => {
   return async () => {
@@ -60,7 +60,11 @@ export const getUser = () => {
       if (!access_token) {
         throw new Error("userNotFound");
       }
+
       dispatch(fetchProfile(access_token));
+      dispatch(fetchMyRent(access_token));
+      dispatch(fetchReviewByUser(access_token));
+      dispatch(fetchMyVehicle(access_token));
     } catch (error) {
       console.log(error, "user not found action");
     }
@@ -88,8 +92,6 @@ export const fetchProfile = (value) => {
       });
 
       dispatch(profilesFetchSuccess(data));
-      dispatch(fetchMyVehicles(value));
-      dispatch(fetchReviewByUser(value));
     } catch (error) {
       console.log(error, "ini loh");
     }
@@ -140,6 +142,7 @@ export const addProfile = (value, access_token) => {
 };
 
 export const editProfile = (value, access_token) => {
+  console.log(access_token, "ini di edit");
   return async (dispatch) => {
     dispatch(addProfileRequest());
     try {

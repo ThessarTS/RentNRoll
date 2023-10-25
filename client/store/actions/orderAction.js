@@ -2,7 +2,7 @@ import axios from "axios";
 import { ORDER_FETCH_BY_VEHICLE_ID_REQUEST, ORDER_FETCH_BY_VEHICLE_ID_SUCCESS, ORDER_FETCH_FAIL, ORDER_FETCH_REQUEST, ORDER_FETCH_SUCCESS } from "./actionType";
 import { errorAlert } from "../../src/helpers/alert";
 
-const baseUrl = "https://d467-118-96-109-120.ngrok-free.app";
+const baseUrl = "https://5ced-118-96-109-120.ngrok-free.app";
 
 export const orderFetchReq = () => {
   return { type: ORDER_FETCH_REQUEST };
