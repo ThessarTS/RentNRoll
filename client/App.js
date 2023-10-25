@@ -151,6 +151,37 @@ export default function App() {
                 },
               })}
             />
+            <Stack.Screen
+              name="detailorder"
+              component={PaymentGateway}
+              options={({ route }) => ({
+                headerShown: true,
+                headerTintColor: "white",
+                headerStyle: {
+                  backgroundColor: "#17799A",
+                },
+              })}
+            />
+            <Stack.Screen
+              name="ConversationList"
+              component={ConversationList}
+              options={() => ({
+                headerShown: true,
+                headerTintColor: "white",
+                headerStyle: {
+                  backgroundColor: "#17799A",
+                },
+              })}
+            />
+            <Stack.Screen
+              name="Chatbox"
+              component={Chatbox}
+              options={({ route }) => ({
+                headerShown: true,
+                tabBarStyle: { display: "none" },
+                // title: route.params.fullName,
+              })}
+            />
           </Stack.Navigator>
         </NavigationContainer>
       </AlertNotificationRoot>

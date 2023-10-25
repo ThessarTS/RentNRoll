@@ -85,13 +85,29 @@ function Detail({ route, navigation }) {
       }
     }
   };
-  // console.log(detail.vehicle.User);
 
   const createOrder = () => {
     if (!profile) {
       navigation.navigate("loginRegister");
       errorAlert("Login First!");
-    } else console.log(berhasil);
+    } else {
+      let newValue = {
+        startDate,
+        endDate,
+      };
+      dispatch(createOrderVehicle(newValue, id))
+        .then((data) => {
+          navigation.navigate("Your Order");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+    //create order >> navigate ke my order
+    // , {
+    //   id: data.id,
+    //   vehicleId: id,
+    // });
   };
 
   useEffect(() => {

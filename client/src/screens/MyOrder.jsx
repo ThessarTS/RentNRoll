@@ -32,7 +32,6 @@ function Account({ navigation }) {
   const filterOrderByStatus = (status) => {
     setSelectedStatus(status.toLowerCase() === null ? "All" : status);
   };
-  // console.log(profile);
   const filteredOrders =
     profile && profile.Orders
       ? selectedStatus === "All"

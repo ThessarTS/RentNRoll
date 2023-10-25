@@ -78,7 +78,6 @@ export const profilesFetchRequest = () => {
 };
 
 export const fetchProfile = (value) => {
-  // console.log(value);
   return async (dispatch) => {
     dispatch(profilesFetchRequest());
     try {

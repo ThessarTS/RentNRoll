@@ -85,7 +85,6 @@ export const createOrderFail = (payload) => {
 };
 
 export const createOrderVehicle = (value, id) => {
-  // console.log(value, id, "<<<<");
   return async (dispatch) => {
     dispatch(createOrderReq());
     try {
@@ -108,7 +107,6 @@ export const createOrderVehicle = (value, id) => {
 };
 
 export const midtransPayment = (id) => {
-  // console.log(id);
   return async (dispatch) => {
     try {
       const access_token = await AsyncStorage.getItem("access_token");
@@ -150,7 +148,6 @@ export const fetchOrderById = (id) => {
         },
       });
       dispatch(fetchOrderByIdSuccess(data));
-      // return data;
     } catch (error) {
       console.log(error);
       errorAlert(error.response.data.message);
@@ -159,7 +156,6 @@ export const fetchOrderById = (id) => {
 };
 
 export const updateOrderStatus = (status, id) => {
-  // console.log(id, status, "<<<<");
   return async (dispatch) => {
     const access_token = await AsyncStorage.getItem("access_token");
     try {
@@ -168,9 +164,6 @@ export const updateOrderStatus = (status, id) => {
         method: "patch",
         data: status,
       });
-      // console.log(data, "<<<<");
-      console.log(access_token, "update");
-      // dispatch(fetchOrders(access_token));
       dispatch(fetchProfile({ access_token: access_token }));
       return data;
     } catch (error) {

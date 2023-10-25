@@ -40,7 +40,6 @@ function Home({ navigation }) {
     (state) => state.vehicleReducer
   );
   const { profile } = useSelector((state) => state.userReducer);
-
   const { categories } = useSelector((state) => state.categoryReducer);
   const dispatch = useDispatch();
   const [search, setSearch] = useState(false);
