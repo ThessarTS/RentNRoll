@@ -20,7 +20,6 @@ import { fDate } from "../helpers/fDate";
 import { successAlert } from "../helpers/alert";
 
 function PaymentGateway({ navigation, route }) {
-  // console.log(route.params);
   const { id, vehicleId } = route.params;
   const [loading, setLoading] = useState(false);
   const [loadingPage, setLoadingPage] = useState(false);
@@ -60,7 +59,6 @@ function PaymentGateway({ navigation, route }) {
             uri: `${midtransToken.redirect_url}?token=${midtransToken.token}`,
           }}
           onNavigationStateChange={(navState) => {
-            // console.log(navState.url);
             if (
               navState.url.includes("app.sandbox.midtrans.com/") &&
               navState.url.includes("/success")

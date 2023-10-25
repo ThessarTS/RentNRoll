@@ -83,7 +83,6 @@ function Detail({ route, navigation }) {
       }
     }
   };
-  // console.log(detail.vehicle.User);
 
   const createOrder = () => {
     if (!profile) {
@@ -94,10 +93,8 @@ function Detail({ route, navigation }) {
         startDate,
         endDate,
       };
-      // console.log(id, "<< detail");
       dispatch(createOrderVehicle(newValue, id))
         .then((data) => {
-          console.log(data, "dari data");
           navigation.navigate("Your Order");
         })
         .catch((error) => {

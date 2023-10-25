@@ -156,7 +156,6 @@ function Profile({ navigation }) {
           // setLoading(false);
         });
     }
-    console.log(loading);
   };
 
   useEffect(() => {

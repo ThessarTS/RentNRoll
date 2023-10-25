@@ -183,7 +183,7 @@ export default function App() {
               name="Chatbox"
               component={Chatbox}
               options={({ route }) => ({
-                headerShown: false,
+                headerShown: true,
                 tabBarStyle: { display: "none" },
                 // title: route.params.fullName,
               })}

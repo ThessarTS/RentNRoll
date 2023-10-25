@@ -40,7 +40,7 @@ export const Chatbox = (props) => {
   conversationBuilder.setParticipant(other);
   return (
     <View style={{ flex: 1 }}>
-      <CustomHeader title="Chat" />
+      {/* <CustomHeader title="Chat" /> */}
       <TalkjsRn.Session appId="tIFEBGyD" me={me}>
         <TalkjsRn.Chatbox
           conversationBuilder={conversation || conversationBuilder}

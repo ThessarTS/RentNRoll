@@ -30,7 +30,6 @@ function Account({ navigation }) {
   const filterOrderByStatus = (status) => {
     setSelectedStatus(status.toLowerCase() === "all" ? "All" : status);
   };
-  // console.log(profile);
   const filteredOrders =
     profile && profile.Orders
       ? selectedStatus === "All"

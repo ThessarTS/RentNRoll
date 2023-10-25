@@ -17,6 +17,7 @@ export default function ConversationList(props) {
       profilePicture: event.others[0].photoUrl,
       id: event.others[0].id,
       email: event.others[0].email,
+      conversationBuilder: event.conversation,
     });
   };
   return (
