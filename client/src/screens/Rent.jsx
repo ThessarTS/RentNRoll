@@ -1,5 +1,14 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { StyleSheet, Text, SafeAreaView, ScrollView, View, Pressable, ActivityIndicator, Alert } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  SafeAreaView,
+  ScrollView,
+  View,
+  Pressable,
+  ActivityIndicator,
+  Alert,
+} from "react-native";
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import SelectDropdown from "react-native-select-dropdown";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -13,10 +22,22 @@ import { errorAlert } from "../helpers/alert";
 function Account({ navigation }) {
   const dispatch = useDispatch();
   const [startdate, setSelectedstartdate] = useState(new Date());
-  const [enddate, setSelectedendate] = useState(new Date(startdate.getTime() + 24 * 60 * 60 * 1000));
-  const countries = ["Jakarta", "Bandung", "Medan", "Batam", "Bali", "Aceh", "Bogor"];
+  const [enddate, setSelectedendate] = useState(
+    new Date(startdate.getTime() + 24 * 60 * 60 * 1000)
+  );
+  const countries = [
+    "Jakarta",
+    "Bandung",
+    "Medan",
+    "Batam",
+    "Bali",
+    "Aceh",
+    "Bogor",
+  ];
   const [searched, setSearched] = useState(false);
-  const { vehiclesQuery, loading } = useSelector((state) => state.vehicleReducer);
+  const { vehiclesQuery, loading } = useSelector(
+    (state) => state.vehicleReducer
+  );
   const dropdownRef = useRef(null);
   const [errMsg, setErrMsg] = useState("");
 
@@ -92,9 +113,33 @@ function Account({ navigation }) {
           <View style={styles.itemContainer}>
             <View style={styles.top}></View>
 
-            <View style={{ backgroundColor: "white", marginHorizontal: 10, padding: 20, borderRadius: 8, gap: 20, shadowColor: "#171717", shadowOffset: { width: -2, height: 4 }, shadowOpacity: 0.2, shadowRadius: 3, flex: 1 }}>
-              <View style={{ flexDirection: "row", alignItems: "center", gap: 20 }}>
-                <View style={{ backgroundColor: "#17799A", width: 35, height: 35, alignItems: "center", justifyContent: "center", borderRadius: "50%" }}>
+            <View
+              style={{
+                backgroundColor: "white",
+                marginHorizontal: 10,
+                padding: 20,
+                borderRadius: 8,
+                gap: 20,
+                shadowColor: "#171717",
+                shadowOffset: { width: -2, height: 4 },
+                shadowOpacity: 0.2,
+                shadowRadius: 3,
+                flex: 1,
+              }}
+            >
+              <View
+                style={{ flexDirection: "row", alignItems: "center", gap: 20 }}
+              >
+                <View
+                  style={{
+                    backgroundColor: "#17799A",
+                    width: 35,
+                    height: 35,
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderRadius: "50%",
+                  }}
+                >
                   <MaterialIcons name="car-rental" size={25} color="white" />
                 </View>
                 <View>
@@ -137,13 +182,27 @@ function Account({ navigation }) {
                     <Text>Pick-up Date</Text>
                     <View style={styles.rentstartdate}>
                       <AntDesign name="calendar" size={24} color="black" />
-                      <DateTimePicker value={startdate} mode="date" is24Hour={true} display="default" minimumDate={new Date()} onChange={handlestartdateChange} />
+                      <DateTimePicker
+                        value={startdate}
+                        mode="date"
+                        is24Hour={true}
+                        display="default"
+                        minimumDate={new Date()}
+                        onChange={handlestartdateChange}
+                      />
                     </View>
                   </View>
                   <View style={styles.rentEndContainer}>
                     <Text>Drop-off Date</Text>
                     <View style={styles.rendendate}>
-                      <DateTimePicker value={enddate} mode="date" is24Hour={true} display="default" minimumDate={startdate} onChange={handleendateChange} />
+                      <DateTimePicker
+                        value={enddate}
+                        mode="date"
+                        is24Hour={true}
+                        display="default"
+                        minimumDate={startdate}
+                        onChange={handleendateChange}
+                      />
                       <AntDesign name="calendar" size={24} color="black" />
                     </View>
                   </View>
@@ -156,15 +215,33 @@ function Account({ navigation }) {
 
               <ScrollView showsVerticalScrollIndicator={false}>
                 {loading && (
-                  <View style={{ flex: 1, justifyContent: "center", alignItems: "center", marginTop: 30 }}>
+                  <View
+                    style={{
+                      flex: 1,
+                      justifyContent: "center",
+                      alignItems: "center",
+                      marginTop: 30,
+                    }}
+                  >
                     <ActivityIndicator size="large" />
-                    <Text style={{ marginTop: 16, fontSize: 18 }}>Loading...</Text>
+                    <Text style={{ marginTop: 16, fontSize: 18 }}>
+                      Loading...
+                    </Text>
                   </View>
                 )}
 
                 {searched &&
                   vehiclesQuery.map((e) => {
-                    return <CardVehicleRent vehicle={e} navigation={navigation} startdate={handleInput.startdate} key={e.id} endDate={enddate} startDate={startdate} />;
+                    return (
+                      <CardVehicleRent
+                        vehicle={e}
+                        navigation={navigation}
+                        startdate={handleInput.startdate}
+                        key={e.id}
+                        endDate={enddate}
+                        startDate={startdate}
+                      />
+                    );
                   })}
               </ScrollView>
             </View>

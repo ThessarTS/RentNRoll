@@ -19,7 +19,10 @@ import { Entypo } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchDetail } from "../../store/actions";
-import { fetchOrderByVehicleId } from "../../store/actions/orderAction";
+import {
+  createOrderVehicle,
+  fetchOrderByVehicleId,
+} from "../../store/actions/orderAction";
 import { fDate } from "../helpers/fDate";
 import { fPrice } from "../helpers/fPrice";
 import { errorAlert } from "../helpers/alert";
@@ -41,9 +44,7 @@ function Detail({ route, navigation }) {
     setLoadingDetail(true);
     dispatch(fetchOrderByVehicleId(id));
     dispatch(fetchDetail(id)).then(() => {
-      setLoadingDetail(false).catch((error) => {
-        console.log(error);
-      });
+      setLoadingDetail(false);
     });
   }, []);
 
@@ -82,12 +83,32 @@ function Detail({ route, navigation }) {
       }
     }
   };
+  // console.log(detail.vehicle.User);
 
   const createOrder = () => {
     if (!profile) {
       navigation.navigate("loginRegister");
       errorAlert("Login First!");
-    } else console.log(berhasil);
+    } else {
+      let newValue = {
+        startDate,
+        endDate,
+      };
+      // console.log(id, "<< detail");
+      dispatch(createOrderVehicle(newValue, id))
+        .then((data) => {
+          console.log(data, "dari data");
+          navigation.navigate("Your Order");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+    //create order >> navigate ke my order
+    // , {
+    //   id: data.id,
+    //   vehicleId: id,
+    // });
   };
 
   useEffect(() => {
@@ -107,6 +128,15 @@ function Detail({ route, navigation }) {
 
     setIsOrder(isVehicleOrdered);
   }, [startDate, endDate, orderByVehicles]);
+
+  const goChat = () => {
+    navigation.navigate("Chatbox", {
+      fullName: detail?.vehicle.User.fullName,
+      profilePicture: detail?.vehicle.User.UserProfile.profilePicture,
+      id: detail?.vehicle.User.id,
+      email: detail?.vehicle.User.email,
+    });
+  };
 
   if (loadingDetail) {
     return (
@@ -140,7 +170,7 @@ function Detail({ route, navigation }) {
               <View style={[styles.headerItemContainer]}>
                 <Ionicons name="location" size={18} color="#17799A" />
                 <Text style={styles.location}>
-                  Location : {detail.vehicle ? detail.vehicle.location : ""}
+                  Location : {detail ? detail.vehicle.location : ""}
                 </Text>
               </View>
               <View style={[styles.headerItemContainer, { marginStart: 2 }]}>
@@ -176,25 +206,30 @@ function Detail({ route, navigation }) {
             <Text style={styles.itemTitle}> Owner</Text>
             <View style={styles.ownerContainer}>
               <View style={styles.ownerItem}>
-                <Image
-                  source={{
-                    uri: detail
-                      ? `${detail.vehicle.User.UserProfile.profilePicture}`
-                      : "https://www.copaster.com/wp-content/uploads/2023/03/pp-kosong-wa-default.jpeg",
-                  }}
-                  style={styles.ownerImage}
-                />
+                {detail && detail.User && detail.User.UserProfile && (
+                  <Image
+                    source={{
+                      uri: detail
+                        ? `${detail.vehicle.User.UserProfile.profilePicture}`
+                        : "https://www.copaster.com/wp-content/uploads/2023/03/pp-kosong-wa-default.jpeg",
+                    }}
+                    style={styles.ownerImage}
+                  />
+                )}
+
                 <Text style={styles.itemTitle}>
                   {detail ? detail.vehicle.User.fullName : ""}
                 </Text>
               </View>
               <View style={styles.ownerAction}>
                 <Feather name="phone-call" size={24} color="#17799A" />
-                <Ionicons
-                  name="ios-chatbox-ellipses-outline"
-                  size={25}
-                  color="#17799A"
-                />
+                <Pressable onPress={goChat}>
+                  <Ionicons
+                    name="ios-chatbox-ellipses-outline"
+                    size={25}
+                    color="#17799A"
+                  />
+                </Pressable>
               </View>
             </View>
           </View>

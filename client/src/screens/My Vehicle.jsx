@@ -17,21 +17,23 @@ function MyVehicle({ navigation }) {
   const { profile } = useSelector((state) => state.userReducer);
   const [togleRent, setTogleRent] = useState(false);
   return (
-    <ScrollView>
+    // <ScrollView>
+    <View style={styles.container}>
       <View>
-        <View style={styles.container}>
+        <View>
           {/* take rent and give rent */}
           <View
             style={{
               flexDirection: "row",
               gap: 10,
+              // height: 200,
               paddingVertical: 2,
               paddingHorizontal: 2,
               backgroundColor: "whitesmoke",
               borderWidth: 1,
               borderRadius: 5,
               borderColor: "#17799A",
-              margin: 10,
+              marginTop: 55,
             }}
           >
             <Pressable
@@ -82,37 +84,39 @@ function MyVehicle({ navigation }) {
             </Pressable>
           </View>
         </View>
-        <View style={{ padding: 10 }}>
-          {togleRent ? (
-            <FlatList
-              data={profile.Vehicles}
-              renderItem={({ item }) => (
-                <CardGiveRent
-                  vehicles={item}
-                  navigation={navigation}
-                  review={profile}
-                />
-              )}
-              keyExtractor={(item) => item.id}
-            />
-          ) : (
-            <FlatList
-              data={profile.Orders}
-              renderItem={({ item }) => (
-                <CardTakenRent
-                  vehicles={item}
-                  navigation={navigation}
-                  review={profile}
-                />
-              )}
-              keyExtractor={(item) => item.id}
-            />
-          )}
-
-          {/* <CardTakenRent /> */}
-        </View>
       </View>
-    </ScrollView>
+
+      <View style={{ padding: 5 }}>
+        {togleRent ? (
+          <FlatList
+            data={profile.Vehicles}
+            renderItem={({ item }) => (
+              <CardGiveRent
+                vehicles={item}
+                navigation={navigation}
+                review={profile}
+              />
+            )}
+            keyExtractor={(item) => item.id}
+          />
+        ) : (
+          <FlatList
+            data={profile.Orders}
+            renderItem={({ item }) => (
+              <CardTakenRent
+                vehicles={item}
+                navigation={navigation}
+                review={profile}
+              />
+            )}
+            keyExtractor={(item) => item.id}
+          />
+        )}
+
+        {/* <CardTakenRent /> */}
+      </View>
+    </View>
+    // </ScrollView>
   );
 }
 const styles = StyleSheet.create({

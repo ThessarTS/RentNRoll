@@ -1,7 +1,6 @@
 import { View, Text, StyleSheet, Image, Pressable } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 function CardTakenRent({ vehicles, navigation }) {
-  console.log(vehicles.Vehicle.image, "<< dari card");
   const fPrice = (price) => {
     return price.toLocaleString("id-ID", {
       style: "currency",
@@ -41,7 +40,7 @@ function CardTakenRent({ vehicles, navigation }) {
 
             <Text style={styles.textCard}>Status: {vehicles.status}</Text>
             <Text style={styles.textCard}>
-              Total Price: {vehicles.totalPrice}
+              Total Price: {fPrice(vehicles.totalPrice)}
             </Text>
           </View>
           <View

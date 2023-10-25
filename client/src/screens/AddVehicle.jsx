@@ -88,7 +88,7 @@ function AddVehicle({ navigation }) {
       formData.append("CategoryId", selectedCategory);
       formData.append("price", Number(input.price));
       formData.append("location", input.location);
-      formData.append("specifications", specifications);
+      formData.append("specifications", JSON.stringify(specifications));
       setLoading(true);
       dispatch(addVehicle(formData, access_token))
         .then((data) => {

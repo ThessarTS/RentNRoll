@@ -1,5 +1,14 @@
 import React, { useCallback, useState } from "react";
-import { StyleSheet, Text, SafeAreaView, ImageBackground, ScrollView, View, Image, Pressable } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  SafeAreaView,
+  ImageBackground,
+  ScrollView,
+  View,
+  Image,
+  Pressable,
+} from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import bg from "../../assets/image/bg-home.png";
 import { Ionicons, Entypo, MaterialIcons } from "@expo/vector-icons";
@@ -48,7 +57,7 @@ function Account({ navigation }) {
                     </Text>
                     <View style={{ gap: 2 }}>
                       <Text style={{ fontSize: 15 }}>
-                        Balance: {profile ? profile.Balances : ""}
+                        Balance: {profile ? profile.totalAmount : ""}
                       </Text>
                       <Text style={styles.profileInfo}>
                         {profile ? profile.email : ""}
