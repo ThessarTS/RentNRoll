@@ -10,12 +10,17 @@ import { addReview } from "../../store/actions";
 import { errorAlert } from "../helpers/alert";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-function CardRent({ vehicles, UserId }) {
+function CardRent({ vehicles, UserId, route, navigation }) {
   const [modalReview, setModalReview] = useState(false);
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState("");
   const dispatch = useDispatch();
-
+  const goDetail = () => {
+    navigation.push("detail", {
+      name: vehicles.Vehicle.name,
+      id: vehicles.Vehicle.id,
+    });
+  };
   const postReview = async () => {
     try {
       const input = {
@@ -25,7 +30,10 @@ function CardRent({ vehicles, UserId }) {
         VehicleId: vehicles.Vehicle.id,
       };
       const access_token = await AsyncStorage.getItem("access_token");
-      dispatch(addReview(input, access_token)).then(() => setModalReview(false));
+      dispatch(addReview(input, access_token)).then(() => {
+        setModalReview(false);
+        goDetail();
+      });
     } catch (error) {
       errorAlert(error);
     }
@@ -115,7 +123,7 @@ function CardRent({ vehicles, UserId }) {
       <View style={styles.container}>
         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
           <Text style={styles.itemsDetailTitle}>{vehicles.Vehicle.name}</Text>
-          {vehicles.status === "returned" && (
+          {!route && vehicles.status === "returned" && (
             <Pressable style={{ flexDirection: "row", alignItems: "center", gap: 2 }} onPress={toggleReview}>
               <AntDesign name="star" size={12} color="#F8B84E" />
               <Text style={{ color: "gray", fontSize: 12 }}>Give Review</Text>

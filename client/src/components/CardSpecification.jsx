@@ -22,9 +22,8 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 2, height: 1 },
     shadowOpacity: 0.5,
     shadowRadius: 3,
-    padding: 20,
-    paddingVertical: 10,
-    gap: 10,
+    paddingVertical: 5,
+    gap: 5,
   },
   specType: {
     color: "gray",

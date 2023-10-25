@@ -12,8 +12,7 @@ import {
   ORDER_FETCH_SUCCESS,
 } from "./actionType";
 import { errorAlert } from "../../src/helpers/alert";
-
-import { baseUrl } from "./categoryAction";
+const baseUrl = "https://5ced-118-96-109-120.ngrok-free.app";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { fetchProfile } from "./userAction";
 

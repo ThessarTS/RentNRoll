@@ -1,7 +1,10 @@
+import { successAlert } from "../../src/helpers/alert";
 import {
   ADD_VEHICLE_REQUEST,
   ADD_VEHICLE_SUCCESS,
-  MY_VEHICLE_FETCH_FAIL,
+  MY_RENT_FETCH_FAIL,
+  MY_RENT_FETCH_REQUEST,
+  MY_RENT_FETCH_SUCCESS,
   MY_VEHICLE_FETCH_REQUEST,
   MY_VEHICLE_FETCH_SUCCESS,
   TRENDING_FETCH_FAIL,
@@ -15,7 +18,7 @@ import {
   VEHICLE_QUERY_FETCH_SUCCESS,
 } from "./actionType";
 import axios from "axios";
-import { baseUrl } from "./categoryAction";
+const baseUrl = "https://5ced-118-96-109-120.ngrok-free.app";
 
 export const vehicleFetchRequest = () => {
   return { type: VEHICLE_FETCH_REQUEST };
@@ -60,7 +63,7 @@ export const fetchVehicles = (query) => {
         dispatch(vehicleFetchSuccess(data));
       }
     } catch (error) {
-      console.log(error);
+      console.log(error, "disini");
       dispatch(vehicleFetchFail(error));
     }
   };
@@ -146,34 +149,81 @@ export const addVehicle = (value, access_token) => {
   };
 };
 
-// MY VEHICLE
-export const myVehiclefetchRequest = () => {
-  return { type: MY_VEHICLE_FETCH_REQUEST };
+// MY RENT
+export const myRentfetchRequest = () => {
+  return { type: MY_RENT_FETCH_REQUEST };
 };
 
-export const myVehiclefetchSuccess = (payload) => {
-  return { type: MY_VEHICLE_FETCH_SUCCESS, payload };
+export const myRentfetchSuccess = (payload) => {
+  return { type: MY_RENT_FETCH_SUCCESS, payload };
 };
 
-export const myVehiclefetchFail = (payload) => {
-  return { type: MY_VEHICLE_FETCH_FAIL, payload };
+export const myRentfetchFail = (payload) => {
+  return { type: MY_RENT_FETCH_FAIL, payload };
 };
 
-export const fetchMyVehicles = (access_token) => {
+export const fetchMyRent = (access_token) => {
   return async (dispatch) => {
     try {
       const { data } = await axios({
-        url: baseUrl + "/vehicles/myVehicle",
-
+        url: baseUrl + "/orders/owner",
         headers: {
           access_token: access_token,
         },
       });
-      dispatch(myVehiclefetchSuccess(data));
+      dispatch(myRentfetchSuccess(data));
     } catch (error) {
-      dispatch(myVehiclefetchFail(error));
+      console.log(error);
+      dispatch(myRentfetchFail(error));
+    }
+  };
+};
+// END MY VEHICLE
+
+// MY VEHICLE
+export const fetchMyVehicleRequest = () => {
+  return { type: MY_VEHICLE_FETCH_REQUEST };
+};
+
+export const fetchMyVehicleSuccess = (payload) => {
+  return { type: MY_VEHICLE_FETCH_SUCCESS, payload };
+};
+
+export const fetchMyVehicle = (access_token) => {
+  return async (dispatch) => {
+    dispatch(fetchMyVehicleRequest());
+    try {
+      const { data } = await axios({
+        method: "get",
+        url: baseUrl + "/vehicles/my-vehicles",
+        headers: {
+          access_token: access_token,
+        },
+      });
+      // console.log(data);
+      dispatch(fetchMyVehicleSuccess(data));
+    } catch (error) {
+      console.log(error.response.data.message, ">>>>");
     }
   };
 };
 
 // END MY VEHICLE
+
+export const deleteMyVehicle = (id, access_token) => {
+  return async (dispatch) => {
+    try {
+      const { data } = await axios({
+        method: "delete",
+        url: baseUrl + "/vehicles/" + id,
+        headers: {
+          access_token: access_token,
+        },
+      });
+      dispatch(fetchMyVehicle(access_token));
+      successAlert("Success Delete Vehicle");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};

@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { View, Text, StyleSheet, Pressable, Image, SafeAreaView, ScrollView } from "react-native";
 import bg from "../../assets/image/bg-home.png";
 import { Ionicons } from "@expo/vector-icons";
@@ -9,12 +9,15 @@ import { ImageBackground } from "react-native";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import CardRent from "../components/CardRent";
 import { getUser } from "../../store/actions";
+import CardOrder from "../components/CardOrder";
+import CardMyVehicle from "../components/CardMyVehicle";
 import { fPrice } from "../helpers/fPrice";
 
-function MyRent({ navigation }) {
+function MyVehicle({ navigation }) {
   const navigate = useNavigation();
   const { profile } = useSelector((state) => state.userReducer);
-  const { myGivenRent } = useSelector((state) => state.vehicleReducer);
+  const { myVehicles, myGivenRent } = useSelector((state) => state.vehicleReducer);
+  let totalOrders = 0;
   const dispatch = useDispatch();
   useFocusEffect(
     useCallback(() => {
@@ -22,7 +25,6 @@ function MyRent({ navigation }) {
     }, [])
   );
 
-  const [togleRent, setTogleRent] = useState(false);
   return (
     <View style={styles.container}>
       <NavIcon />
@@ -30,7 +32,7 @@ function MyRent({ navigation }) {
         <Pressable onPress={() => navigate.goBack()}>
           <Ionicons name="arrow-back-sharp" size={24} color="white" />
         </Pressable>
-        <Text style={{ color: "white", fontSize: 20 }}>My Rent</Text>
+        <Text style={{ color: "white", fontSize: 20 }}>My Vehicle</Text>
       </View>
       <SafeAreaView style={{ flex: 1 }}>
         <ImageBackground source={bg} style={{ flex: 1 }}>
@@ -68,51 +70,40 @@ function MyRent({ navigation }) {
                   </View>
                 </View>
                 {/*end  profile */}
-
                 <View style={{ flexDirection: "row", gap: 10, borderRadius: 5, marginTop: 10 }}>
-                  <Pressable
-                    onPress={() => {
-                      setTogleRent(false);
-                    }}
-                  >
-                    <View style={{ borderBottomColor: !togleRent ? "#17799A" : "whitesmoke", paddingVertical: 5, borderRadius: 4, borderBottomWidth: !togleRent ? 2 : 0 }}>
-                      <Text style={{ color: "black", fontSize: 13 }}>Taken Rent</Text>
-                    </View>
-                  </Pressable>
-                  <Pressable
-                    onPress={() => {
-                      setTogleRent(true);
-                    }}
-                  >
-                    <View style={{ borderBottomColor: togleRent ? "#17799A" : "whitesmoke", paddingVertical: 5, borderRadius: 4, borderBottomWidth: togleRent ? 2 : 0 }}>
-                      <Text style={{ color: "black", fontSize: 13 }}>Given Rent</Text>
+                  <Pressable>
+                    <View style={{ borderBottomColor: "#17799A", paddingVertical: 5, borderRadius: 4, borderBottomWidth: 2 }}>
+                      <Text style={{ color: "black", fontSize: 13 }}>My Vehicle</Text>
                     </View>
                   </Pressable>
                 </View>
+
                 <ScrollView showsVerticalScrollIndicator={false}>
                   <View>
-                    {togleRent ? (
-                      myGivenRent && myGivenRent.length > 0 ? (
-                        myGivenRent.map((item) => <CardRent vehicles={item} UserId={profile.id} navigation={navigation} route={"given"} key={item.id} />)
-                      ) : (
-                        <View style={{ flex: 1, alignItems: "center", justifyContent: "center", marginTop: 30 }}>
-                          <Image source={notFound} style={{ width: 200, height: 200 }} resizeMode="contain" />
-                          <Text style={{ textAlign: "center", fontSize: 15, fontWeight: 500 }}>No Rent found</Text>
-                        </View>
-                      )
-                    ) : profile.Orders ? (
-                      profile.Orders.length > 0 ? (
-                        profile.Orders.map((item) => <CardRent vehicles={item} UserId={profile.id} navigation={navigation} key={item.id} />)
-                      ) : (
-                        <View style={{ flex: 1, alignItems: "center", justifyContent: "center", marginTop: 30 }}>
-                          <Image source={notFound} style={{ width: 200, height: 200 }} resizeMode="contain" />
-                          <Text style={{ textAlign: "center", fontSize: 15, fontWeight: 500 }}>No Rent found</Text>
-                        </View>
-                      )
+                    {myVehicles.length > 0 ? (
+                      myVehicles.map((e) => {
+                        let totalOrders = 0;
+                        if (e.Orders && e.Orders.length > 0) {
+                          e.Orders.forEach((vehicle) => {
+                            if (myGivenRent.some((rent) => rent.id === vehicle.id)) {
+                              totalOrders += 1;
+                            }
+                          });
+                        }
+                        return <CardMyVehicle vehicles={e} key={e.id} totalOrders={totalOrders} />;
+                      })
                     ) : (
-                      <View style={{ flex: 1, alignItems: "center", justifyContent: "center", marginTop: 30 }}>
-                        <ActivityIndicator size="large" />
-                        <Text style={{ marginTop: 16, fontSize: 18 }}>Loading...</Text>
+                      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+                        <Image source={notFound} style={{ width: 200, height: 200 }} resizeMode="contain" />
+                        <Text
+                          style={{
+                            textAlign: "center",
+                            fontSize: 15,
+                            fontWeight: "500",
+                          }}
+                        >
+                          No Vehicle found
+                        </Text>
                       </View>
                     )}
                   </View>
@@ -247,4 +238,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MyRent;
+export default MyVehicle;

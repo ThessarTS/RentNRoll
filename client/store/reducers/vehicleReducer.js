@@ -1,6 +1,7 @@
 import {
   ADD_VEHICLE_SUCCESS,
-  MY_VEHICLE_FETCH_FAIL,
+  MY_RENT_FETCH_REQUEST,
+  MY_RENT_FETCH_SUCCESS,
   MY_VEHICLE_FETCH_REQUEST,
   MY_VEHICLE_FETCH_SUCCESS,
   TRENDING_FETCH_FAIL,
@@ -21,6 +22,7 @@ const initialState = {
   vehicle: null,
   loading: false,
   myVehicles: [],
+  myGivenRent: [],
   error: "",
 };
 const vehicleReducer = (state = initialState, action) => {
@@ -103,10 +105,16 @@ const vehicleReducer = (state = initialState, action) => {
         loading: false,
       };
 
-    case MY_VEHICLE_FETCH_FAIL:
+    case MY_RENT_FETCH_REQUEST:
       return {
         ...state,
-        error: action.payload,
+        loading: true,
+      };
+
+    case MY_RENT_FETCH_SUCCESS:
+      return {
+        ...state,
+        myGivenRent: action.payload,
         loading: false,
       };
 
