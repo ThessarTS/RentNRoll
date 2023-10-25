@@ -1,17 +1,21 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback } from "react";
 import { StyleSheet, Text, SafeAreaView, ImageBackground, ScrollView, View, Image, Pressable } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import bg from "../../assets/image/bg-home.png";
 import { Ionicons, Entypo, MaterialIcons } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchProfile } from "../../store/actions";
-import { useFocusEffect } from "@react-navigation/native";
 import NavIcon from "../components/NavIcon";
+import { useFocusEffect } from "@react-navigation/native";
+import { getUser } from "../../store/actions";
 
 function Account({ navigation }) {
-  const [user, setUser] = useState(null);
-  const { profile } = useSelector((state) => state.userReducer);
   const dispatch = useDispatch();
+  const { profile } = useSelector((state) => state.userReducer);
+
+  useFocusEffect(
+    useCallback(() => {
+      dispatch(getUser());
+    }, [])
+  );
 
   return (
     <View style={styles.container}>
@@ -34,30 +38,18 @@ function Account({ navigation }) {
                   {profile && (
                     <Image
                       source={{
-                        uri: profile.UserProfile
-                          ? `${profile.UserProfile.profilePicture}`
-                          : "https://www.copaster.com/wp-content/uploads/2023/03/pp-kosong-wa-default.jpeg",
+                        uri: profile.UserProfile ? `${profile.UserProfile.profilePicture}` : "https://www.copaster.com/wp-content/uploads/2023/03/pp-kosong-wa-default.jpeg",
                       }}
                       style={styles.profileImage}
                     />
                   )}
 
                   <View>
-                    <Text style={styles.profileName}>
-                      {profile ? profile.fullName : ""}
-                    </Text>
+                    <Text style={styles.profileName}>{profile ? profile.fullName : ""}</Text>
                     <View style={{ gap: 2 }}>
-                      <Text style={{ fontSize: 15 }}>
-                        Balance: {profile ? profile.Balances : ""}
-                      </Text>
-                      <Text style={styles.profileInfo}>
-                        {profile ? profile.email : ""}
-                      </Text>
-                      {profile && profile.Orders && (
-                        <Text style={styles.profileInfo}>
-                          {profile ? profile.Orders.length : 0} Orders
-                        </Text>
-                      )}
+                      <Text style={{ fontSize: 15 }}>Balance: {profile ? profile.Balances : ""}</Text>
+                      <Text style={styles.profileInfo}>{profile ? profile.email : ""}</Text>
+                      {profile && profile.Orders && <Text style={styles.profileInfo}>{profile ? profile.Orders.length : 0} Orders</Text>}
                     </View>
                   </View>
                 </View>
@@ -70,9 +62,7 @@ function Account({ navigation }) {
                       })
                     }
                   >
-                    <Text style={styles.profileButtonText}>
-                      View My Profile
-                    </Text>
+                    <Text style={styles.profileButtonText}>View My Profile</Text>
                   </Pressable>
                 </View>
               </View>
@@ -81,49 +71,37 @@ function Account({ navigation }) {
                 {/* myorder */}
                 <View style={styles.itemsContainer}>
                   <Text style={styles.itemsTitle}>My Order</Text>
-                  <Pressable style={styles.itemsBackgroundContainer}>
+                  <Pressable style={styles.itemsBackgroundContainer} onPress={() => navigation.navigate("Your Order")}>
                     <View style={{ flex: 1 }}>
                       <Ionicons name="book-sharp" size={25} color="#17799A" />
                     </View>
                     <View style={{ gap: 2, flex: 6 }}>
                       <Text style={styles.itemsDetailTitle}>Order</Text>
-                      <Text style={styles.itemsDetailInfo}>
-                        Contains all of your order data.
-                      </Text>
+                      <Text style={styles.itemsDetailInfo}>Contains all of your order data.</Text>
                     </View>
                     <Pressable>
-                      <Ionicons
-                        name="chevron-forward"
-                        size={24}
-                        color="#17799A"
-                      />
+                      <Ionicons name="chevron-forward" size={24} color="#17799A" />
                     </Pressable>
                   </Pressable>
                 </View>
                 {/* endMyorder */}
 
                 {/* myRent */}
-                <View style={styles.itemsContainer}>
+                <Pressable style={styles.itemsContainer} onPress={() => navigation.navigate("myrent")}>
                   <Text style={styles.itemsTitle}>My Rent</Text>
-                  <Pressable style={styles.itemsBackgroundContainer}>
+                  <View style={styles.itemsBackgroundContainer}>
                     <View style={{ flex: 1 }}>
                       <Entypo name="book" size={25} color="#17799A" />
                     </View>
                     <View style={{ gap: 2, flex: 6 }}>
                       <Text style={styles.itemsDetailTitle}>Rent</Text>
-                      <Text style={styles.itemsDetailInfo}>
-                        View the details of your rent.
-                      </Text>
+                      <Text style={styles.itemsDetailInfo}>View the details of your rent.</Text>
                     </View>
                     <Pressable>
-                      <Ionicons
-                        name="chevron-forward"
-                        size={24}
-                        color="#17799A"
-                      />
+                      <Ionicons name="chevron-forward" size={24} color="#17799A" />
                     </Pressable>
-                  </Pressable>
-                </View>
+                  </View>
+                </Pressable>
                 {/* endMyRent */}
 
                 {/* member features */}
@@ -131,59 +109,31 @@ function Account({ navigation }) {
                   <Text style={styles.itemsTitle}>Member Features</Text>
                   <View style={styles.memberContainer}>
                     {/* add vehicle */}
-                    <Pressable
-                      style={styles.memberItemContainer}
-                      onPress={() => navigation.navigate("Add Vehicle")}
-                    >
+                    <Pressable style={styles.memberItemContainer} onPress={() => navigation.navigate("Add Vehicle")}>
                       <View style={{ flex: 1 }}>
-                        <Ionicons
-                          name="ios-add-circle-outline"
-                          size={25}
-                          color="gray"
-                        />
+                        <Ionicons name="ios-add-circle-outline" size={25} color="gray" />
                       </View>
                       <View style={{ gap: 2, flex: 6 }}>
                         <Text style={styles.itemsDetailTitle}>Add Vehicle</Text>
-                        <Text
-                          style={[styles.itemsDetailInfo, { color: "gray" }]}
-                        >
-                          Register your vehicle now.
-                        </Text>
+                        <Text style={[styles.itemsDetailInfo, { color: "gray" }]}>Register your vehicle now.</Text>
                       </View>
                       <View>
-                        <Ionicons
-                          name="chevron-forward"
-                          size={24}
-                          color="#17799A"
-                        />
+                        <Ionicons name="chevron-forward" size={24} color="#17799A" />
                       </View>
                     </Pressable>
                     {/* end add vehicle */}
 
                     {/* my vehicle */}
-                    <Pressable
-                      style={styles.memberItemContainer}
-                      onPress={() => {
-                        navigation.navigate("myvehicle");
-                      }}
-                    >
+                    <Pressable style={styles.memberItemContainer}>
                       <View style={{ flex: 1 }}>
                         <Ionicons name="bicycle-sharp" size={25} color="gray" />
                       </View>
                       <View style={{ gap: 2, flex: 6 }}>
                         <Text style={styles.itemsDetailTitle}>My Vehicle</Text>
-                        <Text
-                          style={[styles.itemsDetailInfo, { color: "gray" }]}
-                        >
-                          View your vehicle now.
-                        </Text>
+                        <Text style={[styles.itemsDetailInfo, { color: "gray" }]}>View your vehicle now.</Text>
                       </View>
                       <View>
-                        <Ionicons
-                          name="chevron-forward"
-                          size={24}
-                          color="#17799A"
-                        />
+                        <Ionicons name="chevron-forward" size={24} color="#17799A" />
                       </View>
                     </Pressable>
                     {/* end my vehicle */}
@@ -197,11 +147,7 @@ function Account({ navigation }) {
                         <Text style={styles.itemsDetailTitle}>Logout</Text>
                       </View>
                       <View>
-                        <Ionicons
-                          name="chevron-forward"
-                          size={24}
-                          color="#17799A"
-                        />
+                        <Ionicons name="chevron-forward" size={24} color="#17799A" />
                       </View>
                     </Pressable>
                     {/* end setting */}

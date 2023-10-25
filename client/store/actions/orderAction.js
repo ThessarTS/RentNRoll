@@ -7,7 +7,10 @@ import {
   ORDER_FETCH_SUCCESS,
 } from "./actionType";
 import { errorAlert } from "../../src/helpers/alert";
-import { baseUrl } from "./categoryAction";
+
+const baseUrl = "https://d467-118-96-109-120.ngrok-free.app";
+
+// import { baseUrl } from "./categoryAction";
 
 export const orderFetchReq = () => {
   return { type: ORDER_FETCH_REQUEST };

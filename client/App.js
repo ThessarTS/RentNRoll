@@ -14,9 +14,9 @@ import Rent from "./src/screens/Rent";
 import MyOrder from "./src/screens/MyOrder";
 import { AlertNotificationRoot } from "react-native-alert-notification";
 import Profile from "./src/screens/Profile";
-import MyVehicle from "./src/screens/My Vehicle";
 import { useCallback } from "react";
 import { getUser } from "./store/actions";
+import MyRent from "./src/screens/MyRent";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -133,17 +133,7 @@ export default function App() {
                 tabBarStyle: { display: "none" },
               })}
             />
-            <Stack.Screen
-              name="myvehicle"
-              component={MyVehicle}
-              options={({ route }) => ({
-                headerShown: true,
-                headerTintColor: "white",
-                headerStyle: {
-                  backgroundColor: "#17799A",
-                },
-              })}
-            />
+            <Stack.Screen name="myrent" component={MyRent} options={{ headerShown: false }} />
           </Stack.Navigator>
         </NavigationContainer>
       </AlertNotificationRoot>

@@ -1,48 +1,27 @@
-import React, { useEffect, useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  SafeAreaView,
-  ImageBackground,
-  ScrollView,
-  View,
-  Image,
-  Pressable,
-  Alert,
-} from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
+import { StyleSheet, Text, SafeAreaView, ImageBackground, ScrollView, View, Image, Pressable, ActivityIndicator } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import bg from "../../assets/image/bg-home.png";
 import { Ionicons, Feather } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
 import NavIcon from "../components/NavIcon";
-import { fetchMyVehicles } from "../../store/actions";
+import { addProfile, editProfile, getUser } from "../../store/actions";
 import * as ImagePicker from "expo-image-picker";
-import { addProfile, editProfile } from "../../store/actions/userAction";
-import { successAlert } from "../helpers/alert";
+import { errorAlert, successAlert } from "../helpers/alert";
+import { useFocusEffect } from "@react-navigation/native";
 
 function Profile({ navigation }) {
-  const { profile } = useSelector((state) => state.userReducer);
+  const { profile, loading } = useSelector((state) => state.userReducer);
   const { myVehicles } = useSelector((state) => state.vehicleReducer);
+  const { userReviews } = useSelector((state) => state.reviewReducer);
   const [toggleEdit, setToggleEdit] = useState(false);
   const [inputProfileImage, setInputProfileImage] = useState(null);
   const [inputKtpImage, setInputKtpImage] = useState(null);
   const [inputSIMAImage, setInputSIMAImage] = useState(null);
   const [inputSIMCImage, setInputSIMCImage] = useState(null);
-  const [loading, setLoading] = useState(false);
-
   const dispatch = useDispatch();
   const [access_token, setAccessToken] = useState("");
-  const getAccessToken = async () => {
-    try {
-      const access_token = await AsyncStorage.getItem("access_token");
-      if (!access_token) {
-        throw new Error("userNotFound");
-      }
-      setAccessToken(access_token);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+
   const selectImage = async (setImageFunction) => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -81,15 +60,6 @@ function Profile({ navigation }) {
     setToggleEdit(false);
   };
 
-  // if (loading) {
-  //   return (
-  //     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-  //       <ActivityIndicator size="large" />
-  //       <Text style={{ marginTop: 16, fontSize: 18 }}>Loading...</Text>
-  //     </View>
-  //   );
-  // }
-  // setLoading(true);
   const submitProfile = async () => {
     const formData = new FormData();
     if (inputProfileImage) {
@@ -138,31 +108,32 @@ function Profile({ navigation }) {
       dispatch(editProfile(formData, access_token, profile.id))
         .then((data) => {
           setToggleEdit(false);
+          // setLoading(false);
           successAlert(data.message);
-          navigation.goBack();
         })
         .catch((error) => {
-          Alert.alert(error.message);
+          // setLoading(false);
+          errorAlert(error.message);
         });
     } else {
       dispatch(addProfile(formData, access_token))
         .then((data) => {
-          // setToggleEdit(false);
+          setToggleEdit(false);
           successAlert(data.message);
           // setLoading(false);
         })
         .catch((error) => {
-          Alert.alert(error.message);
+          errorAlert(error.message);
           // setLoading(false);
         });
     }
-    console.log(loading);
   };
 
-  useEffect(() => {
-    getAccessToken();
-    dispatch(fetchMyVehicles(access_token));
-  }, [access_token]);
+  useFocusEffect(
+    useCallback(() => {
+      dispatch(getUser());
+    }, [])
+  );
 
   return (
     <View style={styles.container}>
@@ -219,9 +190,7 @@ function Profile({ navigation }) {
                         onPress={selectProfileImage}
                       >
                         <Feather name="edit-3" size={15} color="gray" />
-                        <Text style={{ fontSize: 12, color: "gray" }}>
-                          Edit Photo
-                        </Text>
+                        <Text style={{ fontSize: 12, color: "gray" }}>Edit Photo</Text>
                       </Pressable>
                     </View>
                   ) : (
@@ -229,9 +198,7 @@ function Profile({ navigation }) {
                       <View>
                         <Image
                           source={{
-                            uri: profile.UserProfile
-                              ? `${profile.UserProfile.profilePicture}`
-                              : "https://www.copaster.com/wp-content/uploads/2023/03/pp-kosong-wa-default.jpeg",
+                            uri: profile.UserProfile ? `${profile.UserProfile.profilePicture}` : "https://www.copaster.com/wp-content/uploads/2023/03/pp-kosong-wa-default.jpeg",
                           }}
                           style={styles.profileImage}
                         />
@@ -246,30 +213,18 @@ function Profile({ navigation }) {
                           onPress={selectProfileImage}
                         >
                           <Feather name="edit-3" size={15} color="gray" />
-                          <Text style={{ fontSize: 12, color: "gray" }}>
-                            Edit Photo
-                          </Text>
+                          <Text style={{ fontSize: 12, color: "gray" }}>Edit Photo</Text>
                         </Pressable>
                       </View>
                     )
                   )}
 
                   <View style={{ marginTop: -20, flex: 6 }}>
-                    <Text style={styles.profileName}>
-                      {profile ? profile.fullName : ""}
-                    </Text>
+                    <Text style={styles.profileName}>{profile ? profile.fullName : ""}</Text>
                     <View style={{ gap: 2 }}>
-                      <Text style={{ fontSize: 15 }}>
-                        Balance: {profile ? profile.Balances : ""}
-                      </Text>
-                      <Text style={styles.profileInfo}>
-                        {profile ? profile.email : ""}
-                      </Text>
-                      {profile && profile.Orders && (
-                        <Text style={styles.profileInfo}>
-                          {profile ? profile.Orders.length : 0} Orders
-                        </Text>
-                      )}
+                      <Text style={{ fontSize: 15 }}>Balance: {profile ? profile.Balances : ""}</Text>
+                      <Text style={styles.profileInfo}>{profile ? profile.email : ""}</Text>
+                      {profile && profile.Orders && <Text style={styles.profileInfo}>{profile ? profile.Orders.length : 0} Orders</Text>}
                     </View>
                   </View>
                   {toggleEdit && (
@@ -291,9 +246,7 @@ function Profile({ navigation }) {
                         }}
                         onPress={cancelSave}
                       >
-                        <Text style={{ fontSize: 13, color: "white" }}>
-                          Cancel
-                        </Text>
+                        <Text style={{ fontSize: 13, color: "white" }}>Cancel</Text>
                       </Pressable>
                       <Pressable
                         onPress={submitProfile}
@@ -304,9 +257,7 @@ function Profile({ navigation }) {
                           borderRadius: 5,
                         }}
                       >
-                        <Text style={{ fontSize: 13, color: "white" }}>
-                          Save
-                        </Text>
+                        <Text style={{ fontSize: 13, color: "white" }}>Save</Text>
                       </Pressable>
                     </View>
                   )}
@@ -320,14 +271,8 @@ function Profile({ navigation }) {
                       gap: 5,
                     }}
                   >
-                    <Text style={{ fontSize: 18, fontWeight: 700 }}>
-                      {myVehicles.length}
-                    </Text>
-                    <Text
-                      style={{ fontSize: 12, color: "gray", fontWeight: 600 }}
-                    >
-                      Vehicles
-                    </Text>
+                    <Text style={{ fontSize: 18, fontWeight: 700 }}>{myVehicles.length}</Text>
+                    <Text style={{ fontSize: 12, color: "gray", fontWeight: 600 }}>Vehicles</Text>
                   </View>
                   <View
                     style={{
@@ -337,14 +282,8 @@ function Profile({ navigation }) {
                       gap: 5,
                     }}
                   >
-                    <Text style={{ fontSize: 18, fontWeight: 700 }}>
-                      {profile.Orders.length}
-                    </Text>
-                    <Text
-                      style={{ fontSize: 12, color: "gray", fontWeight: 600 }}
-                    >
-                      Orders
-                    </Text>
+                    <Text style={{ fontSize: 18, fontWeight: 700 }}>{profile.Orders.length}</Text>
+                    <Text style={{ fontSize: 12, color: "gray", fontWeight: 600 }}>Orders</Text>
                   </View>
                   <View
                     style={{
@@ -354,12 +293,8 @@ function Profile({ navigation }) {
                       gap: 5,
                     }}
                   >
-                    <Text style={{ fontSize: 18, fontWeight: 700 }}></Text>
-                    <Text
-                      style={{ fontSize: 12, color: "gray", fontWeight: 600 }}
-                    >
-                      Reviews
-                    </Text>
+                    <Text style={{ fontSize: 18, fontWeight: 700 }}>{userReviews.length}</Text>
+                    <Text style={{ fontSize: 12, color: "gray", fontWeight: 600 }}>Reviews</Text>
                   </View>
                 </View>
               </View>
@@ -367,230 +302,23 @@ function Profile({ navigation }) {
               {/* end profile */}
 
               {/* document */}
+
               <ScrollView>
-                <View style={styles.itemsContainer}>
-                  {/* ktp */}
-                  <View style={styles.itemsBackgroundContainer}>
-                    <View style={{ gap: 2 }}>
-                      <Text style={styles.itemsDetailTitle}>ID Card</Text>
-                      <Text style={styles.itemsDetailInfo}>
-                        An official document that proves a person's identity.
-                      </Text>
-                      {!inputKtpImage ? (
-                        <View style={styles.documentContainer}>
-                          {profile &&
-                          profile.UserProfile &&
-                          profile.UserProfile.ktp ? (
-                            <>
-                              <View
-                                style={{
-                                  borderColor: "rgba(0, 0, 0, 0.2)",
-                                  borderWidth: 2,
-                                  borderRadius: 10,
-                                  padding: 5,
-                                }}
-                              >
-                                <Image
-                                  source={{ uri: profile.UserProfile.ktp }}
-                                  style={{
-                                    width: 150,
-                                    height: 90,
-                                    borderRadius: 10,
-                                  }}
-                                  resizeMode="contain"
-                                />
-                              </View>
-                              <Pressable
-                                style={{
-                                  marginStart: 15,
-                                  flexDirection: "row",
-                                  gap: 2,
-                                  alignItems: "flex-end",
-                                  marginBottom: 5,
-                                }}
-                                onPress={selectKTPImage}
-                              >
-                                <Feather name="edit-3" size={15} color="gray" />
-                                <Text style={{ fontSize: 12, color: "gray" }}>
-                                  Edit ID Card
-                                </Text>
-                              </Pressable>
-                            </>
-                          ) : (
-                            <Pressable
-                              style={{
-                                flexDirection: "row",
-                                gap: 2,
-                                alignItems: "flex-end",
-                                marginBottom: 5,
-                              }}
-                              onPress={selectKTPImage}
-                            >
-                              <Feather name="edit-3" size={15} color="gray" />
-                              <Text style={{ fontSize: 12, color: "gray" }}>
-                                Add ID Card
-                              </Text>
-                            </Pressable>
-                          )}
-                        </View>
-                      ) : (
-                        <View style={styles.documentContainer}>
-                          <View
-                            style={{
-                              borderColor: "rgba(0, 0, 0, 0.2)",
-                              borderWidth: 2,
-                              borderRadius: 10,
-                              padding: 5,
-                            }}
-                          >
-                            <Image
-                              source={{ uri: inputKtpImage }}
-                              style={{
-                                width: 150,
-                                height: 90,
-                                borderRadius: 10,
-                              }}
-                              resizeMode="contain"
-                            />
-                          </View>
-                          <Pressable
-                            style={{
-                              marginStart: 15,
-                              flexDirection: "row",
-                              gap: 2,
-                              alignItems: "flex-end",
-                              marginBottom: 5,
-                            }}
-                            onPress={selectKTPImage}
-                          >
-                            <Feather name="edit-3" size={15} color="gray" />
-                            <Text style={{ fontSize: 12, color: "gray" }}>
-                              Edit ID Card
-                            </Text>
-                          </Pressable>
-                        </View>
-                      )}
-                    </View>
+                {loading ? (
+                  <View style={[styles.itemsContainer, { flex: 1, justifyContent: "center", alignItems: "center", zIndex: 3, marginTop: 50 }]}>
+                    <ActivityIndicator size="large" />
+                    <Text style={{ marginTop: 16, fontSize: 18, zIndex: 3 }}>Loading...</Text>
                   </View>
-                  {/* end ktp */}
-
-                  {/* sim A */}
-                  <View style={styles.itemsBackgroundContainer}>
-                    <View style={{ gap: 2 }}>
-                      <Text style={styles.itemsDetailTitle}>SIM A</Text>
-                      <Text style={styles.itemsDetailInfo}>
-                        Indonesian driver's license that allows you to drive
-                        cars.
-                      </Text>
-                      {!inputSIMAImage ? (
-                        <View style={styles.documentContainer}>
-                          {profile.UserProfile && profile.UserProfile.simA ? (
-                            <>
-                              <View
-                                style={{
-                                  borderColor: "rgba(0, 0, 0, 0.2)",
-                                  borderWidth: 2,
-                                  borderRadius: 10,
-                                  padding: 5,
-                                }}
-                              >
-                                <Image
-                                  source={{ uri: profile.UserProfile.simA }}
-                                  style={{
-                                    width: 150,
-                                    height: 90,
-                                    borderRadius: 10,
-                                  }}
-                                  resizeMode="contain"
-                                />
-                              </View>
-                              <Pressable
-                                style={{
-                                  marginStart: 15,
-                                  flexDirection: "row",
-                                  gap: 2,
-                                  alignItems: "flex-end",
-                                  marginBottom: 5,
-                                }}
-                                onPress={selectSIMAImage}
-                              >
-                                <Feather name="edit-3" size={15} color="gray" />
-                                <Text style={{ fontSize: 12, color: "gray" }}>
-                                  Edit SIM A
-                                </Text>
-                              </Pressable>
-                            </>
-                          ) : (
-                            <Pressable
-                              style={{
-                                flexDirection: "row",
-                                gap: 2,
-                                alignItems: "flex-end",
-                                marginBottom: 5,
-                              }}
-                              onPress={selectSIMAImage}
-                            >
-                              <Feather name="edit-3" size={15} color="gray" />
-                              <Text style={{ fontSize: 12, color: "gray" }}>
-                                Add SIM A
-                              </Text>
-                            </Pressable>
-                          )}
-                        </View>
-                      ) : (
-                        <View style={styles.documentContainer}>
-                          <View
-                            style={{
-                              borderColor: "rgba(0, 0, 0, 0.2)",
-                              borderWidth: 2,
-                              borderRadius: 10,
-                              padding: 5,
-                            }}
-                          >
-                            <Image
-                              source={{ uri: inputSIMAImage }}
-                              style={{
-                                width: 150,
-                                height: 90,
-                                borderRadius: 10,
-                              }}
-                              resizeMode="contain"
-                            />
-                          </View>
-                          <Pressable
-                            style={{
-                              marginStart: 15,
-                              flexDirection: "row",
-                              gap: 2,
-                              alignItems: "flex-end",
-                              marginBottom: 5,
-                            }}
-                            onPress={selectSIMAImage}
-                          >
-                            <Feather name="edit-3" size={15} color="gray" />
-                            <Text style={{ fontSize: 12, color: "gray" }}>
-                              Edit SIM A
-                            </Text>
-                          </Pressable>
-                        </View>
-                      )}
-                    </View>
-                  </View>
-                  {/* end sim A */}
-
-                  {/* sim C */}
-                  <View style={styles.itemsBackgroundContainer}>
-                    <View style={{ gap: 2 }}>
-                      <Text style={styles.itemsDetailTitle}>SIM C</Text>
-                      <Text style={styles.itemsDetailInfo}>
-                        Indonesian driver's license for riding motorcycles.
-                      </Text>
-                      <View style={styles.documentContainer}>
-                        {!inputSIMCImage ? (
+                ) : (
+                  <View style={styles.itemsContainer}>
+                    {/* ktp */}
+                    <View style={styles.itemsBackgroundContainer}>
+                      <View style={{ gap: 2 }}>
+                        <Text style={styles.itemsDetailTitle}>ID Card</Text>
+                        <Text style={styles.itemsDetailInfo}>An official document that proves a person's identity.</Text>
+                        {!inputKtpImage ? (
                           <View style={styles.documentContainer}>
-                            {profile &&
-                            profile.UserProfile &&
-                            profile.UserProfile.simC ? (
+                            {profile && profile.UserProfile && profile.UserProfile.ktp ? (
                               <>
                                 <View
                                   style={{
@@ -601,9 +329,7 @@ function Profile({ navigation }) {
                                   }}
                                 >
                                   <Image
-                                    source={{
-                                      uri: profile.UserProfile.selectSIMCImage,
-                                    }}
+                                    source={{ uri: profile.UserProfile.ktp }}
                                     style={{
                                       width: 150,
                                       height: 90,
@@ -620,16 +346,10 @@ function Profile({ navigation }) {
                                     alignItems: "flex-end",
                                     marginBottom: 5,
                                   }}
-                                  onPress={selectSIMCImage}
+                                  onPress={selectKTPImage}
                                 >
-                                  <Feather
-                                    name="edit-3"
-                                    size={15}
-                                    color="gray"
-                                  />
-                                  <Text style={{ fontSize: 12, color: "gray" }}>
-                                    Edit SIM C
-                                  </Text>
+                                  <Feather name="edit-3" size={15} color="gray" />
+                                  <Text style={{ fontSize: 12, color: "gray" }}>Edit ID Card</Text>
                                 </Pressable>
                               </>
                             ) : (
@@ -640,12 +360,10 @@ function Profile({ navigation }) {
                                   alignItems: "flex-end",
                                   marginBottom: 5,
                                 }}
-                                onPress={selectSIMCImage}
+                                onPress={selectKTPImage}
                               >
                                 <Feather name="edit-3" size={15} color="gray" />
-                                <Text style={{ fontSize: 12, color: "gray" }}>
-                                  Add SIM C
-                                </Text>
+                                <Text style={{ fontSize: 12, color: "gray" }}>Add ID Card</Text>
                               </Pressable>
                             )}
                           </View>
@@ -660,7 +378,7 @@ function Profile({ navigation }) {
                               }}
                             >
                               <Image
-                                source={{ uri: inputSIMCImage }}
+                                source={{ uri: inputKtpImage }}
                                 style={{
                                   width: 150,
                                   height: 90,
@@ -677,20 +395,213 @@ function Profile({ navigation }) {
                                 alignItems: "flex-end",
                                 marginBottom: 5,
                               }}
-                              onPress={selectSIMCImage}
+                              onPress={selectKTPImage}
                             >
                               <Feather name="edit-3" size={15} color="gray" />
-                              <Text style={{ fontSize: 12, color: "gray" }}>
-                                Edit SIM C
-                              </Text>
+                              <Text style={{ fontSize: 12, color: "gray" }}>Edit ID Card</Text>
                             </Pressable>
                           </View>
                         )}
                       </View>
                     </View>
+                    {/* end ktp */}
+
+                    {/* sim A */}
+                    <View style={styles.itemsBackgroundContainer}>
+                      <View style={{ gap: 2 }}>
+                        <Text style={styles.itemsDetailTitle}>SIM A</Text>
+                        <Text style={styles.itemsDetailInfo}>Indonesian driver's license that allows you to drive cars.</Text>
+                        {!inputSIMAImage ? (
+                          <View style={styles.documentContainer}>
+                            {profile.UserProfile && profile.UserProfile.simA ? (
+                              <>
+                                <View
+                                  style={{
+                                    borderColor: "rgba(0, 0, 0, 0.2)",
+                                    borderWidth: 2,
+                                    borderRadius: 10,
+                                    padding: 5,
+                                  }}
+                                >
+                                  <Image
+                                    source={{ uri: profile.UserProfile.simA }}
+                                    style={{
+                                      width: 150,
+                                      height: 90,
+                                      borderRadius: 10,
+                                    }}
+                                    resizeMode="contain"
+                                  />
+                                </View>
+                                <Pressable
+                                  style={{
+                                    marginStart: 15,
+                                    flexDirection: "row",
+                                    gap: 2,
+                                    alignItems: "flex-end",
+                                    marginBottom: 5,
+                                  }}
+                                  onPress={selectSIMAImage}
+                                >
+                                  <Feather name="edit-3" size={15} color="gray" />
+                                  <Text style={{ fontSize: 12, color: "gray" }}>Edit SIM A</Text>
+                                </Pressable>
+                              </>
+                            ) : (
+                              <Pressable
+                                style={{
+                                  flexDirection: "row",
+                                  gap: 2,
+                                  alignItems: "flex-end",
+                                  marginBottom: 5,
+                                }}
+                                onPress={selectSIMAImage}
+                              >
+                                <Feather name="edit-3" size={15} color="gray" />
+                                <Text style={{ fontSize: 12, color: "gray" }}>Add SIM A</Text>
+                              </Pressable>
+                            )}
+                          </View>
+                        ) : (
+                          <View style={styles.documentContainer}>
+                            <View
+                              style={{
+                                borderColor: "rgba(0, 0, 0, 0.2)",
+                                borderWidth: 2,
+                                borderRadius: 10,
+                                padding: 5,
+                              }}
+                            >
+                              <Image
+                                source={{ uri: inputSIMAImage }}
+                                style={{
+                                  width: 150,
+                                  height: 90,
+                                  borderRadius: 10,
+                                }}
+                                resizeMode="contain"
+                              />
+                            </View>
+                            <Pressable
+                              style={{
+                                marginStart: 15,
+                                flexDirection: "row",
+                                gap: 2,
+                                alignItems: "flex-end",
+                                marginBottom: 5,
+                              }}
+                              onPress={selectSIMAImage}
+                            >
+                              <Feather name="edit-3" size={15} color="gray" />
+                              <Text style={{ fontSize: 12, color: "gray" }}>Edit SIM A</Text>
+                            </Pressable>
+                          </View>
+                        )}
+                      </View>
+                    </View>
+                    {/* end sim A */}
+
+                    {/* sim C */}
+                    <View style={styles.itemsBackgroundContainer}>
+                      <View style={{ gap: 2 }}>
+                        <Text style={styles.itemsDetailTitle}>SIM C</Text>
+                        <Text style={styles.itemsDetailInfo}>Indonesian driver's license for riding motorcycles.</Text>
+                        <View style={styles.documentContainer}>
+                          {!inputSIMCImage ? (
+                            <View style={styles.documentContainer}>
+                              {profile && profile.UserProfile && profile.UserProfile.simC ? (
+                                <>
+                                  <View
+                                    style={{
+                                      borderColor: "rgba(0, 0, 0, 0.2)",
+                                      borderWidth: 2,
+                                      borderRadius: 10,
+                                      padding: 5,
+                                    }}
+                                  >
+                                    <Image
+                                      source={{
+                                        uri: profile.UserProfile.simC,
+                                      }}
+                                      style={{
+                                        width: 150,
+                                        height: 90,
+                                        borderRadius: 10,
+                                      }}
+                                      resizeMode="contain"
+                                    />
+                                  </View>
+                                  <Pressable
+                                    style={{
+                                      marginStart: 15,
+                                      flexDirection: "row",
+                                      gap: 2,
+                                      alignItems: "flex-end",
+                                      marginBottom: 5,
+                                    }}
+                                    onPress={selectSIMCImage}
+                                  >
+                                    <Feather name="edit-3" size={15} color="gray" />
+                                    <Text style={{ fontSize: 12, color: "gray" }}>Edit SIM C</Text>
+                                  </Pressable>
+                                </>
+                              ) : (
+                                <Pressable
+                                  style={{
+                                    flexDirection: "row",
+                                    gap: 2,
+                                    alignItems: "flex-end",
+                                    marginBottom: 5,
+                                  }}
+                                  onPress={selectSIMCImage}
+                                >
+                                  <Feather name="edit-3" size={15} color="gray" />
+                                  <Text style={{ fontSize: 12, color: "gray" }}>Add SIM C</Text>
+                                </Pressable>
+                              )}
+                            </View>
+                          ) : (
+                            <View style={styles.documentContainer}>
+                              <View
+                                style={{
+                                  borderColor: "rgba(0, 0, 0, 0.2)",
+                                  borderWidth: 2,
+                                  borderRadius: 10,
+                                  padding: 5,
+                                }}
+                              >
+                                <Image
+                                  source={{ uri: inputSIMCImage }}
+                                  style={{
+                                    width: 150,
+                                    height: 90,
+                                    borderRadius: 10,
+                                  }}
+                                  resizeMode="contain"
+                                />
+                              </View>
+                              <Pressable
+                                style={{
+                                  marginStart: 15,
+                                  flexDirection: "row",
+                                  gap: 2,
+                                  alignItems: "flex-end",
+                                  marginBottom: 5,
+                                }}
+                                onPress={selectSIMCImage}
+                              >
+                                <Feather name="edit-3" size={15} color="gray" />
+                                <Text style={{ fontSize: 12, color: "gray" }}>Edit SIM C</Text>
+                              </Pressable>
+                            </View>
+                          )}
+                        </View>
+                      </View>
+                    </View>
+                    {/* end Sim C */}
                   </View>
-                  {/* end Sim C */}
-                </View>
+                )}
+
                 {/* end document */}
               </ScrollView>
             </View>

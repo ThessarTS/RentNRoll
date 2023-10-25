@@ -1,17 +1,5 @@
-import React, { useEffect, useState } from "react";
-import {
-  SafeAreaView,
-  StyleSheet,
-  View,
-  Text,
-  Pressable,
-  TextInput,
-  FlatList,
-  ScrollView,
-  ImageBackground,
-  ActivityIndicator,
-  Image,
-} from "react-native";
+import React, { useCallback, useState } from "react";
+import { SafeAreaView, StyleSheet, View, Text, Pressable, TextInput, FlatList, ScrollView, ImageBackground, ActivityIndicator, Image } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import carIcon from "../../assets/vector/car.png";
@@ -34,7 +22,7 @@ import {
 import CardOrderHome from "../components/CardOrderHome";
 import notFound from "../../assets/image/zzz.png";
 import { fPrice } from "../helpers/fPrice";
-
+import { useFocusEffect } from "@react-navigation/native";
 function Home({ navigation }) {
   const { vehicles, trending, loading } = useSelector(
     (state) => state.vehicleReducer
@@ -82,12 +70,14 @@ function Home({ navigation }) {
     }
   };
 
-  useEffect(() => {
-    dispatch(fetchVehicles());
-    dispatch(fetchCategory());
-    dispatch(fetchTrending());
-    dispatch(getUser());
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      dispatch(fetchVehicles());
+      dispatch(fetchCategory());
+      dispatch(fetchTrending());
+      dispatch(getUser());
+    }, [])
+  );
 
   if (loading) {
     return (
@@ -99,7 +89,7 @@ function Home({ navigation }) {
   }
 
   const RenderModalItems = ({ vehicle }) => {
-    const { image, name, price, averageRating, totalReviews, id } = vehicle.item;
+    const { image, name, price, averageRating, totalReviews, id, location } = vehicle.item;
     const goDetail = () => {
       navigation.navigate("detail", {
         name: name,
@@ -125,7 +115,7 @@ function Home({ navigation }) {
           <View style={{ flex: 6, marginStart: 10, gap: 3 }}>
             <View style={[styles.headerItemContainer]}>
               <Ionicons name="location" size={15} color="#17799A" />
-              <Text style={styles.itemsDetailInfo}>Jakarta</Text>
+              <Text style={styles.itemsDetailInfo}>{location}</Text>
             </View>
             <View style={[styles.headerItemContainer, { marginStart: 2 }]}>
               <AntDesign name="star" size={13} color="#F8B84E" />
@@ -181,17 +171,8 @@ function Home({ navigation }) {
     );
   };
   const RenderCardVehicle = ({ vehicle }) => {
-    const { name, image, price, averageRating, id } = vehicle.item;
-    return (
-      <CardVehicle
-        name={name}
-        image={image}
-        price={price}
-        rating={averageRating}
-        id={id}
-        navigation={navigation}
-      />
-    );
+    const { name, image, price, averageRating, id, totalReviews } = vehicle.item;
+    return <CardVehicle name={name} image={image} price={price} rating={averageRating} id={id} totalReviews={totalReviews} navigation={navigation} />;
   };
 
   return (
@@ -436,7 +417,13 @@ function Home({ navigation }) {
                     </View>
                   )}
 
-                  <Pressable style={{ position: "absolute", top: 10, right: 20 }} onPress={() => setTogleCategory(false)}>
+                  <Pressable
+                    style={{ position: "absolute", top: 10, right: 20 }}
+                    onPress={() => {
+                      setTogleCategory(false);
+                      toggleSearch();
+                    }}
+                  >
                     <MaterialIcons name="cancel" size={30} color="red" />
                   </Pressable>
                 </View>
@@ -525,6 +512,7 @@ const styles = StyleSheet.create({
   },
   scrollViewContainer: {
     position: "relative",
+    minHeight: "100%",
   },
 
   categoryTitle: {
@@ -533,11 +521,6 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
   },
   modalContainer: {
-    elevation: 2,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
     padding: 10,
     borderBottomWidth: 0.5,
     borderBottomColor: "gray",

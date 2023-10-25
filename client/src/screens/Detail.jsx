@@ -40,11 +40,13 @@ function Detail({ route, navigation }) {
   useEffect(() => {
     setLoadingDetail(true);
     dispatch(fetchOrderByVehicleId(id));
-    dispatch(fetchDetail(id)).then(() => {
-      setLoadingDetail(false).catch((error) => {
+    dispatch(fetchDetail(id))
+      .then(() => {
+        setLoadingDetail(false);
+      })
+      .catch((error) => {
         console.log(error);
       });
-    });
   }, []);
 
   const [handleInput, setHandleInput] = useState({
@@ -87,7 +89,7 @@ function Detail({ route, navigation }) {
     if (!profile) {
       navigation.navigate("loginRegister");
       errorAlert("Login First!");
-    } else console.log(berhasil);
+    } else console.log("berhasil");
   };
 
   useEffect(() => {

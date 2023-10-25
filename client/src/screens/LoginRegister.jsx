@@ -7,7 +7,7 @@ import Modal from "react-native-modal";
 import { MaterialIcons, Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch } from "react-redux";
-import { createOtp, fetchProfile, getUser, handleLogin, registerHandler } from "../../store/actions";
+import { createOtp, handleLogin, registerHandler } from "../../store/actions";
 import { errorAlert, successAlert } from "../helpers/alert";
 
 function Login({ navigation }) {
@@ -145,11 +145,11 @@ function Login({ navigation }) {
         <View style={styles.formContainer}>
           <View style={{ gap: 5 }}>
             <Text style={styles.label}>Email</Text>
-            <TextInput placeholder="email" keyboardType="email-address" value={inputLogin.email} onChangeText={(text) => handleChangeLogin("email", text)} style={styles.textInput} />
+            <TextInput placeholder="email" keyboardType="email-address" value={inputLogin.email} returnKeyType={"done"} onChangeText={(text) => handleChangeLogin("email", text)} style={styles.textInput} />
           </View>
           <View style={{ gap: 5 }}>
             <Text style={styles.label}>Password</Text>
-            <TextInput placeholder="password" secureTextEntry={true} name="password" value={inputLogin.password} onChangeText={(text) => handleChangeLogin("password", text)} style={styles.textInput} />
+            <TextInput placeholder="password" secureTextEntry={true} returnKeyType={"done"} name="password" value={inputLogin.password} onChangeText={(text) => handleChangeLogin("password", text)} style={styles.textInput} />
           </View>
           <View style={styles.checkboxContainer}>
             <View style={styles.checkBoxView}>
@@ -198,15 +198,15 @@ function Login({ navigation }) {
               <View style={{ gap: 10 }}>
                 <View style={{ gap: 5 }}>
                   <Text style={styles.label}>Full Name</Text>
-                  <TextInput placeholder="username" style={styles.textInput} value={inputRegister.fullName} onChangeText={(text) => handleChangeRegister("fullName", text)} />
+                  <TextInput placeholder="username" style={styles.textInput} value={inputRegister.fullName} returnKeyType={"done"} onChangeText={(text) => handleChangeRegister("fullName", text)} />
                 </View>
                 <View style={{ gap: 5 }}>
                   <Text style={styles.label}>Email</Text>
-                  <TextInput placeholder="email" style={styles.textInput} value={inputRegister.email} onChangeText={(text) => handleChangeRegister("email", text)} />
+                  <TextInput placeholder="email" style={styles.textInput} value={inputRegister.email} returnKeyType={"done"} onChangeText={(text) => handleChangeRegister("email", text)} />
                 </View>
                 <View style={{ gap: 5 }}>
                   <Text style={styles.label}>Password</Text>
-                  <TextInput placeholder="password" secureTextEntry={true} style={styles.textInput} returnKeyType="done" value={inputRegister.password} onChangeText={(text) => handleChangeRegister("password", text)} />
+                  <TextInput placeholder="password" secureTextEntry={true} style={styles.textInput} returnKeyType={"done"} value={inputRegister.password} onChangeText={(text) => handleChangeRegister("password", text)} />
                 </View>
 
                 <View style={{ gap: 5 }}>

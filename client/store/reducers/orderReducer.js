@@ -1,4 +1,4 @@
-import { ORDER_FETCH_BY_VEHICLE_ID_REQUEST, ORDER_FETCH_BY_VEHICLE_ID_SUCCESS, ORDER_FETCH_FAIL, ORDER_FETCH_SUCCESS } from "../actions/actionType";
+import { ORDER_FETCH_BY_VEHICLE_ID_REQUEST, ORDER_FETCH_BY_VEHICLE_ID_SUCCESS, ORDER_FETCH_FAIL, ORDER_FETCH_REQUEST, ORDER_FETCH_SUCCESS } from "../actions/actionType";
 const initialState = {
   orders: [],
   orderByVehicles: [],
@@ -8,16 +8,24 @@ const initialState = {
 
 const orderReducer = (state = initialState, action) => {
   switch (action.type) {
+    case ORDER_FETCH_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+
     case ORDER_FETCH_SUCCESS:
       return {
         ...state,
         orders: action.payload,
+        loading: false,
       };
 
     case ORDER_FETCH_FAIL:
       return {
         ...state,
         error: action.payload,
+        loading: false,
       };
 
     case ORDER_FETCH_BY_VEHICLE_ID_REQUEST:

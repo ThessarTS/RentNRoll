@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { StyleSheet, Text, SafeAreaView, ScrollView, View, Pressable, ActivityIndicator, Alert } from "react-native";
+import React, { useCallback, useRef, useState } from "react";
+import { StyleSheet, Text, SafeAreaView, ScrollView, View, Pressable, ActivityIndicator, Image } from "react-native";
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import SelectDropdown from "react-native-select-dropdown";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -9,6 +9,7 @@ import CardVehicleRent from "../components/CardVehicleRent";
 import { useFocusEffect } from "@react-navigation/native";
 import NavIcon from "../components/NavIcon";
 import { errorAlert } from "../helpers/alert";
+import notFound from "../../assets/image/zzz.png";
 
 function Account({ navigation }) {
   const dispatch = useDispatch();
@@ -159,6 +160,21 @@ function Account({ navigation }) {
                   <View style={{ flex: 1, justifyContent: "center", alignItems: "center", marginTop: 30 }}>
                     <ActivityIndicator size="large" />
                     <Text style={{ marginTop: 16, fontSize: 18 }}>Loading...</Text>
+                  </View>
+                )}
+
+                {searched && vehiclesQuery.length === 0 && (
+                  <View style={{ flex: 1, alignItems: "center", justifyContent: "center", marginTop: 30 }}>
+                    <Image source={notFound} style={{ width: 200, height: 200 }} resizeMode="contain" />
+                    <Text
+                      style={{
+                        textAlign: "center",
+                        fontSize: 15,
+                        fontWeight: 500,
+                      }}
+                    >
+                      No Vehicle found
+                    </Text>
                   </View>
                 )}
 

@@ -1,4 +1,6 @@
 import {
+  ADD_VEHICLE_REQUEST,
+  ADD_VEHICLE_SUCCESS,
   MY_VEHICLE_FETCH_FAIL,
   MY_VEHICLE_FETCH_REQUEST,
   MY_VEHICLE_FETCH_SUCCESS,
@@ -14,8 +16,8 @@ import {
 } from "./actionType";
 import axios from "axios";
 
+const baseUrl = "https://d467-118-96-109-120.ngrok-free.app";
 
-const baseUrl = "https://1545-118-96-109-120.ngrok-free.app";
 export const vehicleFetchRequest = () => {
   return { type: VEHICLE_FETCH_REQUEST };
 };
@@ -67,7 +69,6 @@ export const fetchVehicles = (query) => {
 // END FETCH VEHICLES
 
 // FETCH VEHICLE DETAIL
-
 export const detailFetchSuccess = (payload) => {
   return { type: VEHICLE_FETCH_BY_ID_SUCCESS, payload };
 };
@@ -86,11 +87,9 @@ export const fetchDetail = (id) => {
     }
   };
 };
-
 // END FETCH VEHICLE BY ID
 
 // TRENDING
-
 export const trendingFetchRequest = () => {
   return { type: TRENDING_FETCH_REQUEST };
 };
@@ -119,12 +118,17 @@ export const fetchTrending = () => {
 // END TRENDING
 
 // ADD VEHICLE
+export const addVehicleRequest = () => {
+  return { type: ADD_VEHICLE_REQUEST };
+};
+
 export const addVehicleSuccess = (payload) => {
-  return { type: ADD_FETCH_SUCCESS, payload };
+  return { type: ADD_VEHICLE_SUCCESS, payload };
 };
 
 export const addVehicle = (value, access_token) => {
   return async (dispatch) => {
+    dispatch(addVehicleRequest());
     try {
       const { data } = await axios({
         url: baseUrl + "/vehicles",
