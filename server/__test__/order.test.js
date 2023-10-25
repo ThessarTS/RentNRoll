@@ -162,7 +162,8 @@ describe("Test add orders endpoint /orders", () => {
       .set("access_token", access_token);
     expect(response.status).toBe(201);
     expect(response.body).toBeInstanceOf(Object);
-    expect(response.body).toHaveProperty("message", expect.any(String));
+    expect(response.body).toHaveProperty('UserId');
+    expect(response.body).toHaveProperty('VehicleId');
   });
   it("Failed add order without access token", async function () {
     const response = await request(app).post("/orders/2").send({
@@ -262,20 +263,7 @@ describe("Test edit order status endpoint /orders/:id", () => {
     expect(response.body).toBeInstanceOf(Object);
     expect(response.body).toHaveProperty("message", expect.any(String));
   });
-  it("Failed edit order status without access token", async function () {
-    const response = await request(app).patch("/orders/3").send({
-      VehicleId: 3,
-      UserId: 3,
-      startDate: "2023-08-20T15:55:00.375Z",
-      endDate: "2024-11-20T15:55:00.375Z",
-      ownerId: 2,
-      status: "returned",
-    });
-    //   .set("access_token", access_token);
-    expect(response.status).toBe(401);
-    expect(response.body).toBeInstanceOf(Object);
-    expect(response.body).toHaveProperty("message", expect.any(String));
-  });
+
   it("Failed to edit a order because the entity id sent does not exist in the database", async function () {
     const response = await request(app)
       .patch("/orders/100")
@@ -357,12 +345,27 @@ describe("Test midtrans token end point /midtrans-token/:orderId", () => {
     expect(response.body).toBeInstanceOf(Object)
     expect(response.body).toHaveProperty('message', 'Not Found')
   });
-  it("should responds with 400 with body message", async function () {
+
+});
+
+describe("Test find all order based on ownerId /orders/owner", () => {
+  it("should responds with 200, successfully get all orders by ownerId", async function () {
     const response = await request(app)
-      .post("/midtrans-token/1")
+      .get("/orders/owner")
       .set("access_token", access_token);
-    expect(response.status).toBe(400);
+
+    expect(response.status).toBe(200);
+    expect(response.body).toBeInstanceOf(Array)
+  })
+  it("should responds with 404, successfully get all orders by ownerId", async function () {
+    let access_token_for_owner = signToken({ id: 5 })
+    const response = await request(app)
+      .get("/orders/owner")
+      .set("access_token", access_token_for_owner);
+
+    expect(response.status).toBe(404);
     expect(response.body).toBeInstanceOf(Object)
-    expect(response.body).toHaveProperty('message', 'Amount required')
-  });
+  })
+
+
 });

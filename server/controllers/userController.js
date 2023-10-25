@@ -3,7 +3,7 @@ const { signToken } = require("../helpers/jwt");
 const { generateOTP, sendOTPByEmail } = require("../helpers/nodemailer");
 const redis = require("../helpers/redis");
 const { User, UserProfile, Order, Vehicle, Balance } = require("../models");
-const { OAuth2Client } = require("google-auth-library");
+
 class UserController {
   static async register(req, res, next) {
     try {
@@ -11,10 +11,10 @@ class UserController {
       await User.create({ fullName, email, password, phone });
       res.status(201).json({ message: `Account succesfully created!` });
     } catch (error) {
-      console.log(error);
       next(error);
     }
   }
+
   static async getOTP(req, res, next) {
     const { email, password } = req.body;
     try {
@@ -33,6 +33,7 @@ class UserController {
       next(err);
     }
   }
+
   static async login(req, res, next) {
     const { email, password, otp } = req.body;
     try {
@@ -46,44 +47,10 @@ class UserController {
       const access_token = signToken({ id: user.id });
       res.status(200).json({ access_token });
     } catch (err) {
-      console.log(err);
       next(err);
     }
   }
-  // static async gLogin(req, res, next) {
-  //   try {
-  //     const { google_token } = req.headers;
-  //     const client = new OAuth2Client();
-  //     const ticket = await client.verifyIdToken({
-  //       idToken: google_token,
-  //       audience: process.env.GOOGLE_CLIENT_ID,
-  //     });
-  //     const payload = ticket.getPayload();
-  //     const [user, isCreated] = await User.findOrCreate({
-  //       where: {
-  //         email: payload.email,
-  //       },
-  //       defaults: {
-  //         fullName: payload.name,
-  //         email: payload.email,
-  //         password: "iniRandomAja",
-  //       },
-  //       hooks: false,
-  //     });
-  //     const access_token = signToken({
-  //       id: user.id,
-  //     });
-  //     let status = 200;
-  //     if (isCreated) {
-  //       status = 201;
-  //     }
-  //     // await redis.del("userFinalProject:" + req.user.id);
-  //     res.status(status).json({ access_token });
-  //   } catch (error) {
-  //     console.log(error);
-  //     next(error);
-  //   }
-  // }
+
   static async createProfile(req, res, next) {
     try {
 
@@ -100,42 +67,47 @@ class UserController {
         simC: req.simC,
         UserId: req.user.id,
       });
-      await redis.del("userFinalProject:" + req.user.id);
       res.status(201).json({ message: `Account profile succesfully created!` });
     } catch (error) {
       next(error);
     }
   }
+
   static async getProfile(req, res, next) {
     try {
-      let users = await redis.get("userFinalProject:" + req.user.id);
-      if (!users) {
-        const data = await User.findOne({
-          where: { email: req.user.email },
-          attributes: { exclude: ["password"] },
-          include: [
-            {
-              model: UserProfile,
-            },
-            {
-              model: Balance,
-            },
-            {
-              model: Order,
-              include: Vehicle,
-            },
-          ],
-        });
-        const totalOrders = data.Orders.length;
-        data.dataValues.totalOrders = totalOrders;
-        users = data;
-      }
-      res.json(users);
+
+      const data = await User.findOne({
+        where: { email: req.user.email },
+        attributes: { exclude: ["password"] },
+        include: [
+          {
+            model: UserProfile,
+          },
+          {
+            model: Balance,
+          },
+          {
+            model: Order,
+            include: Vehicle,
+          },
+          {
+            model: Vehicle
+          }
+        ],
+      });
+      const totalOrders = data.Orders.length;
+      data.dataValues.totalOrders = totalOrders;
+      const totalAmount = data.Balances.reduce((sum, balance) => sum + balance.amount, 0);
+
+      // Insert the total amount into the user object
+      data.dataValues.totalAmount = totalAmount;
+
+      res.json(data);
     } catch (error) {
-      console.log(error);
       next(error);
     }
   }
+
   static async editProfile(req, res, next) {
     try {
       const { ktp, simA, simC, profilePicture } = req;
@@ -146,17 +118,19 @@ class UserController {
         throw { name: "Profile Picture is required!" };
       }
       await UserProfile.update({ ktp, simA, simC, profilePicture }, { where: { UserId: req.user.id } });
-      await redis.del("userFinalProject");
+
       res.json({ message: "Successfully updated!" });
     } catch (error) {
       next(error);
     }
   }
+
   static async deleteUser(req, res, next) {
     try {
+
       await User.destroy({ where: { id: req.user.id } });
       res.json({ message: "Account successfully deleted!" });
-      await redis.del("userFinalProject:" + req.user.id);
+
     } catch (error) {
       next(error);
     }
