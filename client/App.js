@@ -19,6 +19,11 @@ import { getUser } from "./store/actions";
 import MyRent from "./src/screens/MyRent";
 import MyVehicle from "./src/screens/MyVehicle";
 
+import PaymentGateway from "./src/screens/PaymentGateway";
+import ConversationList from "./src/screens/ConversationList";
+import { Chatbox } from "./src/screens/Chatbox";
+
+
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -53,13 +58,17 @@ const HomeTab = () => {
           } else if (route.name === "Video") {
             iconName = focused ? "play-circle-sharp" : "play-circle-outline";
           } else if (route.name === "You") {
-            iconName = focused ? "person-circle-sharp" : "person-circle-outline";
+            iconName = focused
+              ? "person-circle-sharp"
+              : "person-circle-outline";
           } else if (route.name === "Rent Now") {
             iconName = focused ? "bicycle-sharp" : "bicycle-outline";
           } else if (route.name === "Add Vehicle") {
-            iconName = focused ? "ios-add-circle-sharp" : "ios-add-circle-outline";
+            iconName = focused
+              ? "ios-add-circle-sharp"
+              : "ios-add-circle-outline";
           }
-
+          //tes
           return <Ionicons name={iconName} size={20} color={color} />;
         },
         tabBarActiveTintColor: "#17799A",
@@ -70,7 +79,11 @@ const HomeTab = () => {
       <Tab.Screen name="Rent Now" component={Rent} />
       {profile && <Tab.Screen name="Add Vehicle" component={AddVehicle} />}
       <Tab.Screen name="Your Order" component={MyOrder} />
-      {profile ? <Tab.Screen name="You" component={Account} /> : <Tab.Screen name="You" component={LoginRegister} />}
+      {profile ? (
+        <Tab.Screen name="You" component={Account} />
+      ) : (
+        <Tab.Screen name="You" component={LoginRegister} />
+      )}
     </Tab.Navigator>
   );
 };
@@ -113,6 +126,7 @@ export default function App() {
                 },
               }}
             />
+
             <Stack.Screen
               name="detail"
               component={Detail}
@@ -134,8 +148,42 @@ export default function App() {
                 tabBarStyle: { display: "none" },
               })}
             />
+
             <Stack.Screen name="myvehicle" component={MyVehicle} options={{ headerShown: false }} />
             <Stack.Screen name="myrent" component={MyRent} options={{ headerShown: false }} />
+
+            <Stack.Screen
+              name="detailorder"
+              component={PaymentGateway}
+              options={({ route }) => ({
+                headerShown: true,
+                headerTintColor: "white",
+                headerStyle: {
+                  backgroundColor: "#17799A",
+                },
+              })}
+            />
+            <Stack.Screen
+              name="ConversationList"
+              component={ConversationList}
+              options={() => ({
+                headerShown: true,
+                headerTintColor: "white",
+                headerStyle: {
+                  backgroundColor: "#17799A",
+                },
+              })}
+            />
+            <Stack.Screen
+              name="Chatbox"
+              component={Chatbox}
+              options={({ route }) => ({
+                headerShown: true,
+                tabBarStyle: { display: "none" },
+                // title: route.params.fullName,
+              })}
+            />
+
           </Stack.Navigator>
         </NavigationContainer>
       </AlertNotificationRoot>

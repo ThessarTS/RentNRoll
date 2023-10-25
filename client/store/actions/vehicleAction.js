@@ -18,7 +18,6 @@ import {
   VEHICLE_QUERY_FETCH_SUCCESS,
 } from "./actionType";
 import axios from "axios";
-
 const baseUrl = "https://5ced-118-96-109-120.ngrok-free.app";
 
 export const vehicleFetchRequest = () => {
