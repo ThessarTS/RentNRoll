@@ -13,9 +13,6 @@ import {
 } from "./actionType";
 import { errorAlert } from "../../src/helpers/alert";
 
-const baseUrl = "https://d467-118-96-109-120.ngrok-free.app";
-
-// import { baseUrl } from "./categoryAction";
 import { baseUrl } from "./categoryAction";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { fetchProfile } from "./userAction";

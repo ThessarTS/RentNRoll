@@ -1,6 +1,5 @@
 import React from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { Ionicons, Entypo, FontAwesome } from "@expo/vector-icons";
 import { fPrice } from "../helpers/fPrice";
 import { fDate } from "../helpers/fDate";

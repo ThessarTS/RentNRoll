@@ -16,6 +16,9 @@ import { AlertNotificationRoot } from "react-native-alert-notification";
 import Profile from "./src/screens/Profile";
 import { useCallback } from "react";
 import { getUser } from "./store/actions";
+import PaymentGateway from "./src/screens/PaymentGateway";
+import ConversationList from "./src/screens/ConversationList";
+import { Chatbox } from "./src/screens/Chatbox";
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -138,17 +141,6 @@ export default function App() {
               options={({ route }) => ({
                 headerShown: false,
                 tabBarStyle: { display: "none" },
-              })}
-            />
-            <Stack.Screen
-              name="myvehicle"
-              component={MyVehicle}
-              options={({ route }) => ({
-                headerShown: true,
-                headerTintColor: "white",
-                headerStyle: {
-                  backgroundColor: "#17799A",
-                },
               })}
             />
             <Stack.Screen
