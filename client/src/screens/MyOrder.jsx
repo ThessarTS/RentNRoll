@@ -1,5 +1,15 @@
 import React, { useCallback, useState } from "react";
-import { StyleSheet, Text, SafeAreaView, ImageBackground, ScrollView, View, Image, Pressable, ActivityIndicator } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  SafeAreaView,
+  ImageBackground,
+  ScrollView,
+  View,
+  Image,
+  Pressable,
+  ActivityIndicator,
+} from "react-native";
 import bg from "../../assets/image/bg-home.png";
 import { MaterialIcons } from "@expo/vector-icons";
 import notFound from "../../assets/image/zzz.png";
@@ -12,16 +22,31 @@ import { getUser } from "../../store/actions";
 function Account({ navigation }) {
   const { profile, loading } = useSelector((state) => state.userReducer);
   const [selectedStatus, setSelectedStatus] = useState("All");
-  const status = [{ status: "All" }, { status: "Pending" }, { status: "Ongoing" }, { status: "Returned" }];
+  const status = [
+    { status: "All" },
+    { status: "Pending" },
+    { status: "Ongoing" },
+    { status: "Returned" },
+  ];
   const dispatch = useDispatch();
   const filterOrderByStatus = (status) => {
     setSelectedStatus(status.toLowerCase() === null ? "All" : status);
   };
-
-  const filteredOrders = profile && profile.Orders ? (selectedStatus === "All" ? profile.Orders : profile.Orders.filter((order) => order.status.toLowerCase() === selectedStatus.toLowerCase())) : [];
+  // console.log(profile);
+  const filteredOrders =
+    profile && profile.Orders
+      ? selectedStatus === "All"
+        ? profile.Orders
+        : profile.Orders.filter(
+            (order) =>
+              order.status.toLowerCase() === selectedStatus.toLowerCase()
+          )
+      : [];
 
   const ButtonStatus = ({ status }) => {
-    const isSelected = status.status === selectedStatus || (selectedStatus === null && status.status === "all");
+    const isSelected =
+      status.status === selectedStatus ||
+      (selectedStatus === null && status.status === "all");
 
     return (
       <Pressable
@@ -58,56 +83,110 @@ function Account({ navigation }) {
               <View style={styles.itemContainer}>
                 <View style={styles.top}></View>
 
-                <View style={{ backgroundColor: "white", marginHorizontal: 10, padding: 20, borderRadius: 8, gap: 20, shadowColor: "#171717", shadowOffset: { width: -2, height: 4 }, shadowOpacity: 0.2, shadowRadius: 3, flex: 1 }}>
-                  <View style={{ flexDirection: "row", alignItems: "center", gap: 20 }}>
-                    <View style={{ backgroundColor: "#17799A", width: 35, height: 35, alignItems: "center", justifyContent: "center", borderRadius: "50%" }}>
-                      <MaterialIcons name="car-rental" size={25} color="white" />
+                <View
+                  style={{
+                    backgroundColor: "white",
+                    marginHorizontal: 10,
+                    padding: 20,
+                    borderRadius: 8,
+                    gap: 20,
+                    shadowColor: "#171717",
+                    shadowOffset: { width: -2, height: 4 },
+                    shadowOpacity: 0.2,
+                    shadowRadius: 3,
+                    flex: 1,
+                  }}
+                >
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      gap: 20,
+                    }}
+                  >
+                    <View
+                      style={{
+                        backgroundColor: "#17799A",
+                        width: 35,
+                        height: 35,
+                        alignItems: "center",
+                        justifyContent: "center",
+                        borderRadius: "50%",
+                      }}
+                    >
+                      <MaterialIcons
+                        name="car-rental"
+                        size={25}
+                        color="white"
+                      />
                     </View>
                     <View>
                       <Text>The collection of orders you have made</Text>
                     </View>
                   </View>
 
-                  <View style={{ flexDirection: "row", gap: 5, alignItems: "center", justifyContent: "center" }}>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      gap: 5,
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
                     {status.map((e) => (
                       <ButtonStatus status={e} key={e.status} />
                     ))}
                   </View>
 
-                  <ScrollView showsVerticalScrollIndicator={false}>
-                    {loading ? (
-                      <View style={{ flex: 1, justifyContent: "center", alignItems: "center", marginTop: 30 }}>
-                        <ActivityIndicator size="large" />
-                        <Text style={{ marginTop: 16, fontSize: 18 }}>Loading...</Text>
-                      </View>
-                    ) : (
-                      <View>
-                        {filteredOrders.length !== 0 ? (
-                          filteredOrders.map((order) => <CardOrder order={order} key={order.id} />)
-                        ) : (
-                          <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-                            <Image source={notFound} style={{ width: 200, height: 200 }} resizeMode="contain" />
-                            <Text
-                              style={{
-                                textAlign: "center",
-                                fontSize: 15,
-                                fontWeight: 500,
-                              }}
-                            >
-                              No orders found
-                            </Text>
-                          </View>
-                        )}
-                      </View>
-                    )}
+                  <ScrollView>
+                    <View>
+                      {filteredOrders.length !== 0 ? (
+                        filteredOrders.map((order) => (
+                          <CardOrder
+                            navigation={navigation}
+                            order={order}
+                            key={order.id}
+                          />
+                        ))
+                      ) : (
+                        <View
+                          style={{
+                            flex: 1,
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <Image
+                            source={notFound}
+                            style={{ width: 200, height: 200 }}
+                            resizeMode="contain"
+                          />
+                          <Text
+                            style={{
+                              textAlign: "center",
+                              fontSize: 15,
+                              fontWeight: 500,
+                            }}
+                          >
+                            No orders found
+                          </Text>
+                        </View>
+                      )}
+                    </View>
                   </ScrollView>
                 </View>
               </View>
             </View>
           </ImageBackground>
         ) : (
-          <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-            <Image source={notFound} style={{ width: 200, height: 200 }} resizeMode="contain" />
+          <View
+            style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+          >
+            <Image
+              source={notFound}
+              style={{ width: 200, height: 200 }}
+              resizeMode="contain"
+            />
             <Text
               style={{
                 textAlign: "center",

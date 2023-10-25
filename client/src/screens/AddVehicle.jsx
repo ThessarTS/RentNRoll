@@ -1,5 +1,19 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { StyleSheet, Text, TextInput, View, ScrollView, SafeAreaView, Pressable, Image, ActivityIndicator, ImageBackground, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  ScrollView,
+  SafeAreaView,
+  Pressable,
+  Image,
+  ActivityIndicator,
+  ImageBackground,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from "react-native";
 import { useSelector } from "react-redux";
 import Dropdown from "react-native-input-select";
 import * as ImagePicker from "expo-image-picker";
@@ -18,14 +32,17 @@ function AddVehicle({ navigation }) {
   const [loading, setLoading] = useState(false);
   const { categories } = useSelector((state) => state.categoryReducer);
   const [image, setImage] = useState(null);
-  const [specifications, setSpecifications] = useState([{ name: "", value: "" }]);
+  const [specifications, setSpecifications] = useState([
+    { name: "", value: "" },
+  ]);
   const [filledSpecifications, setFilledSpecifications] = useState([]);
   const dispatch = useDispatch();
   const [spec, setSpec] = useState(false);
 
   useEffect(() => {
     (async () => {
-      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      const { status } =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
 
       if (status !== "granted") {
         errorAlert("Permission to access the camera roll is required!");
@@ -119,7 +136,9 @@ function AddVehicle({ navigation }) {
       formData.append("price", Number(input.price));
       formData.append("location", input.location);
 
-      const areAllSpecificationsFilled = specifications.every((spec) => spec.name !== "" && spec.value !== "");
+      const areAllSpecificationsFilled = specifications.every(
+        (spec) => spec.name !== "" && spec.value !== ""
+      );
 
       if (!areAllSpecificationsFilled) {
         errorAlert("Please fill in all specifications");
@@ -181,7 +200,9 @@ function AddVehicle({ navigation }) {
           margin: 0,
         }}
       >
-        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+        >
           <View
             style={{
               backgroundColor: "white",
@@ -193,13 +214,17 @@ function AddVehicle({ navigation }) {
               minHeight: 500, // Sesuaikan kebutuhan
             }}
           >
-            <Text style={{ fontSize: 20, fontWeight: "500", marginBottom: 10 }}>Input Specifications</Text>
+            <Text style={{ fontSize: 20, fontWeight: "500", marginBottom: 10 }}>
+              Input Specifications
+            </Text>
 
             <ScrollView style={{ padding: 10 }}>
               {JSON.parse(findCategory.specifications).map((el, idx) => {
                 return (
                   <View key={idx} style={{ gap: 5, marginVertical: 5 }}>
-                    <Text style={styles.label}>{el.charAt(0).toUpperCase() + el.slice(1)}</Text>
+                    <Text style={styles.label}>
+                      {el.charAt(0).toUpperCase() + el.slice(1)}
+                    </Text>
                     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                       <TextInput
                         style={styles.textInput}
@@ -209,7 +234,11 @@ function AddVehicle({ navigation }) {
                           handleChange(idx, el, text);
                         }}
                         // Set nilai TextInput dari filledSpecifications
-                        value={filledSpecifications[idx] ? filledSpecifications[idx].value : ""}
+                        value={
+                          filledSpecifications[idx]
+                            ? filledSpecifications[idx].value
+                            : ""
+                        }
                       />
                     </TouchableWithoutFeedback>
                   </View>
@@ -231,13 +260,31 @@ function AddVehicle({ navigation }) {
       <NavIcon />
       <SafeAreaView style={{ flex: 1 }}>
         <ImageBackground source={bg} style={{ flex: 1 }}>
-          <ScrollView style={styles.scrollViewContainer} showsVerticalScrollIndicator={false}>
+          <ScrollView
+            style={styles.scrollViewContainer}
+            showsVerticalScrollIndicator={false}
+          >
             <View style={styles.itemContainer}>
               <View style={styles.top}></View>
               <View style={styles.uploadContainer}>
                 {/* icon */}
-                <View style={{ flexDirection: "row", alignItems: "center", gap: 20 }}>
-                  <View style={{ backgroundColor: "#17799A", width: 35, height: 35, alignItems: "center", justifyContent: "center", borderRadius: "50%" }}>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: 20,
+                  }}
+                >
+                  <View
+                    style={{
+                      backgroundColor: "#17799A",
+                      width: 35,
+                      height: 35,
+                      alignItems: "center",
+                      justifyContent: "center",
+                      borderRadius: "50%",
+                    }}
+                  >
                     <MaterialIcons name="car-rental" size={25} color="white" />
                   </View>
                   <View>
@@ -256,15 +303,36 @@ function AddVehicle({ navigation }) {
                 <View style={styles.form}>
                   <View style={{ gap: 5 }}>
                     <Text style={styles.label}>Name Vehicle</Text>
-                    <TextInput style={styles.textInput} value={input.name} returnKeyType={"done"} onChangeText={(text) => handleChangeInput("name", text)} placeholder="Honda Brio" />
+                    <TextInput
+                      style={styles.textInput}
+                      value={input.name}
+                      returnKeyType={"done"}
+                      onChangeText={(text) => handleChangeInput("name", text)}
+                      placeholder="Honda Brio"
+                    />
                   </View>
                   <View style={{ gap: 5 }}>
                     <Text style={styles.label}>City Location</Text>
-                    <TextInput style={styles.textInput} value={input.location} returnKeyType={"done"} onChangeText={(text) => handleChangeInput("location", text)} placeholder="Bandung" />
+                    <TextInput
+                      style={styles.textInput}
+                      value={input.location}
+                      returnKeyType={"done"}
+                      onChangeText={(text) =>
+                        handleChangeInput("location", text)
+                      }
+                      placeholder="Bandung"
+                    />
                   </View>
                   <View style={{ gap: 5, marginBottom: 10 }}>
                     <Text style={styles.label}>Price</Text>
-                    <TextInput style={styles.textInput} placeholder="250000" keyboardType="numeric" returnKeyType="done" value={input.price} onChangeText={(text) => handleChangeInput("price", text)} />
+                    <TextInput
+                      style={styles.textInput}
+                      placeholder="250000"
+                      keyboardType="numeric"
+                      returnKeyType="done"
+                      value={input.price}
+                      onChangeText={(text) => handleChangeInput("price", text)}
+                    />
                   </View>
                   {loading && (
                     <View
@@ -275,14 +343,20 @@ function AddVehicle({ navigation }) {
                       }}
                     >
                       <ActivityIndicator size="large" />
-                      <Text style={{ marginTop: 16, fontSize: 18 }}>Loading...</Text>
+                      <Text style={{ marginTop: 16, fontSize: 18 }}>
+                        Loading...
+                      </Text>
                     </View>
                   )}
                   <View style={{ gap: 5, paddingTop: 10 }}>
                     <View style={{}}>
                       <Dropdown
                         style={styles.textInput}
-                        labelStyle={{ fontSize: 16, color: "black", marginStart: 5 }}
+                        labelStyle={{
+                          fontSize: 16,
+                          color: "black",
+                          marginStart: 5,
+                        }}
                         label="Category"
                         placeholder="Select Category Vehicle"
                         options={[
@@ -314,8 +388,18 @@ function AddVehicle({ navigation }) {
                           shadowRadius: 3,
                         }}
                       />
-                      {specifications.every((spec) => spec.value.trim() !== "") && (
-                        <Pressable style={{ flexDirection: "row", gap: 2, alignItems: "center", marginStart: 5 }} onPress={toggleSpec}>
+                      {specifications.every(
+                        (spec) => spec.value.trim() !== ""
+                      ) && (
+                        <Pressable
+                          style={{
+                            flexDirection: "row",
+                            gap: 2,
+                            alignItems: "center",
+                            marginStart: 5,
+                          }}
+                          onPress={toggleSpec}
+                        >
                           <AntDesign name="eyeo" size={15} color="black" />
                           <Text style={{ fontSize: 11 }}>See Detail</Text>
                         </Pressable>
@@ -338,15 +422,34 @@ function AddVehicle({ navigation }) {
                           borderColor: "#17799A",
                         }}
                       />
-                      <Pressable style={{ flexDirection: "row", marginVertical: 10, gap: 5, alignItems: "center" }}>
+                      <Pressable
+                        style={{
+                          flexDirection: "row",
+                          marginVertical: 10,
+                          gap: 5,
+                          alignItems: "center",
+                        }}
+                      >
                         <Feather name="edit-3" size={17} color="gray" />
-                        <Text style={{ fontSize: 13, color: "gray" }}>Edit Photo</Text>
+                        <Text style={{ fontSize: 13, color: "gray" }}>
+                          Edit Photo
+                        </Text>
                       </Pressable>
                     </View>
                   ) : (
                     <Pressable
                       onPress={selectImage}
-                      style={{ flexDirection: "row", alignItems: "center", gap: 5, padding: 40, justifyContent: "center", borderColor: "#17799A", borderWidth: 1, backgroundColor: "rgba(128, 128, 128, 0.1)", borderRadius: 5 }}
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: 5,
+                        padding: 40,
+                        justifyContent: "center",
+                        borderColor: "#17799A",
+                        borderWidth: 1,
+                        backgroundColor: "rgba(128, 128, 128, 0.1)",
+                        borderRadius: 5,
+                      }}
                     >
                       <AntDesign name="addfile" size={24} color="black" />
                       <Text style={{ color: "gray" }}>Upload Image</Text>

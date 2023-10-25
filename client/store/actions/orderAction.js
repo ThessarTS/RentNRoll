@@ -1,5 +1,10 @@
 import axios from "axios";
 import {
+  CREATE_ORDER_FAIL,
+  CREATE_ORDER_REQUEST,
+  CREATE_ORDER_SUCCESS,
+  ORDERBYID_FETCH_REQUEST,
+  ORDERBYID_FETCH_SUCCESS,
   ORDER_FETCH_BY_VEHICLE_ID_REQUEST,
   ORDER_FETCH_BY_VEHICLE_ID_SUCCESS,
   ORDER_FETCH_FAIL,
@@ -11,6 +16,9 @@ import { errorAlert } from "../../src/helpers/alert";
 const baseUrl = "https://d467-118-96-109-120.ngrok-free.app";
 
 // import { baseUrl } from "./categoryAction";
+import { baseUrl } from "./categoryAction";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { fetchProfile } from "./userAction";
 
 export const orderFetchReq = () => {
   return { type: ORDER_FETCH_REQUEST };
@@ -60,6 +68,114 @@ export const fetchOrderByVehicleId = (id) => {
     } catch (error) {
       console.log(error);
       errorAlert(error.response.data.message);
+    }
+  };
+};
+
+export const createOrderReq = () => {
+  return { type: CREATE_ORDER_REQUEST };
+};
+
+export const createOrderSuccess = (payload) => {
+  return { type: CREATE_ORDER_SUCCESS, payload };
+};
+
+export const createOrderFail = (payload) => {
+  return { type: CREATE_ORDER_FAIL, payload };
+};
+
+export const createOrderVehicle = (value, id) => {
+  // console.log(value, id, "<<<<");
+  return async (dispatch) => {
+    dispatch(createOrderReq());
+    try {
+      const access_token = await AsyncStorage.getItem("access_token");
+      const { data } = await axios({
+        url: baseUrl + "/orders/" + id,
+        method: "POST",
+        data: value,
+        headers: {
+          access_token: access_token,
+        },
+      });
+      dispatch(createOrderSuccess(data));
+      return data;
+    } catch (error) {
+      console.log(error);
+      errorAlert(error.response.data.message);
+    }
+  };
+};
+
+export const midtransPayment = (id) => {
+  // console.log(id);
+  return async (dispatch) => {
+    try {
+      const access_token = await AsyncStorage.getItem("access_token");
+      const { data } = await axios({
+        url: baseUrl + "/midtrans-token/" + id,
+        method: "POST",
+        data: 10,
+        headers: {
+          access_token: access_token,
+        },
+      });
+      dispatch(fetchProfile({ access_token: access_token }));
+      return data;
+    } catch (error) {
+      console.log(error);
+      errorAlert(error.response.data.message);
+    }
+  };
+};
+
+export const fetchOrderByIdRequest = () => {
+  return { type: ORDERBYID_FETCH_REQUEST };
+};
+
+export const fetchOrderByIdSuccess = (payload) => {
+  return { type: ORDERBYID_FETCH_SUCCESS, payload };
+};
+
+export const fetchOrderById = (id) => {
+  fetchOrderByIdRequest();
+  return async (dispatch) => {
+    try {
+      const access_token = await AsyncStorage.getItem("access_token");
+      const { data } = await axios({
+        url: baseUrl + "/orders/" + id,
+        method: "GET",
+        headers: {
+          access_token: access_token,
+        },
+      });
+      dispatch(fetchOrderByIdSuccess(data));
+      // return data;
+    } catch (error) {
+      console.log(error);
+      errorAlert(error.response.data.message);
+    }
+  };
+};
+
+export const updateOrderStatus = (status, id) => {
+  // console.log(id, status, "<<<<");
+  return async (dispatch) => {
+    const access_token = await AsyncStorage.getItem("access_token");
+    try {
+      const { data } = await axios({
+        url: baseUrl + "/orders/" + id,
+        method: "patch",
+        data: status,
+      });
+      // console.log(data, "<<<<");
+      console.log(access_token, "update");
+      // dispatch(fetchOrders(access_token));
+      dispatch(fetchProfile({ access_token: access_token }));
+      return data;
+    } catch (error) {
+      console.log(error.response.data, "<<<error");
+      errorAlert(error.response.data);
     }
   };
 };

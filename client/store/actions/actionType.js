@@ -24,8 +24,18 @@ export const ORDER_FETCH_REQUEST = "order/fetchRequest";
 export const ORDER_FETCH_SUCCESS = "order/fetchSuccess";
 export const ORDER_FETCH_FAIL = "order/fetchFail";
 
-export const ORDER_FETCH_BY_VEHICLE_ID_REQUEST = "order/fetchByVehicleIdRequest";
-export const ORDER_FETCH_BY_VEHICLE_ID_SUCCESS = "order/fetchByVehicleIdSuccess";
+export const ORDERBYID_FETCH_REQUEST = "orderById/fetchRequest";
+export const ORDERBYID_FETCH_SUCCESS = "orderById/fetchSuccess";
+export const ORDERBYID_FETCH_FAIL = "orderById/fetchFail";
+
+export const CREATE_ORDER_REQUEST = "createOrder/createFail";
+export const CREATE_ORDER_SUCCESS = "createOrder/createSuccess";
+export const CREATE_ORDER_FAIL = "createOrder/createFail";
+
+export const ORDER_FETCH_BY_VEHICLE_ID_REQUEST =
+  "order/fetchByVehicleIdRequest";
+export const ORDER_FETCH_BY_VEHICLE_ID_SUCCESS =
+  "order/fetchByVehicleIdSuccess";
 
 export const ADD_VEHICLE_REQUEST = "vehicle/addRequest";
 export const ADD_VEHICLE_SUCCESS = "vehicle/addSuccess";
