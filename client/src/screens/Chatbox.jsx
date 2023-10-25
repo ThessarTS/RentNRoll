@@ -5,7 +5,7 @@ import { View, Text } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { getUser } from "../../store/actions";
 import CustomHeader from "../components/CustomHeader";
-
+//felix
 export const Chatbox = (props) => {
   const { profile } = useSelector((state) => state.userReducer);
   const { fullName, id, profilePicture, email } = props.route.params;

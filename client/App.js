@@ -122,6 +122,7 @@ export default function App() {
                 },
               }}
             />
+
             <Stack.Screen
               name="detail"
               component={Detail}
