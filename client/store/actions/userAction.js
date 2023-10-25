@@ -7,6 +7,8 @@ import { fetchReviewByUser } from "./reviewAction";
 
 const baseUrl = "https://d467-118-96-109-120.ngrok-free.app";
 
+// import { baseUrl } from "./categoryAction";
+
 export const registerHandler = (value) => {
   return async () => {
     try {
@@ -131,7 +133,15 @@ export const addProfile = (value, access_token) => {
         "Content-Type": "multipart/form-data",
         data: value,
       });
+
       dispatch(addProfileSuccess());
+
+//       await dispatch(
+//         fetchProfile({
+//           access_token: access_token,
+//         })
+//       );
+
       return data;
     } catch (error) {
       throw error.response.data;
@@ -154,6 +164,7 @@ export const editProfile = (value, access_token) => {
       });
 
       dispatch(fetchProfile(access_token));
+
       return data;
     } catch (error) {
       console.log(error.response.data);

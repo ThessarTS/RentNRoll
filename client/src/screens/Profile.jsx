@@ -103,10 +103,8 @@ function Profile({ navigation }) {
         uri: inputSIMCImage,
       });
     }
-    // setLoading(true);
-    if (profile.UserProfile.profilePicture) {
-      //edit
 
+    if (profile?.UserProfile.profilePicture) {
       dispatch(editProfile(formData, access_token, profile.id))
         .then((data) => {
           setToggleEdit(false);
@@ -153,7 +151,9 @@ function Profile({ navigation }) {
         <Pressable onPress={() => navigation.navigate("You")}>
           <Ionicons name="arrow-back-sharp" size={24} color="white" />
         </Pressable>
-        <Text style={{ color: "white", fontSize: 20 }}>{profile.fullName}</Text>
+        <Text style={{ color: "white", fontSize: 20 }}>
+          {profile?.fullName}
+        </Text>
       </View>
       <SafeAreaView style={{ flex: 1 }}>
         <ImageBackground source={bg} style={{ flex: 1 }}>

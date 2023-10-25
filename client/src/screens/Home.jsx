@@ -13,13 +13,20 @@ import { Entypo, MaterialIcons, AntDesign } from "@expo/vector-icons";
 import bg from "../../assets/image/bg-home.png";
 import { useDispatch, useSelector } from "react-redux";
 import Modal from "react-native-modal";
-import { fetchVehicles, fetchTrending, fetchCategory, getUser } from "../../store/actions";
+import {
+  fetchVehicles,
+  fetchTrending,
+  fetchCategory,
+  getUser,
+} from "../../store/actions";
 import CardOrderHome from "../components/CardOrderHome";
 import notFound from "../../assets/image/zzz.png";
 import { fPrice } from "../helpers/fPrice";
 import { useFocusEffect } from "@react-navigation/native";
 function Home({ navigation }) {
-  const { vehicles, trending, loading } = useSelector((state) => state.vehicleReducer);
+  const { vehicles, trending, loading } = useSelector(
+    (state) => state.vehicleReducer
+  );
   const { profile } = useSelector((state) => state.userReducer);
 
   const { categories } = useSelector((state) => state.categoryReducer);
@@ -46,6 +53,7 @@ function Home({ navigation }) {
     setFilteredCategory(dataByCategory);
     setTogleCategory(true);
   };
+  console.log(filteredCategory, "line 67");
   const toggleSearch = (value) => {
     setSearch(value);
   };
@@ -117,7 +125,9 @@ function Home({ navigation }) {
             </View>
             <View style={[styles.headerItemContainer, { marginStart: 2 }]}>
               <Entypo name="price-tag" size={15} color="#17799A" />
-              <Text style={[styles.itemsDetailInfo, { marginStart: 2 }]}>{fPrice(price)}/Day</Text>
+              <Text style={[styles.itemsDetailInfo, { marginStart: 2 }]}>
+                {fPrice(price)}/Day
+              </Text>
             </View>
           </View>
           <View>
@@ -152,7 +162,11 @@ function Home({ navigation }) {
           filterDataByCategory(name);
         }}
       >
-        <CardCategory name={name} image={image} backgroundColor={backgroundColor} />
+        <CardCategory
+          name={name}
+          image={image}
+          backgroundColor={backgroundColor}
+        />
       </Pressable>
     );
   };
@@ -184,7 +198,15 @@ function Home({ navigation }) {
               {/* category */}
               <View style={[styles.categoryContainer, styles.shadowProp]}>
                 <Text style={styles.categoryTitle}>Categories</Text>
-                <FlatList style={{ marginTop: 10 }} data={categories} renderItem={(category) => <RenderCategories category={category} />} keyExtractor={(category) => category.id} horizontal={true} />
+                <FlatList
+                  style={{ marginTop: 10 }}
+                  data={categories}
+                  renderItem={(category) => (
+                    <RenderCategories category={category} />
+                  )}
+                  keyExtractor={(category) => category.id}
+                  horizontal={true}
+                />
               </View>
               {/* end category */}
               {/* Trending */}
@@ -221,8 +243,16 @@ function Home({ navigation }) {
                       }}
                     >
                       <FontAwesome name="history" size={24} color="black" />
-                      <Text style={{ fontWeight: 500, fontSize: 18, marginTop: 5 }}>Your History is empty</Text>
-                      <Text style={{ fontWeight: 500, fontSize: 14, marginTop: 10 }}>Looks like you've never done a rental before</Text>
+                      <Text
+                        style={{ fontWeight: 500, fontSize: 18, marginTop: 5 }}
+                      >
+                        Your History is empty
+                      </Text>
+                      <Text
+                        style={{ fontWeight: 500, fontSize: 14, marginTop: 10 }}
+                      >
+                        Looks like you've never done a rental before
+                      </Text>
                       <Pressable
                         onPress={() => navigation.navigate("Rent Now")}
                         style={{
@@ -249,8 +279,16 @@ function Home({ navigation }) {
                     }}
                   >
                     <FontAwesome name="history" size={24} color="black" />
-                    <Text style={{ fontWeight: 500, fontSize: 18, marginTop: 5 }}>Your History is empty</Text>
-                    <Text style={{ fontWeight: 500, fontSize: 14, marginTop: 10 }}>It seems like you haven't logged in yet.</Text>
+                    <Text
+                      style={{ fontWeight: 500, fontSize: 18, marginTop: 5 }}
+                    >
+                      Your History is empty
+                    </Text>
+                    <Text
+                      style={{ fontWeight: 500, fontSize: 14, marginTop: 10 }}
+                    >
+                      It seems like you haven't logged in yet.
+                    </Text>
                     <Pressable
                       onPress={() => navigation.navigate("You")}
                       style={{
@@ -277,8 +315,12 @@ function Home({ navigation }) {
               >
                 <View
                   style={{
-                    backgroundColor: filteredData.length !== 0 ? "whitesmoke" : "white",
-                    height: filteredData.length !== 0 || filteredCategory.length !== 0 ? "75%" : "45%",
+                    backgroundColor:
+                      filteredData.length !== 0 ? "whitesmoke" : "white",
+                    height:
+                      filteredData.length !== 0 || filteredCategory.length !== 0
+                        ? "75%"
+                        : "45%",
                     padding: 20,
                     paddingVertical: 50,
                     gap: 5,
@@ -287,10 +329,77 @@ function Home({ navigation }) {
                   }}
                 >
                   {filteredData.length !== 0 ? (
-                    <FlatList style={{ marginTop: 10 }} data={filteredData} renderItem={(vehicle) => <RenderModalItems vehicle={vehicle} />} keyExtractor={(vehicle) => vehicle.id} showsHorizontalScrollIndicator={false} />
-                  ) : filteredCategory.length !== 0 ? (
-                    // Display the FlatList when filteredCategory is not empty
-                    <FlatList style={{ marginTop: 10 }} data={filteredCategory} renderItem={(vehicle) => <RenderModalItems vehicle={vehicle} />} keyExtractor={(vehicle) => vehicle.id} showsHorizontalScrollIndicator={false} />
+                    <FlatList
+                      style={{ marginTop: 10 }}
+                      data={filteredData}
+                      renderItem={(vehicle) => (
+                        <RenderModalItems vehicle={vehicle} />
+                      )}
+                      keyExtractor={(vehicle) => vehicle.id}
+                      showsHorizontalScrollIndicator={false}
+                    />
+                  ) : (
+                    <View style={{ flex: 1, justifyContent: "center" }}>
+                      <Image
+                        source={notFound}
+                        style={{ flex: 1, width: null, height: null }}
+                        resizeMode="cover"
+                      />
+                      <View style={{ flex: 1 }}>
+                        <Text
+                          style={{
+                            textAlign: "center",
+                            fontSize: 20,
+                            fontWeight: 500,
+                          }}
+                        >
+                          Vehicle not Found
+                        </Text>
+                      </View>
+                    </View>
+                  )}
+
+                  <Pressable
+                    style={{ position: "absolute", top: 10, right: 20 }}
+                    onPress={() => setTogleCategory(false)}
+                  >
+                    <MaterialIcons name="cancel" size={30} color="red" />
+                  </Pressable>
+                </View>
+              </Modal>
+              {/* START Modal Ctegory filter */}
+              <Modal
+                isVisible={togleCategory}
+                onBackdropPress={() => {
+                  setTogleCategory(false);
+                }}
+                style={{
+                  justifyContent: "flex-end",
+                  margin: 0,
+                }}
+              >
+                <View
+                  style={{
+                    backgroundColor:
+                      filteredCategory.length !== 0 ? "whitesmoke" : "white",
+                    height: filteredCategory.length !== 0 ? "75%" : "45%",
+                    padding: 20,
+                    paddingVertical: 50,
+                    gap: 5,
+                    borderTopEndRadius: 16,
+                    borderTopStartRadius: 16,
+                  }}
+                >
+                  {filteredCategory.length !== 0 ? (
+                    <FlatList
+                      style={{ marginTop: 10 }}
+                      data={filteredCategory}
+                      renderItem={(vehicle) => (
+                        <RenderModalItems vehicle={vehicle} />
+                      )}
+                      keyExtractor={(vehicle) => vehicle.id}
+                      showsHorizontalScrollIndicator={false}
+                    />
                   ) : (
                     <View style={{ flex: 1, justifyContent: "center" }}>
                       <Image source={notFound} style={{ flex: 1, width: null, height: null }} resizeMode="cover" />
@@ -319,7 +428,6 @@ function Home({ navigation }) {
                   </Pressable>
                 </View>
               </Modal>
-              {/* END Modal Ctegory filter */}
             </View>
           </ScrollView>
         </ImageBackground>

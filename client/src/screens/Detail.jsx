@@ -1,5 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { SafeAreaView, Image, View, ScrollView, StyleSheet, Text, FlatList, Pressable, ActivityIndicator } from "react-native";
+import {
+  SafeAreaView,
+  Image,
+  View,
+  ScrollView,
+  StyleSheet,
+  Text,
+  FlatList,
+  Pressable,
+  ActivityIndicator,
+} from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 import CardSpecification from "../components/CardSpecification";
 import { Feather } from "@expo/vector-icons";
@@ -22,7 +32,9 @@ function Detail({ route, navigation }) {
   const [isOrder, setIsOrder] = useState(false);
   const [loadingDetail, setLoadingDetail] = useState(false);
   const [startDate, setSelectedStartDate] = useState(new Date());
-  const [endDate, setSelectedEndDate] = useState(new Date(startDate.getTime() + 24 * 60 * 60 * 1000));
+  const [endDate, setSelectedEndDate] = useState(
+    new Date(startDate.getTime() + 24 * 60 * 60 * 1000)
+  );
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -87,7 +99,10 @@ function Detail({ route, navigation }) {
       const orderStartDate = new Date(e.startDate);
       const orderEndDate = new Date(e.endDate);
 
-      if (new Date(startDate) < orderEndDate && new Date(endDate) > orderStartDate) {
+      if (
+        new Date(startDate) < orderEndDate &&
+        new Date(endDate) > orderStartDate
+      ) {
         isVehicleOrdered = true;
       }
     });
@@ -115,22 +130,33 @@ function Detail({ route, navigation }) {
         <View style={styles.container}>
           {/* header */}
           <View style={styles.headerContainer}>
-            {detail && <Image source={{ uri: detail.vehicle.image }} style={styles.imageCover} resizeMode="cover" />}
+            {detail && (
+              <Image
+                source={{ uri: detail.vehicle.image }}
+                style={styles.imageCover}
+                resizeMode="cover"
+              />
+            )}
             <View style={styles.headerItems}>
               <Text style={styles.headerTitle}> {name}</Text>
               <View style={[styles.headerItemContainer]}>
                 <Ionicons name="location" size={18} color="#17799A" />
-                <Text style={styles.location}>Location : {detail ? detail.vehicle.location : ""}</Text>
+                <Text style={styles.location}>
+                  Location : {detail.vehicle ? detail.vehicle.location : ""}
+                </Text>
               </View>
               <View style={[styles.headerItemContainer, { marginStart: 2 }]}>
                 <AntDesign name="star" size={15} color="#F8B84E" />
                 <Text style={styles.rating}>
-                  Rating: {detail ? detail.rating : ""} ({detail ? detail.vehicle.Reviews.length : 0} Reviews)
+                  Rating: {detail ? detail.rating : ""} (
+                  {detail ? detail.vehicle.Reviews.length : 0} Reviews)
                 </Text>
               </View>
               <View style={[styles.headerItemContainer, { marginStart: 3 }]}>
                 <MaterialIcons name="category" size={15} color="#9B59B6" />
-                <Text style={styles.headerCategories}>Category: {detail ? detail.vehicle.Category.name : ""}</Text>
+                <Text style={styles.headerCategories}>
+                  Category: {detail ? detail.vehicle.Category.name : ""}
+                </Text>
               </View>
             </View>
           </View>
@@ -138,7 +164,13 @@ function Detail({ route, navigation }) {
           {/* spec */}
           <View style={styles.itemContainer}>
             <Text style={styles.itemTitle}> Specification</Text>
-            <FlatList data={spec} renderItem={(spec) => <RenderSpec spec={spec} />} keyExtractor={(spec) => spec.id} horizontal={true} showsHorizontalScrollIndicator={false} />
+            <FlatList
+              data={spec}
+              renderItem={(spec) => <RenderSpec spec={spec} />}
+              keyExtractor={(spec) => spec.id}
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}
+            />
           </View>
           {/* end spec */}
           {/* owner */}
@@ -148,15 +180,23 @@ function Detail({ route, navigation }) {
               <View style={styles.ownerItem}>
                 <Image
                   source={{
-                    uri: detail ? `${detail.vehicle.User.UserProfile.profilePicture}` : "https://www.copaster.com/wp-content/uploads/2023/03/pp-kosong-wa-default.jpeg",
+                    uri: detail
+                      ? `${detail.vehicle.User.UserProfile.profilePicture}`
+                      : "https://www.copaster.com/wp-content/uploads/2023/03/pp-kosong-wa-default.jpeg",
                   }}
                   style={styles.ownerImage}
                 />
-                <Text style={styles.itemTitle}>{detail ? detail.vehicle.User.fullName : ""}</Text>
+                <Text style={styles.itemTitle}>
+                  {detail ? detail.vehicle.User.fullName : ""}
+                </Text>
               </View>
               <View style={styles.ownerAction}>
                 <Feather name="phone-call" size={24} color="#17799A" />
-                <Ionicons name="ios-chatbox-ellipses-outline" size={25} color="#17799A" />
+                <Ionicons
+                  name="ios-chatbox-ellipses-outline"
+                  size={25}
+                  color="#17799A"
+                />
               </View>
             </View>
           </View>
@@ -167,7 +207,9 @@ function Detail({ route, navigation }) {
               <Text style={styles.itemTitle}> Rent Now</Text>
               <View style={[styles.headerItemContainer]}>
                 <Entypo name="price-tag" size={24} color="#17799A" />
-                <Text style={styles.location}>{fPrice(detail ? detail.vehicle.price : "")}/day</Text>
+                <Text style={styles.location}>
+                  {fPrice(detail ? detail.vehicle.price : "")}/day
+                </Text>
               </View>
             </View>
             {!startdate && !enddate && (
@@ -176,13 +218,27 @@ function Detail({ route, navigation }) {
                   <Text>Pick-up Date</Text>
                   <View style={styles.rentStartDate}>
                     <AntDesign name="calendar" size={24} color="black" />
-                    <DateTimePicker value={startDate} mode="date" is24Hour={true} display="default" minimumDate={new Date()} onChange={handlestartdateChange} />
+                    <DateTimePicker
+                      value={startDate}
+                      mode="date"
+                      is24Hour={true}
+                      display="default"
+                      minimumDate={new Date()}
+                      onChange={handlestartdateChange}
+                    />
                   </View>
                 </View>
                 <View style={styles.rentEndContainer}>
                   <Text>Drop-off Date</Text>
                   <View style={styles.rendEndDate}>
-                    <DateTimePicker value={endDate} mode="date" is24Hour={true} display="default" minimumDate={startDate} onChange={handleendateChange} />
+                    <DateTimePicker
+                      value={endDate}
+                      mode="date"
+                      is24Hour={true}
+                      display="default"
+                      minimumDate={startDate}
+                      onChange={handleendateChange}
+                    />
                     <AntDesign name="calendar" size={24} color="black" />
                   </View>
                 </View>
@@ -209,7 +265,10 @@ function Detail({ route, navigation }) {
             )}
 
             {isOrder ? (
-              <Pressable style={[styles.rentButton, { backgroundColor: "red" }]} disabled={true}>
+              <Pressable
+                style={[styles.rentButton, { backgroundColor: "red" }]}
+                disabled={true}
+              >
                 <Text style={styles.rentAction}>Booked Out</Text>
               </Pressable>
             ) : (
