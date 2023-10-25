@@ -2,7 +2,7 @@ import { errorAlert } from "../../src/helpers/alert";
 import { CATEGORIES_FETCH_SUCCESS } from "./actionType";
 import axios from "axios";
 
-export const baseUrl = "https://5ced-118-96-109-120.ngrok-free.app";
+export const baseUrl = "https://apiku.thessarts.site";
 // FETCH CATEGORIES
 export const categoriesFetchSuccess = (payload) => {
   return { type: CATEGORIES_FETCH_SUCCESS, payload };
