@@ -1,9 +1,11 @@
-import { PROFILES_FETCH_SUCCESS } from "./actionType";
+import { ADD_PROFILE_REQUEST, ADD_PROFILE_SUCCESS, PROFILES_FETCH_REQUEST, PROFILES_FETCH_SUCCESS } from "./actionType";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { errorAlert, successAlert } from "../../src/helpers/alert";
+import { fetchMyVehicles } from "./vehicleAction";
+import { fetchReviewByUser } from "./reviewAction";
 
-const baseUrl = "https://1545-118-96-109-120.ngrok-free.app";
+const baseUrl = "https://d467-118-96-109-120.ngrok-free.app";
 
 export const registerHandler = (value) => {
   return async () => {
@@ -54,14 +56,11 @@ export const handleLogin = (value) => {
 export const getUser = () => {
   return async (dispatch) => {
     try {
-      const newUser = await AsyncStorage.getItem("access_token");
-      if (!newUser) {
+      const access_token = await AsyncStorage.getItem("access_token");
+      if (!access_token) {
         throw new Error("userNotFound");
       }
-      const newValue = {
-        access_token: newUser,
-      };
-      dispatch(fetchProfile(newValue));
+      dispatch(fetchProfile(access_token));
     } catch (error) {
       console.log(error, "user not found action");
     }
@@ -72,15 +71,25 @@ export const profilesFetchSuccess = (payload) => {
   return { type: PROFILES_FETCH_SUCCESS, payload };
 };
 
+export const profilesFetchRequest = () => {
+  return { type: PROFILES_FETCH_REQUEST };
+};
+
 export const fetchProfile = (value) => {
   return async (dispatch) => {
+    dispatch(profilesFetchRequest());
     try {
       const { data } = await axios({
         url: baseUrl + "/profiles",
         method: "GET",
-        headers: value,
+        headers: {
+          access_token: value,
+        },
       });
+
       dispatch(profilesFetchSuccess(data));
+      dispatch(fetchMyVehicles(value));
+      dispatch(fetchReviewByUser(value));
     } catch (error) {
       console.log(error, "ini loh");
     }
@@ -101,9 +110,17 @@ export const handleLogout = () => {
   };
 };
 
+// add end edit profile
+export const addProfileRequest = () => {
+  return { type: ADD_PROFILE_REQUEST };
+};
+export const addProfileSuccess = () => {
+  return { type: ADD_PROFILE_SUCCESS };
+};
+
 export const addProfile = (value, access_token) => {
-  console.log(value, "<<<<action");
   return async (dispatch) => {
+    dispatch(addProfileRequest());
     try {
       const { data } = await axios({
         url: baseUrl + "/profiles",
@@ -114,6 +131,7 @@ export const addProfile = (value, access_token) => {
         "Content-Type": "multipart/form-data",
         data: value,
       });
+      dispatch(addProfileSuccess());
       return data;
     } catch (error) {
       throw error.response.data;
@@ -122,8 +140,8 @@ export const addProfile = (value, access_token) => {
 };
 
 export const editProfile = (value, access_token) => {
-  console.log(value, access_token, "<<<<action");
   return async (dispatch) => {
+    dispatch(addProfileRequest());
     try {
       const { data } = await axios({
         url: baseUrl + "/profiles",
@@ -134,12 +152,8 @@ export const editProfile = (value, access_token) => {
         "Content-Type": "multipart/form-data",
         data: value,
       });
-      console.log("msuk sini");
-      dispatch(
-        fetchProfile({
-          access_token: access_token,
-        })
-      );
+
+      dispatch(fetchProfile(access_token));
       return data;
     } catch (error) {
       console.log(error.response.data);

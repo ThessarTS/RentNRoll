@@ -17,7 +17,8 @@ export const TRENDING_FETCH_FAIL = "trending/fetchFail";
 
 export const CATEGORIES_FETCH_SUCCESS = "categories/fetchSuccess";
 
-export const PROFILES_FETCH_SUCCESS = "profiles/fetchProfiles";
+export const PROFILES_FETCH_REQUEST = "profiles/fetchRequest";
+export const PROFILES_FETCH_SUCCESS = "profiles/fetchSuccess";
 
 export const ORDER_FETCH_REQUEST = "order/fetchRequest";
 export const ORDER_FETCH_SUCCESS = "order/fetchSuccess";
@@ -26,4 +27,14 @@ export const ORDER_FETCH_FAIL = "order/fetchFail";
 export const ORDER_FETCH_BY_VEHICLE_ID_REQUEST = "order/fetchByVehicleIdRequest";
 export const ORDER_FETCH_BY_VEHICLE_ID_SUCCESS = "order/fetchByVehicleIdSuccess";
 
-export const ADD_FETCH_SUCCESS = "vehicle/addSuccess";
+export const ADD_VEHICLE_REQUEST = "vehicle/addRequest";
+export const ADD_VEHICLE_SUCCESS = "vehicle/addSuccess";
+
+export const ADD_REVIEW_SUCCESS = "review/addSuccess";
+
+export const FETCH_REVIEW_BY_USER_SUCCESS = "review/fetchByUserSuccess";
+
+export const FETCH_REVIEW_BY_VEHICLE_SUCCESS = "review/fetchByVehicleSuccess";
+
+export const ADD_PROFILE_REQUEST = "profile/addRequest";
+export const ADD_PROFILE_SUCCESS = "profile/addSuccess";

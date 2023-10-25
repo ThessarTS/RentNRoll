@@ -1,20 +1,17 @@
 import React from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { Ionicons, Entypo, FontAwesome } from "@expo/vector-icons";
 import { fPrice } from "../helpers/fPrice";
 import { fDate } from "../helpers/fDate";
+import { getStatusBackgroundColor } from "../helpers/getBg";
 
 function CardOrder({ order }) {
-  function getStatusBackgroundColor(status) {
-    if (status === "returned") return "green";
-    else return "#17799A";
-  }
   return (
     <View style={styles.container}>
       <Text style={styles.itemsDetailTitle}>{order.Vehicle.name}</Text>
       <View style={{ flexDirection: "row", gap: 10, alignItems: "center" }}>
         <View>
-          <Image source={{ uri: order.Vehicle.image }} style={{ width: 90, height: 65 }} />
+          <Image source={{ uri: order.Vehicle.image }} style={{ width: 90, height: 65 }} resizeMode="contain" />
         </View>
         <View style={{ flex: 6, marginStart: 10, gap: 3 }}>
           <View style={[styles.headerItemContainer]}>
@@ -34,9 +31,9 @@ function CardOrder({ order }) {
             <Text style={[styles.itemsDetailInfo, { marginStart: 2 }]}>{fPrice(order.Vehicle.price)}</Text>
           </View>
         </View>
-        <View style={{ backgroundColor: getStatusBackgroundColor(order.status), padding: 7, borderRadius: 7 }}>
-          <Text style={{ color: "white", fontSize: 10 }}>{order.status}</Text>
-        </View>
+        <Pressable style={{ backgroundColor: getStatusBackgroundColor(order.status), padding: 7, borderRadius: 5 }}>
+          <Text style={{ color: "white", fontSize: 10 }}>{order.status === "pending" ? "Pay Now" : order.status}</Text>
+        </Pressable>
         <View>
           <Ionicons name="chevron-forward" size={24} color="#17799A" />
         </View>

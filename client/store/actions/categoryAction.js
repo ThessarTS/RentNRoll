@@ -2,7 +2,7 @@ import { errorAlert } from "../../src/helpers/alert";
 import { CATEGORIES_FETCH_SUCCESS } from "./actionType";
 import axios from "axios";
 
-const baseUrl = "https://1545-118-96-109-120.ngrok-free.app";
+const baseUrl = "https://d467-118-96-109-120.ngrok-free.app";
 
 // FETCH CATEGORIES
 export const categoriesFetchSuccess = (payload) => {
