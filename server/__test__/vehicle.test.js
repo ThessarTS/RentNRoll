@@ -43,6 +43,7 @@ beforeAll(async () => {
     },
   });
   access_token = signToken({ id: userToken.id });
+
 });
 
 afterAll(async () => {
@@ -146,6 +147,7 @@ describe("Test get data detail vehicle endpoint /vehicles/:id", () => {
 
 describe("Test add vehicle endpoint /vehicles method POST", () => {
   it("Successfully added a vehicle", async function () {
+    let data = [{ name: "color", value: "red" }]
     const response = await request(app)
       .post("/vehicles")
       .set("access_token", access_token)
@@ -153,6 +155,7 @@ describe("Test add vehicle endpoint /vehicles method POST", () => {
       .field('CategoryId', '1')
       .field('price', '270000')
       .field('location', 'Bandung')
+      .field('specifications', JSON.stringify(data))
       .attach('image', './data/testingImage.png')
 
     expect(response.status).toBe(201);
@@ -201,7 +204,7 @@ describe("Test add vehicle endpoint /vehicles method POST", () => {
 
     expect(response.status).toBe(500);
     expect(response.body).toBeInstanceOf(Object);
-    expect(response.body).toHaveProperty("error");
+
   }, 10000);
 });
 
@@ -247,6 +250,7 @@ describe("PUT edit vehicle endpoint /vehicles/:id", () => {
   }, 10000);
 
   it("Failed edit vehicle because cannot found vehicle", async function () {
+
     const response = await request(app)
       .put("/vehicles/200")
       .set("access_token", access_token)

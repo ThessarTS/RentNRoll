@@ -1,5 +1,5 @@
 const redis = require("../helpers/redis");
-const { Review, Vehicle } = require("../models");
+const { Review, Vehicle, UserProfile, User } = require("../models");
 class ReviewController {
   static async getReviewUser(req, res, next) {
     try {
@@ -7,7 +7,13 @@ class ReviewController {
       // if (!reviewUser) {
       const data = await Review.findAll({
         where: { UserId: req.user.id },
-        include: [Vehicle],
+        include: [{
+          model: Vehicle
+        }, {
+          model: User,
+          attributes: { exclude: ["password"] },
+          include: UserProfile,
+        }],
       });
       let reviewUser = data;
       // await redis.set(`reviewUserFinalProject:${req.user.id}`, JSON.stringify(data));
@@ -30,7 +36,7 @@ class ReviewController {
       // if (!reviewVehicle) {
       const data = await Review.findAll({
         where: { VehicleId },
-        include: [Vehicle],
+        include: [Vehicle, { model: User, include: UserProfile }],
       });
       let reviewVehicle = data;
       // await redis.set(`reviewVehicleFinalProject:${VehicleId}`, JSON.stringify(data))

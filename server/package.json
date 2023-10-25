@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest --detectOpenHandles --verbose --coverage"
+    "test": "jest --detectOpenHandles --verbose --coverage",
+    "dev": "nodemon ./bin/www"
   },
   "keywords": [],
   "author": "",

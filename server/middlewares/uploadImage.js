@@ -7,13 +7,12 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// Create a combined middleware function
 const uploadMulti = (fields) => {
   const storage = multer.memoryStorage();
   const upload = multer({
     storage: storage,
     limits: {
-      fileSize: 1024 * 1024 * 10, // Adjust the file size limit as needed
+      fileSize: 1024 * 1024 * 10,
     },
     fileFilter: (req, file, cb) => {
       if (file.mimetype.startsWith("image/")) {
@@ -37,12 +36,13 @@ const uploadMulti = (fields) => {
         return res.status(500).json({ error: "Failed to upload images" });
       }
 
-      const cloudinaryResponses = [];
       const promises = [];
+      const inputField = []
 
       for (const field of fields) {
         if (req.files[field]) {
           const image = req.files[field][0];
+          inputField.push(field)
 
           promises.push(uploadToCloudinary(image.buffer, image.originalname));
         }
@@ -52,15 +52,9 @@ const uploadMulti = (fields) => {
         const cloudinaryResults = await Promise.all(promises);
 
         cloudinaryResults.forEach((result, index) => {
-          const field = fields[index];
+          const field = inputField[index];
           req[field] = result.secure_url;
-          cloudinaryResponses.push({
-            field,
-            public_id: result.public_id,
-            secure_url: result.secure_url,
-          });
         });
-        req.cloudinaryResponses = cloudinaryResponses;
 
         next();
       } catch (error) {
@@ -70,13 +64,13 @@ const uploadMulti = (fields) => {
   };
 };
 
-// Function to upload to Cloudinary
+
 const uploadToCloudinary = (buffer, originalname) => {
   return new Promise((resolve, reject) => {
     cloudinary.uploader
       .upload_stream(
         {
-          resource_type: "auto",
+          resource_type: "raw",
           public_id: originalname,
         },
         (error, result) => {

@@ -9,13 +9,12 @@ async function authentication(req, res, next) {
     const data = verifyToken(access_token);
     const findUser = await User.findByPk(data.id);
     if (!findUser) {
-      throw "unauthenticated";
+      throw { name: "unauthenticated" };
     }
     req.user = {
       id: findUser.id,
       email: findUser.email,
     };
-    console.log("auth");
     next();
   } catch (error) {
     next(error);

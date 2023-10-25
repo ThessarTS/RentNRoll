@@ -1,6 +1,6 @@
 const { Vehicle, User, Category, Review, Order, UserProfile, Specification } = require("../models/index");
 const redis = require("../helpers/redis");
-const { sequelize } = require("../models/index");
+const { sequelize } = require('../models/index')
 
 class VehicleController {
   static async fetchVehicle(req, res, next) {
@@ -27,20 +27,15 @@ class VehicleController {
         options.where = { location };
       }
       const vehicles = await Vehicle.findAll(options);
+
       if (vehicles.length == 0) {
         throw { name: "not_found" };
       }
-      vehicles.map((el) => {
-        el.Orders.map(async (el) => {
-          if (el.status === "returned" || new Date() >= el.endDate) {
-            await Vehicle.update({ status: "available" });
-          }
-        });
-      });
+
       let filteredVehicles;
       if (startdate && enddate) {
-        startdate = new Date(startdate);
-        enddate = new Date(enddate);
+        startdate = new Date(startdate)
+        enddate = new Date(enddate)
         filteredVehicles = vehicles.filter((vehicle) => {
           let isNotIncluded = true;
           vehicle.Orders.forEach((el) => {
@@ -61,6 +56,7 @@ class VehicleController {
         const totalReviews = Reviews.length;
         const totalOrders = Orders.length;
         const averageRating = totalReviews > 0 ? Reviews.reduce((sum, review) => sum + review.rating, 0) / totalReviews : 0;
+
         return {
           id,
           name,
@@ -71,7 +67,7 @@ class VehicleController {
           totalOrders,
           location,
           averageRating: averageRating.toFixed(1),
-          Category,
+          Category
         };
       });
       res.status(200).json(vehicleData);
@@ -79,36 +75,41 @@ class VehicleController {
       next(err);
     }
   }
+
   static async fetchMyVehicle(req, res, next) {
     try {
       // let dataVehicle = await redis.get("myVehicleFinalProject:" + req.user.id);
       // if (!dataVehicle) {
-      const vehicle = await Vehicle.findAll({ where: { UserId: req.user.id } });
+      const vehicle = await Vehicle.findAll({
+        include: [Order],
+        where: { UserId: req.user.id }
+      });
       if (vehicle.length == 0) {
         throw { name: "not_found" };
       }
-      let dataVehicle = vehicle;
-      //   await redis.set("myVehicleFinalProject:" + req.user.id, JSON.stringify(vehicle));
+      //   await redis.set("myVehicleFinalProject:" + req.user.id, JSON.stringify(vehicle))
+      //   dataVehicle = vehicle;
       // } else {
-      //   dataVehicle = JSON.parse(dataVehicle);
+      //   dataVehicle = JSON.parse(dataVehicle)
       // }
-      res.json(dataVehicle);
+      res.json(vehicle);
     } catch (error) {
       next(error);
     }
   }
+
   static async fetchLocation(req, res, next) {
     try {
       // let locationsData = await redis.get("locationFinalProject");
       // if (!locationsData) {
       const vehicles = await Vehicle.findAll();
       const locations = [...new Set(vehicles.map((vehicle) => vehicle.location))];
+      //   await redis.set("locationFinalProject", JSON.stringify(locations))
       //   locationsData = locations;
-      //   await redis.set("locationFinalProject", JSON.stringify(locationsData));
       // } else {
-      //   locationsData = JSON.parse(locationsData);
+      //   locationsData = JSON.parse(locationsData)
       // }
-     res.status(200).json(locations);
+      res.status(200).json(locations);
     } catch (error) {
       next(error);
     }
@@ -116,8 +117,7 @@ class VehicleController {
   static async detailVehicle(req, res, next) {
     try {
       const { id } = req.params;
-      let detailVehicleData; //= await redis.get("detailVehicle:" + id);
-      // if (!detailVehicleData) {
+      let detailVehicleData
       let averageRating = 0;
       const reviews = await Review.findAll({
         where: {
@@ -161,19 +161,18 @@ class VehicleController {
       }
       detailVehicleData = {
         vehicle,
-        averageRating,
+        rating: averageRating,
       };
-      // await redis.set("detailVehicle:" + id, JSON.stringify(detailVehicleData));
-      // } else {
-      //   detailVehicleData = JSON.parse(detailVehicleData);
-      // }
-      res.status(200).json({ vehicle: detailVehicleData.vehicle, rating: detailVehicleData.averageRating });
+
+      res.status(200).json(detailVehicleData);
     } catch (err) {
       next(err);
     }
   }
+
   static async addVehicle(req, res, next) {
     try {
+
       const result = await sequelize.transaction(async (t) => {
         const { name, CategoryId, price, location, specifications } = req.body;
         const vehicle = await Vehicle.create(
@@ -187,9 +186,14 @@ class VehicleController {
           },
           { transaction: t }
         );
-        await vehicle.Specification.bulkCreate(specifications, { transaction: t });
-        await redis.del("locationFinalProject");
-        return result;
+        let dataSpec = JSON.parse(specifications)
+        dataSpec.forEach(e => {
+          e.VehicleId = vehicle.id
+        })
+
+        await Specification.bulkCreate(dataSpec, { transaction: t });
+        // await redis.del("locationFinalProject");
+        // await redis.del("myVehicleFinalProject:" + req.user.id);
       });
       res.status(201).json({ message: "Success Add New Vehicle" });
     } catch (err) {
@@ -210,9 +214,9 @@ class VehicleController {
           id,
         },
       });
-      await redis.del("detailVehicle/" + id);
-      await redis.del("locationFinalProject");
-      await redis.del("myVehicleFinalProject:" + req.user.id);
+
+      // await redis.del("locationFinalProject");
+      // await redis.del("myVehicleFinalProject:" + id);
       res.status(200).json({ message: `Success Delete Vehicle With Id ${id}` });
     } catch (err) {
       console.log(err);
@@ -240,24 +244,26 @@ class VehicleController {
         },
         { where: { id } }
       );
-      await redis.del("detailVehicle/" + id);
-      await redis.del("myVehicleFinalProject:" + req.user.id);
+      // await redis.del("locationFinalProject");
+      // await redis.del("myVehicleFinalProject:" + id);
       res.status(200).json({ message: "Success Edit Vehicle" });
     } catch (err) {
       next(err);
     }
   }
+
   static async getCategories(req, res, next) {
     try {
+
       // let dataCategories = await redis.get("categoryFinalProject");
       // if (!dataCategories) {
       const data = await Category.findAll();
-      let dataCategories = data;
-      // await redis.set("categoryFinalProject", JSON.stringify(data))
+      // dataCategories = data;
+      //   await redis.set("categoryFinalProject", JSON.stringify(data))
       // } else {
       //   dataCategories = JSON.parse(dataCategories)
       // }
-      res.json(dataCategories);
+      res.json(data);
     } catch (error) {
       next(error);
     }
