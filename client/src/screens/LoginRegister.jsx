@@ -2,32 +2,41 @@ import React, { useEffect, useState } from "react";
 import { ImageBackground, Pressable, StyleSheet, Text, TextInput, View, Image, ScrollView, Platform, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, ActivityIndicator } from "react-native";
 import Checkbox from "expo-checkbox";
 import banner from "../../assets/image/banner.jpg";
+import { Ionicons } from "@expo/vector-icons";
 import googleIcon from "../../assets/vector/google.png";
 import Modal from "react-native-modal";
-import { MaterialIcons, Ionicons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch } from "react-redux";
-import { createOtp, fetchProfile, getUser, handleLogin, registerHandler } from "../../store/actions";
+import { createOtp, handleLogin, registerHandler } from "../../store/actions/userAction";
 import { errorAlert, successAlert } from "../helpers/alert";
 
 function Login({ navigation }) {
   const [isChecked, setChecked] = useState(false);
-  const [inputRegister, setInputRegister] = useState({ fullName: "", email: "", password: "", phone: "" });
-  const [inputLogin, setInputLogin] = useState({ email: "", password: "" });
+  const [inputRegister, setInputRegister] = useState({
+    fullName: "",
+    email: "",
+    password: "",
+    phone: "",
+  });
+  const [inputLogin, setInputLogin] = useState({
+    email: "",
+    password: "",
+  });
+
+  const changePage = () => {
+    setFormRegister(!formRegister);
+    setLoginForm(!loginForm);
+  };
+
+  const dispatch = useDispatch();
   const [loginForm, setLoginForm] = useState(true);
   const [formRegister, setFormRegister] = useState(false);
   const [formOtp, setFormOtp] = useState(false);
   const [otp, setOtp] = useState(["", "", "", ""]);
   const [userOtp, setUserOtp] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [errMsg, setErrMsg] = useState("");
-  const [succMsg, setSuccMsg] = useState("");
-  const dispatch = useDispatch();
 
-  const changePage = () => {
-    setFormRegister(!formRegister);
-    setLoginForm(!loginForm);
-  };
   const handleOtpChange = (index, value) => {
     if (/^[0-9]$/.test(value) || value === "") {
       let updatedOtp = [...otp];
@@ -52,10 +61,10 @@ function Login({ navigation }) {
       .then((data) => {
         toggleOtp();
         setLoading(false);
-        setSuccMsg(data.message);
+        successAlert(data.message);
       })
-      .catch((err) => {
-        errorAlert(err);
+      .catch((error) => {
+        errorAlert(error.message);
         setLoading(false);
       });
   };
@@ -87,7 +96,20 @@ function Login({ navigation }) {
             phone: "",
           });
       })
-      .catch((err) => errorAlert(err));
+      .catch((err) => {
+        errorAlert(err.message);
+      });
+  };
+
+  retrieveData = async (key) => {
+    try {
+      const value = await AsyncStorage.getItem(key);
+      if (value !== null) {
+        return value;
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const storeData = async (key, value) => {
@@ -97,19 +119,18 @@ function Login({ navigation }) {
       console.error("Error saving data:", error);
     }
   };
-
   const submitOtp = async () => {
     inputLogin.otp = userOtp;
     dispatch(handleLogin(inputLogin))
       .then((data) => {
         storeData("access_token", data.access_token).then(() => {
-          navigation.navigate("Home");
-          toggleOtp();
+          navigation.navigate("You");
+          toggleOtp;
           successAlert("Welcome to RentNRoll");
         });
       })
       .catch((error) => {
-        setErrMsg(error);
+        errorAlert(error.message);
       });
   };
   const otpInputs = [];
@@ -122,20 +143,20 @@ function Login({ navigation }) {
     setFormOtp(!formOtp);
   };
 
-  useEffect(() => {
-    if (errMsg) {
-      setSuccMsg("");
-      setTimeout(() => {
-        setErrMsg("");
-      }, 3000);
-    }
-  }, [errMsg]);
-
   return (
     <View style={styles.container}>
-      <ImageBackground source={banner} style={styles.backgroundImage} resizeMode="cover">
-        <Text style={styles.textWithShadow}>{formRegister ? "Register" : "Log in"}</Text>
-        <Pressable style={styles.buttonBack} onPress={() => navigation.navigate("Home")}>
+      <ImageBackground
+        source={banner}
+        style={styles.backgroundImage}
+        resizeMode="cover"
+      >
+        <Text style={styles.textWithShadow}>
+          {formRegister ? "Register" : "Log in"}
+        </Text>
+        <Pressable
+          style={styles.buttonBack}
+          onPress={() => navigation.push("home")}
+        >
           <Ionicons name="arrow-back-sharp" size={20} color="white" />
         </Pressable>
       </ImageBackground>
@@ -198,21 +219,51 @@ function Login({ navigation }) {
               <View style={{ gap: 10 }}>
                 <View style={{ gap: 5 }}>
                   <Text style={styles.label}>Full Name</Text>
-                  <TextInput placeholder="username" style={styles.textInput} value={inputRegister.fullName} onChangeText={(text) => handleChangeRegister("fullName", text)} />
+                  <TextInput
+                    placeholder="username"
+                    style={styles.textInput}
+                    value={inputRegister.fullName}
+                    onChangeText={(text) =>
+                      handleChangeRegister("fullName", text)
+                    }
+                  />
                 </View>
                 <View style={{ gap: 5 }}>
                   <Text style={styles.label}>Email</Text>
-                  <TextInput placeholder="email" style={styles.textInput} value={inputRegister.email} onChangeText={(text) => handleChangeRegister("email", text)} />
+                  <TextInput
+                    placeholder="email"
+                    style={styles.textInput}
+                    value={inputRegister.email}
+                    onChangeText={(text) => handleChangeRegister("email", text)}
+                  />
                 </View>
                 <View style={{ gap: 5 }}>
                   <Text style={styles.label}>Password</Text>
-                  <TextInput placeholder="password" secureTextEntry={true} style={styles.textInput} returnKeyType="done" value={inputRegister.password} onChangeText={(text) => handleChangeRegister("password", text)} />
+                  <TextInput
+                    placeholder="password"
+                    secureTextEntry={true}
+                    style={styles.textInput}
+                    returnKeyType="done"
+                    value={inputRegister.password}
+                    onChangeText={(text) =>
+                      handleChangeRegister("password", text)
+                    }
+                  />
                 </View>
 
                 <View style={{ gap: 5 }}>
                   <Text style={styles.label}>Phone Number</Text>
                   <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                    <TextInput placeholder="081233623XXX" keyboardType="numeric" style={styles.textInput} returnKeyType="done" value={inputRegister.phone} onChangeText={(text) => handleChangeRegister("phone", text)} />
+                    <TextInput
+                      placeholder="081233623XXX"
+                      keyboardType="numeric"
+                      style={styles.textInput}
+                      returnKeyType="done"
+                      value={inputRegister.phone}
+                      onChangeText={(text) =>
+                        handleChangeRegister("phone", text)
+                      }
+                    />
                   </TouchableWithoutFeedback>
                 </View>
               </View>
@@ -261,23 +312,41 @@ function Login({ navigation }) {
           margin: 0,
         }}
       >
-        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.otpContainer}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={styles.otpContainer}
+        >
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={styles.otpField}>
-              <Text style={styles.otpText}>Enter the OTP you received via email</Text>
-              {errMsg && <Text style={{ color: "red", fontSize: 13, marginTop: -10 }}>{errMsg}</Text>}
-              {succMsg && <Text style={{ color: "green", fontSize: 13, marginTop: -10 }}>{succMsg}</Text>}
+              <Text style={styles.otpText}>
+                Enter the OTP you received via email
+              </Text>
               <View style={styles.otpView}>
                 {otp.map((digit, index) => (
-                  <TextInput key={index} style={styles.otpInput} value={digit} onChangeText={(value) => handleOtpChange(index, value)} keyboardType="numeric" maxLength={1} ref={(ref) => (otpInputs[index] = ref)} returnKeyType="done" />
+                  <TextInput
+                    key={index}
+                    style={styles.otpInput}
+                    value={digit}
+                    onChangeText={(value) => handleOtpChange(index, value)}
+                    keyboardType="numeric"
+                    maxLength={1}
+                    ref={(ref) => (otpInputs[index] = ref)}
+                    returnKeyType="done"
+                  />
                 ))}
               </View>
             </View>
           </TouchableWithoutFeedback>
-          <Pressable style={[styles.buttonAction, { paddingHorizontal: 90 }]} onPress={submitOtp}>
+          <Pressable
+            style={[styles.buttonAction, { paddingHorizontal: 90 }]}
+            onPress={submitOtp}
+          >
             <Text style={styles.textAction}>Submit</Text>
           </Pressable>
-          <Pressable style={{ position: "absolute", top: 20, right: 20 }} onPress={toggleOtp}>
+          <Pressable
+            style={{ position: "absolute", top: 20, right: 20 }}
+            onPress={toggleOtp}
+          >
             <MaterialIcons name="cancel" size={30} color="red" />
           </Pressable>
         </KeyboardAvoidingView>
@@ -357,7 +426,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#17799A",
     height: 30,
     width: 30,
-    borderRadius: "50%",
+    borderRadius: 20,
     padding: 5,
     alignItems: "center",
     justifyContent: "center",
@@ -367,8 +436,7 @@ const styles = StyleSheet.create({
     gap: 15,
     flex: 1,
     backgroundColor: "white",
-    borderTopEndRadius: 15,
-    borderTopStartRadius: 15,
+    borderRadius: 15,
     padding: 20,
     paddingVertical: 30,
   },
@@ -376,10 +444,9 @@ const styles = StyleSheet.create({
   registerContainer: {
     backgroundColor: "white",
     flex: 1,
+    borderRadius: 15,
     padding: 20,
     paddingVertical: 30,
-    borderTopEndRadius: 15,
-    borderTopStartRadius: 15,
   },
 
   checkboxContainer: {
@@ -469,7 +536,7 @@ const styles = StyleSheet.create({
 
   otpText: {
     fontSize: 15,
-    fontWeight: "700",
+    fontWeight: "bold",
   },
 
   otpView: {

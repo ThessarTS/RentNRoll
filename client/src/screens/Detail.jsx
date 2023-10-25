@@ -116,7 +116,7 @@ function Detail({ route, navigation }) {
       </View>
     );
   }
-  const spec = detail ? detail.vehicle.Specifications : [];
+  const spec = detail ? detail?.vehicle.Specifications : [];
 
   const RenderSpec = ({ spec }) => {
     const { name, value } = spec.item;
@@ -140,7 +140,7 @@ function Detail({ route, navigation }) {
               <View style={[styles.headerItemContainer]}>
                 <Ionicons name="location" size={18} color="#17799A" />
                 <Text style={styles.location}>
-                  Location : {detail.vehicle ? detail.vehicle.location : ""}
+                  Location : {detail?.vehicle ? detail.vehicle.location : ""}
                 </Text>
               </View>
               <View style={[styles.headerItemContainer, { marginStart: 2 }]}>
@@ -401,7 +401,7 @@ const styles = StyleSheet.create({
   rentAction: {
     fontSize: 15,
     color: "white",
-    fontWeight: 600,
+    fontWeight: "600",
   },
   rentButton: {
     backgroundColor: "#17799A",

@@ -320,11 +320,11 @@ function Profile({ navigation }) {
                       gap: 5,
                     }}
                   >
-                    <Text style={{ fontSize: 18, fontWeight: 700 }}>
+                    <Text style={{ fontSize: 18, fontWeight: "700" }}>
                       {myVehicles.length}
                     </Text>
                     <Text
-                      style={{ fontSize: 12, color: "gray", fontWeight: 600 }}
+                      style={{ fontSize: 12, color: "gray", fontWeight: "600" }}
                     >
                       Vehicles
                     </Text>
@@ -337,11 +337,11 @@ function Profile({ navigation }) {
                       gap: 5,
                     }}
                   >
-                    <Text style={{ fontSize: 18, fontWeight: 700 }}>
+                    <Text style={{ fontSize: 18, fontWeight: "700" }}>
                       {profile.Orders.length}
                     </Text>
                     <Text
-                      style={{ fontSize: 12, color: "gray", fontWeight: 600 }}
+                      style={{ fontSize: 12, color: "gray", fontWeight: "600" }}
                     >
                       Orders
                     </Text>
@@ -354,9 +354,9 @@ function Profile({ navigation }) {
                       gap: 5,
                     }}
                   >
-                    <Text style={{ fontSize: 18, fontWeight: 700 }}></Text>
+                    <Text style={{ fontSize: 18, fontWeight: "700" }}></Text>
                     <Text
-                      style={{ fontSize: 12, color: "gray", fontWeight: 600 }}
+                      style={{ fontSize: 12, color: "gray", fontWeight: "600" }}
                     >
                       Reviews
                     </Text>

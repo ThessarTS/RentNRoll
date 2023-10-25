@@ -94,7 +94,7 @@ function Account({ navigation }) {
 
             <View style={{ backgroundColor: "white", marginHorizontal: 10, padding: 20, borderRadius: 8, gap: 20, shadowColor: "#171717", shadowOffset: { width: -2, height: 4 }, shadowOpacity: 0.2, shadowRadius: 3, flex: 1 }}>
               <View style={{ flexDirection: "row", alignItems: "center", gap: 20 }}>
-                <View style={{ backgroundColor: "#17799A", width: 35, height: 35, alignItems: "center", justifyContent: "center", borderRadius: "50%" }}>
+                <View style={{ backgroundColor: "#17799A", width: 35, height: 35, alignItems: "center", justifyContent: "center", borderRadius: 20 }}>
                   <MaterialIcons name="car-rental" size={25} color="white" />
                 </View>
                 <View>
@@ -231,7 +231,7 @@ const styles = StyleSheet.create({
   rentAction: {
     fontSize: 15,
     color: "white",
-    fontWeight: 600,
+    fontWeight: "600",
   },
   rentButton: {
     backgroundColor: "#17799A",

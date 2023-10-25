@@ -50,14 +50,14 @@ function NavIcon() {
         <View style={styles.modalSettingContainer}>
           <Pressable style={{ alignItems: "center", justifyContent: "center" }}>
             <AntDesign name="warning" size={50} color="red" />
-            <Text style={{ fontWeight: 600, fontSize: 20, marginTop: 10, marginBottom: 5 }}>Are you sure?</Text>
+            <Text style={{ fontWeight: "600", fontSize: 20, marginTop: 10, marginBottom: 5 }}>Are you sure?</Text>
             <Text>You won't be able to revert this</Text>
             <View style={{ flexDirection: "row", gap: 5, marginTop: 10 }}>
               <Pressable style={{ backgroundColor: "#17799A", padding: 5, paddingHorizontal: 10, borderRadius: 5 }} onPress={doLogout}>
-                <Text style={{ color: "white", fontWeight: 500 }}>Logout</Text>
+                <Text style={{ color: "white", fontWeight: "500" }}>Logout</Text>
               </Pressable>
               <Pressable style={{ backgroundColor: "red", padding: 5, paddingHorizontal: 10, borderRadius: 5 }} onPress={toggleLogout}>
-                <Text style={{ color: "white", fontWeight: 500 }}>Cancel</Text>
+                <Text style={{ color: "white", fontWeight: "500" }}>Cancel</Text>
               </Pressable>
             </View>
           </Pressable>

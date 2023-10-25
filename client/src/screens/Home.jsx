@@ -263,12 +263,12 @@ function Home({ navigation }) {
                     >
                       <FontAwesome name="history" size={24} color="black" />
                       <Text
-                        style={{ fontWeight: 500, fontSize: 18, marginTop: 5 }}
+                        style={{ fontWeight: "500", fontSize: 18, marginTop: 5 }}
                       >
                         Your History is empty
                       </Text>
                       <Text
-                        style={{ fontWeight: 500, fontSize: 14, marginTop: 10 }}
+                        style={{ fontWeight: "500", fontSize: 14, marginTop: 10 }}
                       >
                         Looks like you've never done a rental before
                       </Text>
@@ -299,12 +299,12 @@ function Home({ navigation }) {
                   >
                     <FontAwesome name="history" size={24} color="black" />
                     <Text
-                      style={{ fontWeight: 500, fontSize: 18, marginTop: 5 }}
+                      style={{ fontWeight: "500", fontSize: 18, marginTop: 5 }}
                     >
                       Your History is empty
                     </Text>
                     <Text
-                      style={{ fontWeight: 500, fontSize: 14, marginTop: 10 }}
+                      style={{ fontWeight: "500", fontSize: 14, marginTop: 10 }}
                     >
                       It seems like you haven't logged in yet.
                     </Text>
@@ -369,7 +369,7 @@ function Home({ navigation }) {
                           style={{
                             textAlign: "center",
                             fontSize: 20,
-                            fontWeight: 500,
+                            fontWeight: "500",
                           }}
                         >
                           Vehicle not Found
@@ -427,7 +427,7 @@ function Home({ navigation }) {
                           style={{
                             textAlign: "center",
                             fontSize: 20,
-                            fontWeight: 500,
+                            fontWeight: "500",
                           }}
                         >
                           Vehicle not Found
@@ -529,7 +529,7 @@ const styles = StyleSheet.create({
 
   categoryTitle: {
     fontSize: 20,
-    fontWeight: 500,
+    fontWeight: "500",
     alignSelf: "flex-start",
   },
   modalContainer: {
