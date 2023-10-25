@@ -186,6 +186,7 @@ function Detail({ route, navigation }) {
                   </View>
                 </View>
                 {/* end spec */}
+
                 {/* Rent Action */}
                 <View style={styles.itemContainer}>
                   <View style={styles.rentHeaderContainer}>
