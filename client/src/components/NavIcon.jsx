@@ -46,9 +46,6 @@ function NavIcon() {
             <Pressable onPress={goConversationList}>
               <Entypo name="chat" size={25} color="white" />
             </Pressable>
-            <Pressable style={styles.notifContainer}>
-              <Icon name="bell-badge" size={25} color="white" />
-            </Pressable>
             <Pressable onPress={toggleLogout}>
               <MaterialIcons name="logout" size={25} color="white" />
             </Pressable>

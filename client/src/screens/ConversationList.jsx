@@ -1,4 +1,4 @@
-import { View, Button } from "react-native";
+import { View } from "react-native";
 
 const TalkjsRn = require("@talkjs/expo");
 
@@ -9,7 +9,6 @@ export default function ConversationList(props) {
     name: fullName,
     email: email,
     photoUrl: profilePicture,
-    role: "default",
   };
   const onSelectConversation = (event) => {
     props.navigation.navigate("Chatbox", {
@@ -21,9 +20,9 @@ export default function ConversationList(props) {
     });
   };
   return (
-    <View style={{ flex: 1, justifyContent: "center" }}>
-      <TalkjsRn.Session appId="tIFEBGyD" me={me}>
-        <TalkjsRn.ConversationList onSelectConversation={onSelectConversation} style={{ color: "red" }} />
+    <View style={{ flex: 1 }}>
+      <TalkjsRn.Session appId="tDSnHzrH" me={me}>
+        <TalkjsRn.ConversationList onSelectConversation={onSelectConversation} />
       </TalkjsRn.Session>
     </View>
   );

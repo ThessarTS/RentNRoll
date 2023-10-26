@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { View, Text, Image, ActivityIndicator, Pressable, StyleSheet, SafeAreaView, ScrollView } from "react-native";
 import { MaterialIcons, AntDesign, Entypo, Feather, Ionicons, FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
@@ -6,6 +6,7 @@ import { fetchDetail, fetchOrderById, midtransPayment, updateOrderStatus } from 
 import { WebView } from "react-native-webview";
 import { fPrice } from "../helpers/fPrice";
 import { fDate } from "../helpers/fDate";
+import { useFocusEffect } from "@react-navigation/native";
 
 function PaymentGateway({ navigation, route }) {
   const { id } = route.params;
@@ -14,14 +15,25 @@ function PaymentGateway({ navigation, route }) {
   const { order } = useSelector((state) => state.orderReducer);
   const [midtransToken, setMidtransToken] = useState("");
   const dispatch = useDispatch();
-  console.log(order);
 
-  useEffect(() => {
-    setLoadingPage(true);
-    dispatch(fetchOrderById(id)).then(() => {
-      setLoadingPage(false);
+  const goChat = () => {
+    navigation.push("Chatbox", {
+      fullName: order?.User.fullName,
+      profilePicture: order?.Vehicle?.User.UserProfile.profilePicture,
+      id: order?.User.id,
+      email: order?.User.email,
     });
-  }, []);
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      setLoadingPage(true);
+      dispatch(fetchOrderById(id)).then(() => {
+        setLoadingPage(false);
+      });
+    }, [])
+  );
+
   if (loadingPage) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -30,6 +42,18 @@ function PaymentGateway({ navigation, route }) {
       </View>
     );
   }
+
+  const handleReturn = () => {
+    const newStatus = {
+      status: "returned",
+    };
+    dispatch(updateOrderStatus(newStatus, order.id))
+      .then((data) => {
+        successAlert(data.message);
+        navigation.navigate("myrent");
+      })
+      .catch((err) => console.log("ini loh"));
+  };
 
   const handlePayment = async () => {
     setLoading(true);
@@ -66,15 +90,15 @@ function PaymentGateway({ navigation, route }) {
                 <Text style={styles.headerTitle}> {order?.Vehicle.name}</Text>
                 <View style={[styles.headerItemContainer]}>
                   <Ionicons name="location" size={18} color="#17799A" />
-                  <Text style={styles.location}>Location : {order?.Vehicle.location}</Text>
+                  <Text style={styles.location}>Location : {order?.Vehicle?.location}</Text>
                 </View>
                 <View style={[styles.headerItemContainer, { marginStart: 3 }]}>
                   <FontAwesome name="calendar-plus-o" size={13} />
-                  <Text style={styles.location}>Start Date : {fDate(order?.startDate)}</Text>
+                  <Text style={styles.location}>Start Date : {order ? fDate(order.startDate) : ""}</Text>
                 </View>
                 <View style={[styles.headerItemContainer, { marginStart: 3 }]}>
                   <FontAwesome name="calendar-check-o" size={13} />
-                  <Text style={styles.location}>End Date : {fDate(order?.startDate)}</Text>
+                  <Text style={styles.location}>End Date : {order ? fDate(order.startDate) : ""}</Text>
                 </View>
               </View>
 
@@ -86,13 +110,13 @@ function PaymentGateway({ navigation, route }) {
                   <View style={styles.ownerItem}>
                     <Image
                       source={{
-                        uri: order?.image ? `${order.Vehicle.User.profilePicture}` : "https://www.copaster.com/wp-content/uploads/2023/03/pp-kosong-wa-default.jpeg",
+                        uri: order ? `${order.Vehicle?.User.UserProfile.profilePicture}` : "https://www.copaster.com/wp-content/uploads/2023/03/pp-kosong-wa-default.jpeg",
                       }}
                       style={styles.ownerImage}
                     />
-                    <Text style={styles.itemTitle}>{order?.Vehicle.User.fullName}</Text>
+                    <Text style={styles.itemTitle}>{order?.Vehicle?.User.fullName}</Text>
                   </View>
-                  <Pressable style={styles.ownerAction}>
+                  <Pressable style={styles.ownerAction} onPress={goChat}>
                     <Ionicons name="ios-chatbox-ellipses-outline" size={25} color="#17799A" />
                   </Pressable>
                 </View>
@@ -108,7 +132,7 @@ function PaymentGateway({ navigation, route }) {
                   </View>
                   <View style={[styles.headerItemContainer, { marginStart: 3 }]}>
                     <Entypo name="price-tag" size={23} color="black" />
-                    <Text style={[styles.location, { marginStart: 15 }]}>Total Price : {fPrice(order?.totalPrice)}</Text>
+                    <Text style={[styles.location, { marginStart: 15 }]}>Total Price : {order ? fPrice(order.totalPrice) : ""}</Text>
                   </View>
                 </View>
               </View>
@@ -119,8 +143,8 @@ function PaymentGateway({ navigation, route }) {
               </Pressable>
             )}
             {order?.status === "ongoing" && (
-              <Pressable style={styles.rentButton}>
-                <Text style={{ color: "white" }}>Pay Now</Text>
+              <Pressable style={styles.rentButton} onPress={handleReturn}>
+                <Text style={{ color: "white" }}>Return</Text>
               </Pressable>
             )}
           </View>
@@ -256,6 +280,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 10,
+    marginHorizontal: 20,
   },
   payButton: {
     backgroundColor: "#FF6347",

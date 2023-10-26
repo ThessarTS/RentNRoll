@@ -104,6 +104,7 @@ function Home({ navigation }) {
         id: id,
       });
       setSearch(false);
+      setTogleCategory(false);
     };
 
     return (
@@ -186,9 +187,6 @@ function Home({ navigation }) {
         </View>
         <Pressable style={styles.filterContainer} onPress={goConversationList}>
           <Entypo name="chat" size={25} color="white" />
-        </Pressable>
-        <Pressable style={styles.notifContainer}>
-          <Icon name="bell-badge" size={25} color="white" />
         </Pressable>
       </View>
       <SafeAreaView>
@@ -331,6 +329,7 @@ function Home({ navigation }) {
                 isVisible={togleCategory}
                 onBackdropPress={() => {
                   setTogleCategory(false);
+                  setSearch(false);
                 }}
                 style={{
                   justifyContent: "flex-end",
