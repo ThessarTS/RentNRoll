@@ -1,37 +1,37 @@
 [
   {
-    "fullName": "Pablo Escobar",
-    "email": "pablo@mail.com",
-    "password": "Pablo123",
+    "fullName": "A.Rusdi Ilham",
+    "email": "mbem.ilham@gmail.com",
+    "password": "123123123",
     "phone": "081362192211",
-    "otp": "1234"
+    "otp": null
   },
   {
-    "fullName": "The Rok",
-    "email": "rock@mail.com",
-    "password": "deRock123",
-    "phone": "08211231231",
-    "otp": "1234"
+    "fullName": "Sajad",
+    "email": "sajadhijir@gmail.com",
+    "password": "123123123",
+    "phone": "08227829182",
+    "otp": null
   },
   {
-    "fullName": "Jokowi Didi",
-    "email": "wididi@mail.com",
-    "password": "wididi123",
-    "phone": "08212112123",
-    "otp": "1234"
+    "fullName": "Felix Leonardo Caprio",
+    "email": "felixgiancarlo789@gmail.com",
+    "password": "123123123",
+    "phone": "081362278671",
+    "otp": null
   },
   {
-    "fullName": "Ajay Kumur Rajesh",
-    "email": "ajay@mail.com",
-    "password": "singh123",
-    "phone": "08112312321",
-    "otp": "1234"
+    "fullName": "Thessar Tesalonika Setiawan",
+    "email": "thessarts@gmail.com",
+    "password": "123123123",
+    "phone": "08116227867",
+    "otp": null
   },
   {
-    "fullName": "Jarjit",
-    "email": "jarjit@mail.com",
-    "password": "jarjit123",
-    "phone": "081313123212",
-    "otp": "1234"
+    "fullName": "Thessar Setiawan",
+    "email": "tsrts333@mail.com",
+    "password": "123123123",
+    "phone": "08116227867",
+    "otp": null
   }
 ]

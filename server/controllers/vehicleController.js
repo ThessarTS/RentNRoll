@@ -143,7 +143,7 @@ class VehicleController {
           {
             model: User,
             attributes: { exclude: ["password"] },
-            include: UserProfile,
+            include: [{ model: UserProfile, attributes: ['profilePicture'] }]
           },
           {
             model: Order,

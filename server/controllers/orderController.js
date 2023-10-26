@@ -58,13 +58,15 @@ class OrderController {
                         include: [
                             {
                                 model: User,
-                                attributes: { exclude: ["password"] },
+                                attributes: { exclude: ["password", "otp"] },
+                                include: [{ model: UserProfile, attributes: ['profilePicture'] }]
                             },
                         ],
                     },
                     {
                         model: User,
-                        attributes: { exclude: ["password"] },
+                        attributes: { exclude: ["password", "otp"] },
+
                     },
                 ],
             });

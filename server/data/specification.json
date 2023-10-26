@@ -1,0 +1,307 @@
+[
+  {
+    "name": "color",
+    "value": "black",
+    "VehicleId": 1
+  },
+  {
+    "name": "transmission",
+    "value": "automatic",
+    "VehicleId": 1
+  },
+  {
+    "name": "seat",
+    "value": "8",
+    "VehicleId": 1
+  },
+  {
+    "name": "year",
+    "value": "2019",
+    "VehicleId": 1
+  },
+  {
+    "name": "color",
+    "value": "red",
+    "VehicleId": 2
+  },
+  {
+    "name": "transmission",
+    "value": "manual",
+    "VehicleId": 2
+  },
+  {
+    "name": "seat",
+    "value": "8",
+    "VehicleId": 2
+  },
+  {
+    "name": "year",
+    "value": "2020",
+    "VehicleId": 2
+  },
+  {
+    "name": "color",
+    "value": "yellow",
+    "VehicleId": 3
+  },
+  {
+    "name": "transmission",
+    "value": "manual",
+    "VehicleId": 3
+  },
+  {
+    "name": "seat",
+    "value": "5",
+    "VehicleId": 3
+  },
+  {
+    "name": "year",
+    "value": "2020",
+    "VehicleId": 3
+  },
+  {
+    "name": "transmission",
+    "value": "matic",
+    "VehicleId": 4
+  },
+  {
+    "name": "color",
+    "value": "red",
+    "VehicleId": 4
+  },
+  {
+    "name": "year",
+    "value": "2022",
+    "VehicleId": 4
+  },
+  {
+    "name": "color",
+    "value": "black",
+    "VehicleId": 5
+  },
+  {
+    "name": "transmission",
+    "value": "matic",
+    "VehicleId": 5
+  },
+  {
+    "name": "year",
+    "value": "2020",
+    "VehicleId": 5
+  },
+  {
+    "name": "color",
+    "value": "white",
+    "VehicleId": 6
+  },
+  {
+    "name": "transmission",
+    "value": "automatic",
+    "VehicleId": 6
+  },
+  {
+    "name": "seat",
+    "value": "8",
+    "VehicleId": 6
+  },
+  {
+    "name": "year",
+    "value": "2022",
+    "VehicleId": 6
+  },
+  {
+    "name": "color",
+    "value": "blue",
+    "VehicleId": 7
+  },
+  {
+    "name": "transmission",
+    "value": "automatic",
+    "VehicleId": 7
+  },
+  {
+    "name": "seat",
+    "value": "5",
+    "VehicleId": 7
+  },
+  {
+    "name": "year",
+    "value": "2017",
+    "VehicleId": 7
+  },
+  {
+    "name": "color",
+    "value": "red",
+    "VehicleId": 8
+  },
+  {
+    "name": "color",
+    "value": "black",
+    "VehicleId": 9
+  },
+  {
+    "name": "transmission",
+    "value": "matic",
+    "VehicleId": 9
+  },
+  {
+    "name": "year",
+    "value": "2017",
+    "VehicleId": 9
+  },
+  {
+    "name": "color",
+    "value": "yellow",
+    "VehicleId": 10
+  },
+  {
+    "name": "color",
+    "value": "yellow",
+    "VehicleId": 11
+  },
+  {
+    "name": "color",
+    "value": "black",
+    "VehicleId": 12
+  },
+  {
+    "name": "color",
+    "value": "blue",
+    "VehicleId": 13
+  },
+  {
+    "name": "color",
+    "value": "orange",
+    "VehicleId": 14
+  },
+  {
+    "name": "transmission",
+    "value": "automatic",
+    "VehicleId": 14
+  },
+  {
+    "name": "seat",
+    "value": "5",
+    "VehicleId": 14
+  },
+  {
+    "name": "year",
+    "value": "2023",
+    "VehicleId": 14
+  },
+  {
+    "name": "color",
+    "value": "silver",
+    "VehicleId": 15
+  },
+  {
+    "name": "transmission",
+    "value": "manual",
+    "VehicleId": 15
+  },
+  {
+    "name": "seat",
+    "value": "8",
+    "VehicleId": 15
+  },
+  {
+    "name": "year",
+    "value": "2019",
+    "VehicleId": 15
+  },
+  {
+    "name": "color",
+    "value": "green",
+    "VehicleId": 16
+  },
+  {
+    "name": "year",
+    "value": "2022",
+    "VehicleId": 16
+  },
+  {
+    "name": "transmission",
+    "value": "matic",
+    "VehicleId": 16
+  },
+  {
+    "name": "color",
+    "value": "white",
+    "VehicleId": 17
+  },
+  {
+    "name": "transmission",
+    "value": "automatic",
+    "VehicleId": 17
+  },
+  {
+    "name": "seat",
+    "value": "8",
+    "VehicleId": 17
+  },
+  {
+    "name": "year",
+    "value": "2023",
+    "VehicleId": 17
+  },
+  {
+    "name": "color",
+    "value": "black",
+    "VehicleId": 18
+  },
+  {
+    "name": "transmission",
+    "value": "automatic",
+    "VehicleId": 18
+  },
+  {
+    "name": "seat",
+    "value": "8",
+    "VehicleId": 18
+  },
+  {
+    "name": "year",
+    "value": "2023",
+    "VehicleId": 18
+  },
+  {
+    "name": "color",
+    "value": "red",
+    "VehicleId": 19
+  },
+  {
+    "name": "transmission",
+    "value": "automatic",
+    "VehicleId": 19
+  },
+  {
+    "name": "seat",
+    "value": "8",
+    "VehicleId": 19
+  },
+  {
+    "name": "year",
+    "value": "2022",
+    "VehicleId": 19
+  },
+  {
+    "name": "color",
+    "value": "white",
+    "VehicleId": 20
+  },
+  {
+    "name": "transmission",
+    "value": "manual",
+    "VehicleId": 20
+  },
+  {
+    "name": "seat",
+    "value": "2",
+    "VehicleId": 20
+  },
+  {
+    "name": "year",
+    "value": "2017",
+    "VehicleId": 20
+  }
+]
