@@ -1,0 +1,350 @@
+[
+  {
+    "rating": 4.9,
+    "message": "My experience with this car is very good, the rent went smoothly, the service was good.",
+    "VehicleId": 1,
+    "UserId": 1
+  },
+  {
+    "rating": 4,
+    "message": "The overall experience was Ok, the air conditioner isn't working well.",
+    "VehicleId": 2,
+    "UserId": 2
+  },
+  {
+    "rating": 5,
+    "message": "Excellent!",
+    "VehicleId": 3,
+    "UserId": 3
+  },
+  {
+    "rating": 3,
+    "message": "Very bad experience!",
+    "VehicleId": 4,
+    "UserId": 4
+  },
+  {
+    "rating": 4.5,
+    "message": "Smooth rental process, the car was clean and comfortable.",
+    "VehicleId": 5,
+    "UserId": 1
+  },
+  {
+    "rating": 3.5,
+    "message": "Average experience, could be better.",
+    "VehicleId": 6,
+    "UserId": 2
+  },
+  {
+    "rating": 4.8,
+    "message": "The car's performance exceeded my expectations.",
+    "VehicleId": 7,
+    "UserId": 3
+  },
+  {
+    "rating": 2.5,
+    "message": "Unpleasant smell in the car, needs better maintenance.",
+    "VehicleId": 8,
+    "UserId": 4
+  },
+  {
+    "rating": 4.9,
+    "message": "Highly satisfied with the service and the vehicle.",
+    "VehicleId": 9,
+    "UserId": 1
+  },
+  {
+    "rating": 3.2,
+    "message": "Average experience, but the car had some issues.",
+    "VehicleId": 10,
+    "UserId": 2
+  },
+  {
+    "rating": 4.7,
+    "message": "Great car, no complaints at all.",
+    "VehicleId": 11,
+    "UserId": 3
+  },
+  {
+    "rating": 1.5,
+    "message": "Terrible experience, the car broke down during the trip.",
+    "VehicleId": 12,
+    "UserId": 4
+  },
+  {
+    "rating": 4.6,
+    "message": "Smooth rental process and a comfortable ride.",
+    "VehicleId": 13,
+    "UserId": 1
+  },
+  {
+    "rating": 3.7,
+    "message": "Decent car, but the service could be improved.",
+    "VehicleId": 14,
+    "UserId": 2
+  },
+  {
+    "rating": 4.9,
+    "message": "Exceptional experience, top-notch service.",
+    "VehicleId": 15,
+    "UserId": 3
+  },
+  {
+    "rating": 2.0,
+    "message": "Car was dirty and in poor condition.",
+    "VehicleId": 16,
+    "UserId": 4
+  },
+  {
+    "rating": 4.9,
+    "message": "Outstanding service, highly recommend!",
+    "VehicleId": 17,
+    "UserId": 1
+  },
+  {
+    "rating": 3.9,
+    "message": "Good car, but it had some minor issues.",
+    "VehicleId": 18,
+    "UserId": 2
+  },
+  {
+    "rating": 4.8,
+    "message": "Great car and excellent customer service.",
+    "VehicleId": 19,
+    "UserId": 3
+  },
+  {
+    "rating": 2.3,
+    "message": "Poorly maintained car, not a pleasant experience.",
+    "VehicleId": 20,
+    "UserId": 4
+  },
+  {
+    "rating": 4.5,
+    "message": "I enjoyed the ride, the car was clean and comfortable.",
+    "VehicleId": 4,
+    "UserId": 4
+  },
+  {
+    "rating": 4.2,
+    "message": "The car was decent, but it could use better maintenance.",
+    "VehicleId": 5,
+    "UserId": 1
+  },
+  {
+    "rating": 3.8,
+    "message": "The vehicle had some issues, but the price was reasonable.",
+    "VehicleId": 6,
+    "UserId": 2
+  },
+  {
+    "rating": 4.7,
+    "message": "Great service and a fantastic car!",
+    "VehicleId": 7,
+    "UserId": 3
+  },
+  {
+    "rating": 4.1,
+    "message": "Overall, it was a good experience, but the fuel efficiency could be better.",
+    "VehicleId": 8,
+    "UserId": 4
+  },
+  {
+    "rating": 4.6,
+    "message": "I loved the car, it was in perfect condition.",
+    "VehicleId": 9,
+    "UserId": 1
+  },
+  {
+    "rating": 3.5,
+    "message": "The car was old, but it got the job done.",
+    "VehicleId": 10,
+    "UserId": 2
+  },
+  {
+    "rating": 4.8,
+    "message": "Outstanding experience! I would highly recommend it.",
+    "VehicleId": 11,
+    "UserId": 3
+  },
+  {
+    "rating": 4.3,
+    "message": "A decent choice for the price.",
+    "VehicleId": 12,
+    "UserId": 4
+  },
+  {
+    "rating": 4.9,
+    "message": "Exceptional car and service!",
+    "VehicleId": 13,
+    "UserId": 1
+  },
+  {
+    "rating": 3.7,
+    "message": "The vehicle had a strange noise, but it didn't affect the trip significantly.",
+    "VehicleId": 14,
+    "UserId": 2
+  },
+  {
+    "rating": 4.5,
+    "message": "The car was clean, and the staff was friendly.",
+    "VehicleId": 15,
+    "UserId": 3
+  },
+  {
+    "rating": 4.0,
+    "message": "Good value for the money, but the GPS was a bit outdated.",
+    "VehicleId": 16,
+    "UserId": 4
+  },
+  {
+    "rating": 4.6,
+    "message": "I had a wonderful experience with this car.",
+    "VehicleId": 17,
+    "UserId": 1
+  },
+  {
+    "rating": 3.8,
+    "message": "The car had a strong odor, which was unpleasant.",
+    "VehicleId": 18,
+    "UserId": 2
+  },
+  {
+    "rating": 4.8,
+    "message": "Absolutely fantastic, I couldn't have asked for a better car.",
+    "VehicleId": 19,
+    "UserId": 3
+  },
+  {
+    "rating": 4.2,
+    "message": "A good choice for a short trip, but not for long journeys.",
+    "VehicleId": 20,
+    "UserId": 4
+  },
+  {
+    "rating": 4.7,
+    "message": "I had a great time with this car. Smooth ride and excellent service.",
+    "VehicleId": 4,
+    "UserId": 4
+  },
+  {
+    "rating": 3.5,
+    "message": "The car was decent, but the service could have been better.",
+    "VehicleId": 5,
+    "UserId": 1
+  },
+  {
+    "rating": 4.8,
+    "message": "The vehicle was in excellent condition. No complaints at all.",
+    "VehicleId": 6,
+    "UserId": 2
+  },
+  {
+    "rating": 4.2,
+    "message": "I enjoyed the ride, but the car needed some maintenance.",
+    "VehicleId": 7,
+    "UserId": 3
+  },
+  {
+    "rating": 4.9,
+    "message": "Top-notch service and a well-maintained vehicle. Highly recommended!",
+    "VehicleId": 8,
+    "UserId": 4
+  },
+  {
+    "rating": 4.6,
+    "message": "The car exceeded my expectations. A great choice for a road trip.",
+    "VehicleId": 9,
+    "UserId": 1
+  },
+  {
+    "rating": 3.8,
+    "message": "The vehicle was average, and the rental process could have been smoother.",
+    "VehicleId": 10,
+    "UserId": 2
+  },
+  {
+    "rating": 4.5,
+    "message": "A reliable car with good mileage. Served my purpose well.",
+    "VehicleId": 11,
+    "UserId": 3
+  },
+  {
+    "rating": 4.7,
+    "message": "The car was clean and well-maintained. No complaints whatsoever.",
+    "VehicleId": 12,
+    "UserId": 4
+  },
+  {
+    "rating": 4.0,
+    "message": "Decent car, but the fuel efficiency could have been better.",
+    "VehicleId": 13,
+    "UserId": 1
+  },
+  {
+    "rating": 4.8,
+    "message": "Outstanding service! The car was in pristine condition.",
+    "VehicleId": 14,
+    "UserId": 2
+  },
+  {
+    "rating": 3.5,
+    "message": "The car had some issues, but the staff was helpful in resolving them.",
+    "VehicleId": 15,
+    "UserId": 3
+  },
+  {
+    "rating": 4.6,
+    "message": "Great experience overall. I would rent this car again.",
+    "VehicleId": 16,
+    "UserId": 4
+  },
+  {
+    "rating": 4.4,
+    "message": "The car was reliable, and the rental process was hassle-free.",
+    "VehicleId": 17,
+    "UserId": 1
+  },
+  {
+    "rating": 4.9,
+    "message": "An excellent choice for a family trip. The car was spacious and comfortable.",
+    "VehicleId": 18,
+    "UserId": 2
+  },
+  {
+    "rating": 4.7,
+    "message": "The car was clean and well-maintained. Smooth rental experience.",
+    "VehicleId": 19,
+    "UserId": 3
+  },
+  {
+    "rating": 4.5,
+    "message": "No complaints. The car and service were both top-notch.",
+    "VehicleId": 20,
+    "UserId": 4
+  },
+  {
+    "rating": 4.9,
+    "message": "My experience with this car is very good, the rent went smoothly, the service was good.",
+    "VehicleId": 1,
+    "UserId": 1
+  },
+  {
+    "rating": 4.0,
+    "message": "I had a pleasant trip with this vehicle. No major issues to report.",
+    "VehicleId": 2,
+    "UserId": 2
+  },
+  {
+    "rating": 4.5,
+    "message": "The car was in decent condition, and the service met my expectations.",
+    "VehicleId": 3,
+    "UserId": 3
+  },
+  {
+    "rating": 4.8,
+    "message": "Excellent car. Smooth ride and great customer service.",
+    "VehicleId": 4,
+    "UserId": 4
+  }
+]

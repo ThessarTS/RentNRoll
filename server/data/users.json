@@ -1,0 +1,37 @@
+[
+  {
+    "fullName": "A.Rusdi Ilham",
+    "email": "mbem.ilham@gmail.com",
+    "password": "123123123",
+    "phone": "081362192211",
+    "otp": null
+  },
+  {
+    "fullName": "Sajad",
+    "email": "sajadhijir@gmail.com",
+    "password": "123123123",
+    "phone": "08227829182",
+    "otp": null
+  },
+  {
+    "fullName": "Felix Leonardo Caprio",
+    "email": "felixgiancarlo789@gmail.com",
+    "password": "123123123",
+    "phone": "081362278671",
+    "otp": null
+  },
+  {
+    "fullName": "Thessar Tesalonika Setiawan",
+    "email": "thessarts@gmail.com",
+    "password": "123123123",
+    "phone": "08116227867",
+    "otp": null
+  },
+  {
+    "fullName": "Thessar Setiawan",
+    "email": "tsrts333@mail.com",
+    "password": "123123123",
+    "phone": "08116227867",
+    "otp": null
+  }
+]
