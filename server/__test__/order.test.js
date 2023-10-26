@@ -63,7 +63,7 @@ beforeAll(async () => {
 
   const userToken = await User.findOne({
     where: {
-      email: "wididi@mail.com",
+      email: "sajadhijir@gmail.com",
     },
   });
   access_token = signToken({ id: userToken.id });

@@ -3,7 +3,7 @@
     "name": "Toyota Grand New Avanza",
     "CategoryId": 1,
     "price": 270000,
-    "image": "https://1.bp.blogspot.com/-KCkEiJcf-gc/XdQxSkkgvfI/AAAAAAAAad0/O1OkNdU7lyEU13I7ydL5uyARYA5lVs69wCLcBGAsYHQ/w1200-h630-p-k-no-nu/spesifikasi-grand-new-avanza.jpg",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpnXIesoFjn8gJtT-dO_6cQ4MLgFn69mUBEatnYcS0ZNNRWm4OZP1eErKIOlvVlSN7dhY&usqp=CAU",
     "UserId": 1,
     "location": "Jakarta"
   },
@@ -11,104 +11,154 @@
     "name": "Toyota Calya",
     "CategoryId": 1,
     "price": 292000,
-    "image": "https://cdn3.tstatic.net/jualbeli/img/2022/3/2434453/1-765898205-Mobil-Toyota-Calya-G-MT-2020-Seken-Surat-Lengkap-Harga-Nego---Surabaya.jpg",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSBiPrqFdi_gVJoo1SXsT0oYhYxkwkn-lkFHg&usqp=CAU",
     "UserId": 1,
     "location": "Bandung"
   },
   {
     "name": "Toyota Agya",
     "CategoryId": 1,
-    "price": 300665,
-    "image": "https://img3.icarcdn.com/2703185/gallery_used-car-mobil123-toyota-agya-trd-hatchback-indonesia_2703185_Ui35oXOFUE7tjTYU5LY28G.jpg?smia=xTM",
-    "UserId": 2,
+    "price": 198000,
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSg0Cn5U_7YujtUpeeDG1SvdTQyR2P6eQPsWbxKWuq98rIOCWP-RCrZDyvpJOj0SFUiBIM&usqp=CAU",
+    "UserId": 1,
     "location": "Medan"
-  },
-  {
-    "name": "Suzuki Ertiga",
-    "CategoryId": 1,
-    "price": 400000,
-    "image": "https://imgx.gridoto.com/crop/116x125:1140x701/700x465/photo/2020/03/30/3128164803.jpeg",
-    "UserId": 3,
-    "location": "Batam"
-  },
-  {
-    "name": "Honda Mobilio",
-    "CategoryId": 1,
-    "price": 515533,
-    "image": "https://static.rajamobil.com/resize/600x600/media/images/databasemobil/mobilbaru/color/new-mobilio-phoenix-orange.png",
-    "UserId": 3,
-    "location": "Bali"
-  },
-  {
-    "name": "Honda Jazz",
-    "CategoryId": 1,
-    "price": 538194,
-    "image": "https://mocil.id/uploads/vehicle/size-md-720--BmNtNIkgZuB5hOlZ0ZFOjaFY6gTvA0wmTD6Zpz38.jpg",
-    "UserId": 3,
-    "location": "Jakarta"
   },
   {
     "name": "Honda Scoopy",
     "CategoryId": 2,
     "price": 100000,
-    "image": "https://images.tokopedia.net/img/cache/700/OJWluG/2022/8/1/8e94e5fb-6874-4837-be41-74445bdd6874.jpg?ect=4g",
-    "UserId": 3,
-    "location": "Aceh"
-  },
-  {
-    "name": "Honda Vario",
-    "CategoryId": 2,
-    "price": 100000,
-    "image": "https://i0.wp.com/cdn.juraganwp.com/aripitstop/wp-content/uploads/2020/06/AHM_NewHondaVario150.-Sporty-Black-Red-1.jpg?fit=776%2C567&ssl=1",
-    "UserId": 3,
-    "location": "Sulawesi"
-  },
-  {
-    "name": "Honda New Vario",
-    "CategoryId": 2,
-    "price": 100000,
-    "image": "https://i0.wp.com/cdn.juraganwp.com/aripitstop/wp-content/uploads/2020/06/AHM_NewHondaVario150.-Sporty-Black-Red-1.jpg?fit=776%2C567&ssl=1",
-    "UserId": 3,
-    "location": "Medan"
-  },
-  {
-    "name": "Yamaha Fazzio",
-    "CategoryId": 2,
-    "price": 120000,
-    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkCFobG_s3V-gjNfjH5BwEphL8_1ga6GsHzg&usqp=CAU",
-    "UserId": 3,
-    "location": "Aceh"
-  },
-  {
-    "name": "Yamaha N-max",
-    "CategoryId": 2,
-    "price": 125000,
-    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQCqV0j_lTQr2Al6ahfzD3eDJhsGjGaL-4j0w&usqp=CAU",
-    "UserId": 3,
-    "location": "Jakarta"
-  },
-  {
-    "name": "Polygon Kids Bike Maze 20",
-    "CategoryId": 3,
-    "price": 50000,
-    "image": "https://balibicyclerental.com/wp-content/uploads/2023/07/MONARCH_MAZE_20_P-bali-bicycle-rental-kids-bike-rental-bali-300x225.png",
-    "UserId": 1,
-    "location": "Bogor"
-  },
-  {
-    "name": "Polygon Cascade 4 Mountain Bike",
-    "CategoryId": 3,
-    "price": 100000,
-    "image": "https://balibicyclerental.com/wp-content/uploads/2023/07/Screen-Shot-2023-07-05-at-11.43.31-300x177.png",
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTGDD9UgB-btkwYDJ93Bq56WjlfGuRW3GIy0Q&usqp=CAU",
     "UserId": 1,
     "location": "Kalimantan"
   },
   {
-    "name": "Lime E-Scooters",
-    "CategoryId": 4,
-    "price": 120000,
-    "image": "https://www.trendingtopics.eu/wp-content/uploads/2021/11/IMG_1421-scaled.jpg",
+    "name": "Honda Vario",
+    "CategoryId": 2,
+    "price": 90000,
+    "image": "https://i0.wp.com/cdn.juraganwp.com/aripitstop/wp-content/uploads/2020/06/AHM_NewHondaVario150.-Sporty-Black-Red-1.jpg?fit=776%2C567&ssl=1",
     "UserId": 1,
+    "location": "Sulawesi"
+  },
+  {
+    "name": "Toyota Rush",
+    "CategoryId": 1,
+    "price": 310000,
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRgdVMwY34dDFiNXJDlDOvvG-41ifCOXyGuHA194c3uzQG2GCWz_74ODCGseCXYZf6WxNM&usqp=CAU",
+    "UserId": 2,
+    "location": "Jakarta"
+  },
+  {
+    "name": "Honda Jazz",
+    "CategoryId": 1,
+    "price": 202000,
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXpLS9CC75PUwUaR5NF1uToArYZlApn1C8FA&usqp=CAU",
+    "UserId": 2,
+    "location": "Bandung"
+  },
+  {
+    "name": "Scooter Okai",
+    "CategoryId": 2,
+    "price": 120000,
+    "image": "https://cdn.antaranews.com/cache/1200x800/2022/01/06/Picsart_22-01-06_08-26-19-438.jpg",
+    "UserId": 2,
+    "location": "Jakarta"
+  },
+  {
+    "name": "Yamaha N-max",
+    "CategoryId": 2,
+    "price": 150000,
+    "image": "https://www.otoinfo.id/wp-content/uploads/2019/12/nmax-2020-696x464.jpg",
+    "UserId": 2,
+    "location": "Aceh"
+  },
+  {
+    "name": "Polygon Kids Bike Maze 20",
+    "CategoryId": 3,
+    "price": 90000,
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTCBbzQ7hXz1nCuiDFmx2WsqgX-iq3lUlSWmAy3ilfvlNjIOJXFjIKM70cPg2dzflGMQ0w&usqp=CAU",
+    "UserId": 2,
+    "location": "Bogor"
+  },
+
+  {
+    "name": "Clyde 700C",
+    "CategoryId": 3,
+    "price": 129000,
+    "image": "https://ahoybikes.com/wp-content/uploads/2022/10/Clyde-700C-Yellow-Hybrid-Bike-By-Ahoy-Bikes.jpg.webp",
+    "UserId": 3,
+    "location": "Bogor"
+  },
+
+  {
+    "name": "SUNHON S9plus",
+    "CategoryId": 4,
+    "price": 140000,
+    "image": "https://ae01.alicdn.com/kf/S36b10c5bb1704b9fa16da46025d4c174i/Gudang-EU-Ningbo-SUNHON-S9plus-baru-800W-patineta-electrica-scoter-electrico-pro-skuter-listrik.jpg",
+    "UserId": 3,
+    "location": "Bandung"
+  },
+  {
+    "name": "ZEETA PLUS BICYCLE",
+    "CategoryId": 3,
+    "price": 100000,
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1F7qb1RqBqRVRnfMAbDVpWwCycemibThzlkyv6gDruqaRIultqO5sC2LapuwyVrU474k&usqp=CAU",
+    "UserId": 3,
+    "location": "Bandung"
+  },
+  {
+    "name": "Honda Brio",
+    "CategoryId": 1,
+    "price": 352000,
+    "image": "https://honda-salemba.com/wp-content/uploads/2018/03/Brio.png",
+    "UserId": 3,
+    "location": "Jakarta"
+  },
+  {
+    "name": "Honda Mobilio",
+    "CategoryId": 1,
+    "price": 290000,
+    "image": "https://hondaserpong.net/wp-content/uploads/2020/10/8ZTMVN6Z2dmLd596wigq_honda_id__0007_moblunar.png",
+    "UserId": 3,
+    "location": "Jakarta"
+  },
+  {
+    "name": "Yamaha Fazzio",
+    "CategoryId": 2,
+    "price": 110000,
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjgT5EtaW4tVeG81j8kOPf6cm77cfiFVaPOSB4xFKLUkJH58xwCUcB8LNIkhOL6EaUo64&usqp=CAU",
+    "UserId": 4,
     "location": "Bali"
+  },
+  {
+    "name": "Mitsubishi Xpander Cross",
+    "CategoryId": 1,
+    "price": 390839,
+    "image": "https://res.cloudinary.com/mufautoshow/image/upload/f_auto,f_auto/w_1200/v1608086376/moas/news/1605461108_mitsubishi-xpander-cross-kelebihan-spesifikasi-dan-harga.jpg",
+    "UserId": 4,
+    "location": "Medan"
+  },
+  {
+    "name": "Toyota Raize 2023",
+    "CategoryId": 1,
+    "price": 380000,
+    "image": "https://static.wixstatic.com/media/261cbb_c49120dc39b34a82b7c7f25125c26e84~mv2.png/v1/fill/w_826,h_490,al_c,lg_1,q_90,enc_auto/261cbb_c49120dc39b34a82b7c7f25125c26e84~mv2.png",
+    "UserId": 4,
+    "location": "Aceh"
+  },
+  {
+    "name": "Hyundai Creta",
+    "CategoryId": 1,
+    "price": 420000,
+    "image": "https://img-ik.cars.co.za/news-site-za/images/2022/07/Hyundai-Creta-22-1.jpg?tr=w-1200,h-800",
+    "UserId": 4,
+    "location": "Batam"
+  },
+  {
+    "name": "Daihatsu Pick Up",
+    "CategoryId": 1,
+    "price": 221000,
+    "image": "https://astraimageresizer.azureedge.net/GranMax.jpg-8432219653778517072.webp",
+    "UserId": 4,
+    "location": "Jakarta"
   }
 ]
