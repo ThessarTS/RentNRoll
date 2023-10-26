@@ -12,7 +12,7 @@ import {
   ORDER_FETCH_SUCCESS,
 } from "./actionType";
 import { errorAlert } from "../../src/helpers/alert";
-const baseUrl = "https://5ced-118-96-109-120.ngrok-free.app";
+const baseUrl = "https://apiku.thessarts.site";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { fetchProfile } from "./userAction";
 
@@ -114,7 +114,7 @@ export const midtransPayment = (id) => {
           access_token: access_token,
         },
       });
-      dispatch(fetchProfile({ access_token: access_token }));
+      dispatch(fetchProfile(access_token));
       return data;
     } catch (error) {
       console.log(error);
@@ -160,7 +160,7 @@ export const updateOrderStatus = (status, id) => {
         method: "patch",
         data: status,
       });
-      dispatch(fetchProfile({ access_token: access_token }));
+      dispatch(fetchProfile(access_token));
       return data;
     } catch (error) {
       console.log(error.response.data, "<<<error");

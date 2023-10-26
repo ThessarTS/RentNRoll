@@ -2,6 +2,7 @@ import { successAlert } from "../../src/helpers/alert";
 import {
   ADD_VEHICLE_REQUEST,
   ADD_VEHICLE_SUCCESS,
+  LOCATION_FETCH_SUCCESS,
   MY_RENT_FETCH_FAIL,
   MY_RENT_FETCH_REQUEST,
   MY_RENT_FETCH_SUCCESS,
@@ -18,7 +19,7 @@ import {
   VEHICLE_QUERY_FETCH_SUCCESS,
 } from "./actionType";
 import axios from "axios";
-const baseUrl = "https://5ced-118-96-109-120.ngrok-free.app";
+const baseUrl = "https://apiku.thessarts.site";
 
 export const vehicleFetchRequest = () => {
   return { type: VEHICLE_FETCH_REQUEST };
@@ -221,7 +222,26 @@ export const deleteMyVehicle = (id, access_token) => {
         },
       });
       dispatch(fetchMyVehicle(access_token));
+      dispatch(fetchVehicles());
       successAlert("Success Delete Vehicle");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+};
+
+export const fetchLocationSuccess = (payload) => {
+  return { type: LOCATION_FETCH_SUCCESS };
+};
+
+export const fetchLocation = () => {
+  return async (dispatch) => {
+    try {
+      const { data } = await axios({
+        url: baseUrl + "vehicles/locations",
+      });
+      console.log(data);
+      dispatch(fetchLocationSuccess(data));
     } catch (error) {
       console.log(error);
     }

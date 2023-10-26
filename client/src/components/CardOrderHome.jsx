@@ -1,11 +1,13 @@
 import React from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { fPrice } from "../helpers/fPrice";
 import { truncateName } from "../helpers/fName";
+import { getStatusBackgroundColor } from "../helpers/getBg";
 
 function CardOrderHome({ orders, navigation }) {
   const goDetail = () => {
-    navigation.navigate("detail", {
+    navigation.navigate("detailorder", {
       name: orders.Vehicle.name,
       id: orders.Vehicle.id,
     });
@@ -18,9 +20,10 @@ function CardOrderHome({ orders, navigation }) {
         <View style={styles.cardContainer}>
           <Text style={styles.title}>{truncateName(orders.Vehicle.name)}</Text>
           <Text style={styles.price}>{fPrice(orders.Vehicle.price)}</Text>
-          {/* <Text style={styles.rating}>
-            <AntDesign name="star" size={15} color="#F8B84E" />({rating})
-          </Text> */}
+          <View style={{ flexDirection: "row", gap: 2, alignItems: "center" }}>
+            <MaterialCommunityIcons name="list-status" color={getStatusBackgroundColor(orders.status)} />
+            <Text style={[styles.status, { color: getStatusBackgroundColor(orders.status) }]}>{orders.status}</Text>
+          </View>
         </View>
       </View>
     </Pressable>
@@ -41,7 +44,7 @@ const styles = StyleSheet.create({
   },
   innerContainer: {
     backgroundColor: "white",
-    alignItems: "center",
+    alignItems: "flex-start",
     borderRadius: 10,
     overflow: "hidden",
   },
@@ -63,9 +66,9 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     fontSize: 11,
   },
-  rating: {
-    fontSize: 11,
-    fontWeight: "600",
+  status: {
+    fontSize: 10,
+    fontWeight: "400",
   },
 });
 

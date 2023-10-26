@@ -1,5 +1,6 @@
 import {
   ADD_VEHICLE_SUCCESS,
+  LOCATION_FETCH_SUCCESS,
   MY_RENT_FETCH_REQUEST,
   MY_RENT_FETCH_SUCCESS,
   MY_VEHICLE_FETCH_REQUEST,
@@ -24,6 +25,7 @@ const initialState = {
   myVehicles: [],
   myGivenRent: [],
   error: "",
+  location: [],
 };
 const vehicleReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -116,6 +118,12 @@ const vehicleReducer = (state = initialState, action) => {
         ...state,
         myGivenRent: action.payload,
         loading: false,
+      };
+
+    case LOCATION_FETCH_SUCCESS:
+      return {
+        ...state,
+        location: action.payload,
       };
 
     default:

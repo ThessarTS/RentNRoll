@@ -1,7 +1,7 @@
 import axios from "axios";
 import { errorAlert, successAlert } from "../../src/helpers/alert";
 import { ADD_REVIEW_SUCCESS, FETCH_REVIEW_BY_USER_SUCCESS, FETCH_REVIEW_BY_VEHICLE_SUCCESS } from "./actionType";
-const baseUrl = "https://5ced-118-96-109-120.ngrok-free.app";
+const baseUrl = "https://apiku.thessarts.site";
 
 export const fetchReviewByUserSuccess = (payload) => {
   return { type: FETCH_REVIEW_BY_USER_SUCCESS, payload };

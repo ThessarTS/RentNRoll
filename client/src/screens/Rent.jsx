@@ -1,19 +1,10 @@
 import React, { useCallback, useRef, useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  SafeAreaView,
-  ScrollView,
-  View,
-  Pressable,
-  ActivityIndicator,
-  Image,
-} from "react-native";
+import { StyleSheet, Text, SafeAreaView, ScrollView, View, Pressable, ActivityIndicator, Image } from "react-native";
 import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import SelectDropdown from "react-native-select-dropdown";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchVehicles } from "../../store/actions/vehicleAction";
+import { fetchLocation, fetchVehicles } from "../../store/actions/vehicleAction";
 import CardVehicleRent from "../components/CardVehicleRent";
 import { useFocusEffect } from "@react-navigation/native";
 import NavIcon from "../components/NavIcon";
@@ -23,22 +14,10 @@ import notFound from "../../assets/image/zzz.png";
 function Account({ navigation }) {
   const dispatch = useDispatch();
   const [startdate, setSelectedstartdate] = useState(new Date());
-  const [enddate, setSelectedendate] = useState(
-    new Date(startdate.getTime() + 24 * 60 * 60 * 1000)
-  );
-  const countries = [
-    "Jakarta",
-    "Bandung",
-    "Medan",
-    "Batam",
-    "Bali",
-    "Aceh",
-    "Bogor",
-  ];
+  const [enddate, setSelectedendate] = useState(new Date(startdate.getTime() + 24 * 60 * 60 * 1000));
+  const { location } = useSelector((state) => state.vehicleReducer);
   const [searched, setSearched] = useState(false);
-  const { vehiclesQuery, loading } = useSelector(
-    (state) => state.vehicleReducer
-  );
+  const { vehiclesQuery, loading } = useSelector((state) => state.vehicleReducer);
   const dropdownRef = useRef(null);
   const [errMsg, setErrMsg] = useState("");
 
@@ -47,6 +26,11 @@ function Account({ navigation }) {
     startdate: new Date(),
     enddate: new Date(startdate.getTime() + 24 * 60 * 60 * 1000),
   });
+  useFocusEffect(
+    useCallback(() => {
+      dispatch(fetchLocation());
+    }, [])
+  );
 
   const search = () => {
     if (handleInput.location !== "") {
@@ -128,9 +112,7 @@ function Account({ navigation }) {
                 flex: 1,
               }}
             >
-              <View
-                style={{ flexDirection: "row", alignItems: "center", gap: 20 }}
-              >
+              <View style={{ flexDirection: "row", alignItems: "center", gap: 20 }}>
                 <View
                   style={{
                     backgroundColor: "#17799A",
@@ -163,7 +145,7 @@ function Account({ navigation }) {
                     fontSize: 15,
                   }}
                   defaultButtonText="Select Location"
-                  data={countries}
+                  data={location}
                   onSelect={(selectedItem, index) => {
                     setHandleInput((prevState) => ({
                       ...prevState,
@@ -183,27 +165,13 @@ function Account({ navigation }) {
                     <Text>Pick-up Date</Text>
                     <View style={styles.rentstartdate}>
                       <AntDesign name="calendar" size={24} color="black" />
-                      <DateTimePicker
-                        value={startdate}
-                        mode="date"
-                        is24Hour={true}
-                        display="default"
-                        minimumDate={new Date()}
-                        onChange={handlestartdateChange}
-                      />
+                      <DateTimePicker value={startdate} mode="date" is24Hour={true} display="default" minimumDate={new Date()} onChange={handlestartdateChange} />
                     </View>
                   </View>
                   <View style={styles.rentEndContainer}>
                     <Text>Drop-off Date</Text>
                     <View style={styles.rendendate}>
-                      <DateTimePicker
-                        value={enddate}
-                        mode="date"
-                        is24Hour={true}
-                        display="default"
-                        minimumDate={startdate}
-                        onChange={handleendateChange}
-                      />
+                      <DateTimePicker value={enddate} mode="date" is24Hour={true} display="default" minimumDate={startdate} onChange={handleendateChange} />
                       <AntDesign name="calendar" size={24} color="black" />
                     </View>
                   </View>
@@ -225,9 +193,7 @@ function Account({ navigation }) {
                     }}
                   >
                     <ActivityIndicator size="large" />
-                    <Text style={{ marginTop: 16, fontSize: 18 }}>
-                      Loading...
-                    </Text>
+                    <Text style={{ marginTop: 16, fontSize: 18 }}>Loading...</Text>
                   </View>
                 )}
 
@@ -240,11 +206,7 @@ function Account({ navigation }) {
                       marginTop: 30,
                     }}
                   >
-                    <Image
-                      source={notFound}
-                      style={{ width: 200, height: 200 }}
-                      resizeMode="contain"
-                    />
+                    <Image source={notFound} style={{ width: 200, height: 200 }} resizeMode="contain" />
                     <Text
                       style={{
                         textAlign: "center",
@@ -259,16 +221,7 @@ function Account({ navigation }) {
 
                 {searched &&
                   vehiclesQuery.map((e) => {
-                    return (
-                      <CardVehicleRent
-                        vehicle={e}
-                        navigation={navigation}
-                        startdate={handleInput.startdate}
-                        key={e.id}
-                        endDate={enddate}
-                        startDate={startdate}
-                      />
-                    );
+                    return <CardVehicleRent vehicle={e} navigation={navigation} startdate={handleInput.startdate} key={e.id} endDate={enddate} startDate={startdate} />;
                   })}
               </ScrollView>
             </View>
