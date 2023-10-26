@@ -1,0 +1,18 @@
+DB_PASS = wAhC5mFhrt8LNVkE
+DB_URI = postgresql://postgres:wAhC5mFhrt8LNVkE@db.obxlfpfsbsyeaqcxyttn.supabase.co:5432/postgres
+
+export DATABASE_URL=postgresql://postgres:wAhC5mFhrt8LNVkE@db.obxlfpfsbsyeaqcxyttn.supabase.co:5432/postgres
+
+module.exports = {
+apps : [{
+name : "app1",
+script : "./app.js",
+env : {
+NODE_ENV : "production",
+PORT : 80,
+DATABASE_URL : "postgres://[YOUR_DB_URI]",
+JWT_SECRET : "[APP_SECRET_KEY]",
+GOOGLE_CLIENT_ID : "[YOUR_CLIENT_ID]"
+}
+}]
+}
