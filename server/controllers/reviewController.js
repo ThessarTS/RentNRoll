@@ -12,7 +12,7 @@ class ReviewController {
         }, {
           model: User,
           attributes: { exclude: ["password"] },
-          include: UserProfile,
+          include: [{ model: UserProfile, attributes: ['profilePicture'] }],
         }],
       });
       let reviewUser = data;
@@ -36,7 +36,7 @@ class ReviewController {
       // if (!reviewVehicle) {
       const data = await Review.findAll({
         where: { VehicleId },
-        include: [Vehicle, { model: User, include: UserProfile }],
+        include: [Vehicle, { model: User, include: [{ model: UserProfile, attributes: ['profilePicture'] }] }],
       });
       let reviewVehicle = data;
       // await redis.set(`reviewVehicleFinalProject:${VehicleId}`, JSON.stringify(data))

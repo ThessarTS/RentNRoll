@@ -53,7 +53,7 @@ beforeAll(async () => {
   await sequelize.queryInterface.bulkInsert("Reviews", dataReview);
   const userToken = await User.findOne({
     where: {
-      email: "pablo@mail.com",
+      email: "sajadhijir@gmail.com",
     },
   });
   access_token = signToken({ id: userToken.id });

@@ -34,6 +34,12 @@ module.exports = {
       return el;
     });
     await queryInterface.bulkInsert("Vehicles", dataVehicles, {});
+    const specs = require("../data/specification.json");
+    const dataSpec = specs.map((el) => {
+      el.createdAt = el.updatedAt = new Date();
+      return el;
+    });
+    await queryInterface.bulkInsert("Specifications", dataSpec, {});
 
     const orders = require("../data/orders.json");
     const dataOrders = orders.map((el) => {
