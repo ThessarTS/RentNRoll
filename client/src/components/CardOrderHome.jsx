@@ -16,13 +16,13 @@ function CardOrderHome({ orders, navigation }) {
   return (
     <Pressable style={styles.container} onPress={goDetail}>
       <View style={styles.innerContainer}>
-        <Image source={{ uri: `${orders.Vehicle.image}` }} style={styles.image} resizeMode="cover" />
+        <Image source={{ uri: `${orders?.Vehicle.image}` }} style={styles.image} resizeMode="contain" />
         <View style={styles.cardContainer}>
-          <Text style={styles.title}>{truncateName(orders.Vehicle.name)}</Text>
-          <Text style={styles.price}>{fPrice(orders.Vehicle.price)}</Text>
+          <Text style={styles.title}>{truncateName(orders?.Vehicle.name)}</Text>
+          <Text style={styles.price}>{fPrice(orders?.Vehicle.price)}</Text>
           <View style={{ flexDirection: "row", gap: 2, alignItems: "center" }}>
-            <MaterialCommunityIcons name="list-status" color={getStatusBackgroundColor(orders.status)} />
-            <Text style={[styles.status, { color: getStatusBackgroundColor(orders.status) }]}>{orders.status}</Text>
+            <MaterialCommunityIcons name="list-status" color={getStatusBackgroundColor(orders?.status)} />
+            <Text style={[styles.status, { color: getStatusBackgroundColor(orders?.status) }]}>{orders?.status}</Text>
           </View>
         </View>
       </View>

@@ -22,6 +22,7 @@ function Detail({ route, navigation }) {
   const [endDate, setSelectedEndDate] = useState(new Date(startDate.getTime() + 24 * 60 * 60 * 1000));
   const { vehicleReviews } = useSelector((state) => state.reviewReducer);
   const [review, setReview] = useState(false);
+  console.log(detail.vehicle.User);
 
   const toggleReview = () => {
     setReview(!review);
@@ -155,7 +156,7 @@ function Detail({ route, navigation }) {
         <View style={styles.container}>
           {/* header */}
           <View style={styles.headerContainer}>
-            {detail && <Image source={{ uri: detail.vehicle.image }} style={styles.imageCover} resizeMode="cover" />}
+            {detail && <Image source={{ uri: detail.vehicle.image }} style={styles.imageCover} resizeMode="contain" />}
             <View style={styles.headerItems}>
               <Text style={styles.headerTitle}> {name}</Text>
               <View style={[styles.headerItemContainer]}>
@@ -293,7 +294,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 250,
     marginBottom: 10,
-    objectFit: "cover",
+    objectFit: "contain",
   },
 
   headerTitle: {

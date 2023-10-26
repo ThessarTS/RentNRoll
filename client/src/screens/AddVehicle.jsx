@@ -19,6 +19,7 @@ function AddVehicle({ navigation }) {
   const [loading, setLoading] = useState(false);
   const { categories } = useSelector((state) => state.categoryReducer);
   const { location } = useSelector((state) => state.vehicleReducer);
+  console.log(location);
   const [image, setImage] = useState(null);
   const [specifications, setSpecifications] = useState([{ name: "", value: "" }]);
   const [filledSpecifications, setFilledSpecifications] = useState([]);
@@ -41,6 +42,7 @@ function AddVehicle({ navigation }) {
       dispatch(fetchLocation());
     }, [])
   );
+
   const selectImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -202,7 +204,6 @@ function AddVehicle({ navigation }) {
             }}
           >
             <Text style={{ fontSize: 20, fontWeight: "500", marginBottom: 10 }}>Input Specifications</Text>
-
             <ScrollView style={{ padding: 10 }}>
               {JSON.parse(findCategory.specifications).map((el, idx) => {
                 return (
@@ -283,7 +284,7 @@ function AddVehicle({ navigation }) {
                   </View>
 
                   <View style={{ gap: 5, marginBottom: 10 }}>
-                    <Text style={styles.label}>Price</Text>
+                    <Text style={styles.label}>Price /day</Text>
                     <TextInput style={styles.textInput} placeholder="250000" keyboardType="numeric" returnKeyType="done" value={input.price} onChangeText={(text) => handleChangeInput("price", text)} />
                   </View>
 

@@ -15,7 +15,7 @@ function CardVehicle({ id, image, name, price, rating, navigation, totalReviews 
   return (
     <Pressable style={styles.container} onPress={goDetail}>
       <View style={styles.innerContainer}>
-        <Image source={{ uri: `${image}` }} style={styles.image} resizeMode="cover" />
+        <Image source={{ uri: `${image}` }} style={styles.image} resizeMode="contain" />
         <View style={styles.cardContainer}>
           <Text style={styles.title}>{truncateName(name)}</Text>
           <Text style={styles.price}>{fPrice(price)}</Text>

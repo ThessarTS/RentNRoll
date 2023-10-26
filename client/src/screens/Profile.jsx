@@ -25,8 +25,6 @@ function Profile({ navigation }) {
   const dispatch = useDispatch();
   const [review, setReview] = useState(false);
 
-  console.log(profile);
-
   const selectImage = async (setImageFunction) => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -133,6 +131,15 @@ function Profile({ navigation }) {
     }
   };
 
+  function addNewlineEvery100Chars(inputString) {
+    const chunkSize = 48;
+    let result = "";
+    for (let i = 0; i < inputString.length; i += chunkSize) {
+      result += inputString.substring(i, i + chunkSize) + "\n";
+    }
+    return result;
+  }
+
   const CardReview = (review) => {
     const { rating, message, createdAt, Vehicle } = review.review;
 
@@ -141,10 +148,10 @@ function Profile({ navigation }) {
         <View style={{ flexDirection: "row", gap: 10 }}>
           <Image source={{ uri: Vehicle ? Vehicle.image : "https://www.copaster.com/wp-content/uploads/2023/03/pp-kosong-wa-default.jpeg" }} style={{ width: 30, height: 30, borderRadius: 50 }} />
           <View style={{ gap: 5 }}>
-            <Text style={{ fontSize: 12, fontWeight: "700" }}>{Vehicle.name}</Text>
+            <Text style={{ fontSize: 12, fontWeight: "700" }}>{Vehicle?.name}</Text>
             <Text>{generateStars(Math.round(rating * 2) / 2)}</Text>
             <Text style={{ fontSize: 10 }}>{fDate(createdAt)}</Text>
-            <Text style={{ fontSize: 13, marginVertical: 7 }}>{message}</Text>
+            <Text style={{ fontSize: 13, marginVertical: 7 }}>{addNewlineEvery100Chars(message)}</Text>
           </View>
         </View>
       </View>

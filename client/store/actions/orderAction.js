@@ -14,7 +14,7 @@ import {
 import { errorAlert } from "../../src/helpers/alert";
 const baseUrl = "https://apiku.thessarts.site";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { fetchProfile } from "./userAction";
+import { fetchProfile, getUser } from "./userAction";
 
 export const orderFetchReq = () => {
   return { type: ORDER_FETCH_REQUEST };
@@ -114,7 +114,7 @@ export const midtransPayment = (id) => {
           access_token: access_token,
         },
       });
-      dispatch(fetchProfile(access_token));
+      dispatch(getUser());
       return data;
     } catch (error) {
       console.log(error);
@@ -160,6 +160,7 @@ export const updateOrderStatus = (status, id) => {
         method: "patch",
         data: status,
       });
+      dispatch(fetchOrders(access_token));
       dispatch(fetchProfile(access_token));
       return data;
     } catch (error) {

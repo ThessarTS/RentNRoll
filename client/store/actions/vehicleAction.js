@@ -231,16 +231,15 @@ export const deleteMyVehicle = (id, access_token) => {
 };
 
 export const fetchLocationSuccess = (payload) => {
-  return { type: LOCATION_FETCH_SUCCESS };
+  return { type: LOCATION_FETCH_SUCCESS, payload };
 };
 
 export const fetchLocation = () => {
   return async (dispatch) => {
     try {
       const { data } = await axios({
-        url: baseUrl + "vehicles/locations",
+        url: baseUrl + "/vehicles/locations",
       });
-      console.log(data);
       dispatch(fetchLocationSuccess(data));
     } catch (error) {
       console.log(error);

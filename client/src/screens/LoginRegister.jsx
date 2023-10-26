@@ -1,19 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  ImageBackground,
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-  Image,
-  ScrollView,
-  Platform,
-  KeyboardAvoidingView,
-  TouchableWithoutFeedback,
-  Keyboard,
-  ActivityIndicator,
-} from "react-native";
+import { ImageBackground, Pressable, StyleSheet, Text, TextInput, View, Image, ScrollView, Platform, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, ActivityIndicator } from "react-native";
 import Checkbox from "expo-checkbox";
 import banner from "../../assets/image/banner.jpg";
 import googleIcon from "../../assets/vector/google.png";
@@ -152,18 +138,9 @@ function Login({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <ImageBackground
-        source={banner}
-        style={styles.backgroundImage}
-        resizeMode="cover"
-      >
-        <Text style={styles.textWithShadow}>
-          {formRegister ? "Register" : "Log in"}
-        </Text>
-        <Pressable
-          style={styles.buttonBack}
-          onPress={() => navigation.navigate("Home")}
-        >
+      <ImageBackground source={banner} style={styles.backgroundImage} resizeMode="cover">
+        <Text style={styles.textWithShadow}>{formRegister ? "Register" : "Log in"}</Text>
+        <Pressable style={styles.buttonBack} onPress={() => navigation.navigate("Home")}>
           <Ionicons name="arrow-back-sharp" size={20} color="white" />
         </Pressable>
       </ImageBackground>
@@ -173,35 +150,15 @@ function Login({ navigation }) {
         <View style={styles.formContainer}>
           <View style={{ gap: 5 }}>
             <Text style={styles.label}>Email</Text>
-            <TextInput
-              placeholder="email"
-              keyboardType="email-address"
-              value={inputLogin.email}
-              returnKeyType={"done"}
-              onChangeText={(text) => handleChangeLogin("email", text)}
-              style={styles.textInput}
-            />
+            <TextInput placeholder="email" keyboardType="email-address" value={inputLogin.email} returnKeyType={"done"} onChangeText={(text) => handleChangeLogin("email", text)} style={styles.textInput} />
           </View>
           <View style={{ gap: 5 }}>
             <Text style={styles.label}>Password</Text>
-            <TextInput
-              placeholder="password"
-              secureTextEntry={true}
-              returnKeyType={"done"}
-              name="password"
-              value={inputLogin.password}
-              onChangeText={(text) => handleChangeLogin("password", text)}
-              style={styles.textInput}
-            />
+            <TextInput placeholder="password" secureTextEntry={true} returnKeyType={"done"} name="password" value={inputLogin.password} onChangeText={(text) => handleChangeLogin("password", text)} style={styles.textInput} />
           </View>
           <View style={styles.checkboxContainer}>
             <View style={styles.checkBoxView}>
-              <Checkbox
-                style={styles.checkbox}
-                value={isChecked}
-                onValueChange={toggleRememberMe}
-                color={isChecked ? "#17799A" : undefined}
-              />
+              <Checkbox style={styles.checkbox} value={isChecked} onValueChange={toggleRememberMe} color={isChecked ? "#17799A" : undefined} />
               <Text style={{ paddingLeft: -50 }}>Remember Me</Text>
             </View>
           </View>
@@ -216,29 +173,11 @@ function Login({ navigation }) {
             <View style={styles.actionContainer}>
               <Text style={{ textAlign: "center" }}>Dont have account? </Text>
               <Pressable onPress={changePage}>
-                <Text
-                  style={{ textDecorationLine: "underline", color: "#17799A" }}
-                >
-                  Register Now
-                </Text>
+                <Text style={{ textDecorationLine: "underline", color: "#17799A" }}>Register Now</Text>
               </Pressable>
             </View>
             <Pressable style={styles.buttonAction} onPress={getOtp}>
               <Text style={styles.textAction}>Log In</Text>
-            </Pressable>
-          </View>
-          <View style={styles.lineContainer}>
-            <View style={styles.line}></View>
-            <Text style={styles.orText}>or log in with</Text>
-            <View style={styles.line}></View>
-          </View>
-          <View>
-            <Pressable
-              style={styles.buttonGoggle}
-              onPress={() => navigation.navigate("register")}
-            >
-              <Image source={googleIcon} style={styles.googleIcon} />
-              <Text style={styles.googleText}>Google</Text>
             </Pressable>
           </View>
         </View>
@@ -247,64 +186,27 @@ function Login({ navigation }) {
 
       {/* register */}
       {formRegister && (
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          style={styles.registerContainer}
-        >
+        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.registerContainer}>
           <ScrollView>
-            <View
-              style={[styles.formContainer, { justifyContent: "space-around" }]}
-            >
+            <View style={[styles.formContainer, { justifyContent: "space-around" }]}>
               <View style={{ gap: 10 }}>
                 <View style={{ gap: 5 }}>
                   <Text style={styles.label}>Full Name</Text>
-                  <TextInput
-                    placeholder="username"
-                    style={styles.textInput}
-                    value={inputRegister.fullName}
-                    returnKeyType={"done"}
-                    onChangeText={(text) =>
-                      handleChangeRegister("fullName", text)
-                    }
-                  />
+                  <TextInput placeholder="username" style={styles.textInput} value={inputRegister.fullName} returnKeyType={"done"} onChangeText={(text) => handleChangeRegister("fullName", text)} />
                 </View>
                 <View style={{ gap: 5 }}>
                   <Text style={styles.label}>Email</Text>
-                  <TextInput
-                    placeholder="email"
-                    style={styles.textInput}
-                    value={inputRegister.email}
-                    returnKeyType={"done"}
-                    onChangeText={(text) => handleChangeRegister("email", text)}
-                  />
+                  <TextInput placeholder="email" style={styles.textInput} value={inputRegister.email} returnKeyType={"done"} onChangeText={(text) => handleChangeRegister("email", text)} />
                 </View>
                 <View style={{ gap: 5 }}>
                   <Text style={styles.label}>Password</Text>
-                  <TextInput
-                    placeholder="password"
-                    secureTextEntry={true}
-                    style={styles.textInput}
-                    returnKeyType={"done"}
-                    value={inputRegister.password}
-                    onChangeText={(text) =>
-                      handleChangeRegister("password", text)
-                    }
-                  />
+                  <TextInput placeholder="password" secureTextEntry={true} style={styles.textInput} returnKeyType={"done"} value={inputRegister.password} onChangeText={(text) => handleChangeRegister("password", text)} />
                 </View>
 
                 <View style={{ gap: 5 }}>
                   <Text style={styles.label}>Phone Number</Text>
                   <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                    <TextInput
-                      placeholder="081233623XXX"
-                      keyboardType="numeric"
-                      style={styles.textInput}
-                      returnKeyType="done"
-                      value={inputRegister.phone}
-                      onChangeText={(text) =>
-                        handleChangeRegister("phone", text)
-                      }
-                    />
+                    <TextInput placeholder="081233623XXX" keyboardType="numeric" style={styles.textInput} returnKeyType="done" value={inputRegister.phone} onChangeText={(text) => handleChangeRegister("phone", text)} />
                   </TouchableWithoutFeedback>
                 </View>
               </View>
@@ -353,51 +255,23 @@ function Login({ navigation }) {
           margin: 0,
         }}
       >
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          style={styles.otpContainer}
-        >
+        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={styles.otpContainer}>
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={styles.otpField}>
-              <Text style={styles.otpText}>
-                Enter the OTP you received via email
-              </Text>
-              {errMsg && (
-                <Text style={{ color: "red", fontSize: 13, marginTop: -10 }}>
-                  {errMsg}
-                </Text>
-              )}
-              {succMsg && (
-                <Text style={{ color: "green", fontSize: 13, marginTop: -10 }}>
-                  {succMsg}
-                </Text>
-              )}
+              <Text style={styles.otpText}>Enter the OTP you received via email</Text>
+              {errMsg && <Text style={{ color: "red", fontSize: 13, marginTop: -10 }}>{errMsg}</Text>}
+              {succMsg && <Text style={{ color: "green", fontSize: 13, marginTop: -10 }}>{succMsg}</Text>}
               <View style={styles.otpView}>
                 {otp.map((digit, index) => (
-                  <TextInput
-                    key={index}
-                    style={styles.otpInput}
-                    value={digit}
-                    onChangeText={(value) => handleOtpChange(index, value)}
-                    keyboardType="numeric"
-                    maxLength={1}
-                    ref={(ref) => (otpInputs[index] = ref)}
-                    returnKeyType="done"
-                  />
+                  <TextInput key={index} style={styles.otpInput} value={digit} onChangeText={(value) => handleOtpChange(index, value)} keyboardType="numeric" maxLength={1} ref={(ref) => (otpInputs[index] = ref)} returnKeyType="done" />
                 ))}
               </View>
             </View>
           </TouchableWithoutFeedback>
-          <Pressable
-            style={[styles.buttonAction, { paddingHorizontal: 90 }]}
-            onPress={submitOtp}
-          >
+          <Pressable style={[styles.buttonAction, { paddingHorizontal: 90 }]} onPress={submitOtp}>
             <Text style={styles.textAction}>Submit</Text>
           </Pressable>
-          <Pressable
-            style={{ position: "absolute", top: 20, right: 20 }}
-            onPress={toggleOtp}
-          >
+          <Pressable style={{ position: "absolute", top: 20, right: 20 }} onPress={toggleOtp}>
             <MaterialIcons name="cancel" size={30} color="red" />
           </Pressable>
         </KeyboardAvoidingView>

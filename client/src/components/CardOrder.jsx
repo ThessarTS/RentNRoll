@@ -19,11 +19,19 @@ function CardOrder({ order, navigation }) {
     };
     dispatch(updateOrderStatus(newStatus, order.id)).then((data) => {
       successAlert(data.message);
-      navigation.navigate("Home");
+      navigation.push("myrent");
     });
   };
   return (
-    <View style={styles.container}>
+    <Pressable
+      style={styles.container}
+      onPress={() => {
+        navigation.navigate("detailorder", {
+          name: order.Vehicle.name,
+          id: order.id,
+        });
+      }}
+    >
       <Text style={styles.itemsDetailTitle}>{order.Vehicle.name}</Text>
       <View style={{ flexDirection: "row", gap: 10, alignItems: "center" }}>
         <View>
@@ -49,13 +57,13 @@ function CardOrder({ order, navigation }) {
         </View>
         <View style={{ flexDirection: "column", gap: 10 }}>
           {order?.status == "ongoing" && (
-            <Pressable onPress={handleReturn} style={{ backgroundColor: "#17799A", borderRadius: 10, padding: 5 }}>
+            <Pressable onPress={handleReturn} style={{ backgroundColor: "#17799A", borderRadius: 5, padding: 5 }}>
               <Text style={{ color: "white", fontWeight: "normal" }}>Return</Text>
             </Pressable>
           )}
           {order?.status == "returned" && (
-            <Pressable style={{ backgroundColor: "green", borderRadius: 10, padding: 5 }}>
-              <Text style={{ color: "white", fontWeight: "normal" }}>Return</Text>
+            <Pressable style={{ backgroundColor: "green", borderRadius: 5, padding: 5 }}>
+              <Text style={{ color: "white", fontWeight: "normal" }}>Returned</Text>
             </Pressable>
           )}
           {order?.status === "pending" && (
@@ -77,7 +85,7 @@ function CardOrder({ order, navigation }) {
           )}
         </View>
       </View>
-    </View>
+    </Pressable>
   );
 }
 
