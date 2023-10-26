@@ -4,11 +4,12 @@ import CardSpecification from "../components/CardSpecification";
 import { MaterialIcons, AntDesign, Entypo, Feather, Ionicons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchDetail, fetchReviewByVehicle,  createOrderVehicle, fetchOrderByVehicleId,fetchOrderByVehicleId } from "../../store/actions";
+import { fetchDetail, fetchReviewByVehicle, createOrderVehicle, fetchOrderByVehicleId } from "../../store/actions";
 import { fDate } from "../helpers/fDate";
 import { fPrice } from "../helpers/fPrice";
 import { errorAlert } from "../helpers/alert";
 import { generateStars } from "../helpers/fRating";
+import notFound from "../../assets/image/zzz.png";
 
 function Detail({ route, navigation }) {
   const { name, id, startdate, enddate } = route.params;
@@ -21,6 +22,7 @@ function Detail({ route, navigation }) {
   const [endDate, setSelectedEndDate] = useState(new Date(startDate.getTime() + 24 * 60 * 60 * 1000));
   const { vehicleReviews } = useSelector((state) => state.reviewReducer);
   const [review, setReview] = useState(false);
+
   const toggleReview = () => {
     setReview(!review);
   };
@@ -36,7 +38,6 @@ function Detail({ route, navigation }) {
       .catch((error) => {
         console.log(error);
       });
-    });
   }, []);
 
   const [handleInput, setHandleInput] = useState({
@@ -125,7 +126,7 @@ function Detail({ route, navigation }) {
   }, [startDate, endDate, orderByVehicles]);
 
   const goChat = () => {
-    navigation.navigate("Chatbox", {
+    navigation.push("Chatbox", {
       fullName: detail?.vehicle.User.fullName,
       profilePicture: detail?.vehicle.User.UserProfile.profilePicture,
       id: detail?.vehicle.User.id,
@@ -147,38 +148,40 @@ function Detail({ route, navigation }) {
     const { name, value } = spec.item;
     return <CardSpecification name={name} value={value} />;
   };
+
   return (
     <SafeAreaView style={{ backgroundColor: "white" }}>
-      <View style={styles.container}>
-        {/* header */}
-        <View style={styles.headerContainer}>
-          {detail && <Image source={{ uri: detail.vehicle.image }} style={styles.imageCover} resizeMode="cover" />}
-          <View style={styles.headerItems}>
-            <Text style={styles.headerTitle}> {name}</Text>
-            <View style={[styles.headerItemContainer]}>
-              <Ionicons name="location" size={18} color="#17799A" />
-              <Text style={styles.location}>Location : {detail ? detail.vehicle.location : ""}</Text>
+      <ScrollView>
+        <View style={styles.container}>
+          {/* header */}
+          <View style={styles.headerContainer}>
+            {detail && <Image source={{ uri: detail.vehicle.image }} style={styles.imageCover} resizeMode="cover" />}
+            <View style={styles.headerItems}>
+              <Text style={styles.headerTitle}> {name}</Text>
+              <View style={[styles.headerItemContainer]}>
+                <Ionicons name="location" size={18} color="#17799A" />
+                <Text style={styles.location}>Location : {detail ? detail.vehicle.location : ""}</Text>
+              </View>
+              <View style={[styles.headerItemContainer, { marginStart: 2 }]}>
+                <AntDesign name="star" size={15} color="#F8B84E" />
+                <Text style={styles.rating}>
+                  Rating: {detail ? detail.rating : ""} ({detail ? detail.vehicle.Reviews.length : 0} Reviews)
+                </Text>
+              </View>
+              <View style={[styles.headerItemContainer, { marginStart: 3 }]}>
+                <MaterialIcons name="category" size={15} color="#9B59B6" />
+                <Text style={styles.headerCategories}>Category: {detail ? detail.vehicle.Category.name : ""}</Text>
+              </View>
             </View>
-            <View style={[styles.headerItemContainer, { marginStart: 2 }]}>
-              <AntDesign name="star" size={15} color="#F8B84E" />
-              <Text style={styles.rating}>
-                Rating: {detail ? detail.rating : ""} ({detail ? detail.vehicle.Reviews.length : 0} Reviews)
-              </Text>
-            </View>
-            <View style={[styles.headerItemContainer, { marginStart: 3 }]}>
-              <MaterialIcons name="category" size={15} color="#9B59B6" />
-              <Text style={styles.headerCategories}>Category: {detail ? detail.vehicle.Category.name : ""}</Text>
-            </View>
+            <Pressable style={{ position: "absolute", bottom: 10, right: 15, flexDirection: "row", alignItems: "center", paddingHorizontal: 10 }} onPress={toggleReview}>
+              <AntDesign name="star" size={12} color="#F8B84E" />
+              <Text style={{ fontSize: 12 }}>{review ? "Close Review" : "See Review"}</Text>
+            </Pressable>
           </View>
-          <Pressable style={{ position: "absolute", bottom: 10, right: 15, flexDirection: "row", alignItems: "center", paddingHorizontal: 10 }} onPress={toggleReview}>
-            <AntDesign name="star" size={12} color="#F8B84E" />
-            <Text style={{ fontSize: 12 }}>{review ? "Close Review" : "See Review"}</Text>
-          </Pressable>
-        </View>
-        {/* end header */}
-        {/* spec */}
-        <ScrollView>
-          <View>
+          {/* end header */}
+          {/* spec */}
+
+          <View style={{ backgroundColor: "white", minHeight: 450 }}>
             {!review ? (
               <View>
                 <View style={styles.itemContainer}>
@@ -198,24 +201,13 @@ function Detail({ route, navigation }) {
                         style={styles.ownerImage}
                       />
                       <Text style={styles.itemTitle}>{detail ? detail.vehicle.User.fullName : ""}</Text>
-                       <View style={styles.ownerAction}>
-                <Feather name="phone-call" size={24} color="#17799A" />
-                <Pressable onPress={goChat}>
-                  <Ionicons
-                    name="ios-chatbox-ellipses-outline"
-                    size={25}
-                    color="#17799A"
-                  />
-                </Pressable>
-              </View>
                     </View>
-                    <View style={styles.ownerAction}>
+                    <Pressable style={styles.ownerAction} onPress={goChat}>
                       <Ionicons name="ios-chatbox-ellipses-outline" size={25} color="#17799A" />
-                    </View>
+                    </Pressable>
                   </View>
                 </View>
                 {/* end spec */}
-
                 {/* Rent Action */}
                 <View style={styles.itemContainer}>
                   <View style={styles.rentHeaderContainer}>
@@ -276,21 +268,17 @@ function Detail({ route, navigation }) {
                   {/* end rent Action */}
                 </View>
               </View>
-
-            )}
-            {isOrder ? (
-              <Pressable
-                style={[styles.rentButton, { backgroundColor: "red" }]}
-                disabled={true}
-              >
-                <Text style={styles.rentAction}>Booked Out</Text>
-              </Pressable>
-            ) : (
+            ) : vehicleReviews.length > 0 ? (
               vehicleReviews.map((e) => <CardReview review={e} key={e.id} />)
+            ) : (
+              <View style={{ flex: 1, alignItems: "center", justifyContent: "flex-start" }}>
+                <Image source={notFound} style={{ width: 200, height: 200 }} resizeMode="contain" />
+                <Text style={{ textAlign: "center", fontSize: 15, fontWeight: 500 }}>No reviews yet</Text>
+              </View>
             )}
           </View>
-        </ScrollView>
-      </View>
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }

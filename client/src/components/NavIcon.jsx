@@ -6,6 +6,8 @@ import { useDispatch, useSelector } from "react-redux";
 import Modal from "react-native-modal";
 import { handleLogout } from "../../store/actions/userAction";
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { errorAlert } from "../helpers/alert";
 function NavIcon() {
   const [modalLogout, setModalLogout] = useState(false);
   const navigate = useNavigation();
@@ -21,24 +23,26 @@ function NavIcon() {
       toggleLogout();
     });
   };
-  const goConversationList = () => {
-    console.log(profile);
-    navigate.push("ConversationList", {
-      fullName: profile?.fullName,
-      profilePicture: profile?.UserProfile.profilePicture,
-      id: profile?.id,
-      email: profile?.email,
-    });
+  const goConversationList = async () => {
+    try {
+      const access_token = await AsyncStorage.getItem("access_token");
+      if (!access_token) throw { message: "Login First" };
+      navigate.push("ConversationList", {
+        fullName: profile?.fullName,
+        profilePicture: profile?.UserProfile.profilePicture,
+        id: profile?.id,
+        email: profile?.email,
+      });
+    } catch (error) {
+      errorAlert(error.message);
+    }
   };
+
   return (
     <View>
       <View style={styles.mastheadContainer}>
-        <View
-          style={{ marginEnd: 10, paddingBottom: 10, alignSelf: "flex-end" }}
-        >
-          <View
-            style={{ flexDirection: "row", justifyContent: "center", gap: 10 }}
-          >
+        <View style={{ marginEnd: 10, paddingBottom: 10, alignSelf: "flex-end" }}>
+          <View style={{ flexDirection: "row", justifyContent: "center", gap: 10 }}>
             <Pressable onPress={goConversationList}>
               <Entypo name="chat" size={25} color="white" />
             </Pressable>

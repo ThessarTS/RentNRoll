@@ -4,6 +4,7 @@ import { Entypo, AntDesign, MaterialIcons, Ionicons } from "@expo/vector-icons";
 import { fPrice } from "../helpers/fPrice";
 import { useDispatch, useSelector } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { deleteMyVehicle } from "../../store/actions";
 
 function CardMyVehicle({ vehicles, totalOrders }) {
   const [isCanDelete, setIsCanDelete] = useState(false);
@@ -19,7 +20,7 @@ function CardMyVehicle({ vehicles, totalOrders }) {
   const delVehicle = async () => {
     try {
       const access_token = await AsyncStorage.getItem("access_token");
-      dispatch(delVehicle(vehicles.id, access_token));
+      dispatch(deleteMyVehicle(vehicles.id, access_token));
     } catch (error) {
       console.log(error);
     }

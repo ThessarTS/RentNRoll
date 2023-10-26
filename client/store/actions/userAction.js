@@ -5,7 +5,7 @@ import { errorAlert, successAlert } from "../../src/helpers/alert";
 import { fetchMyRent, fetchMyVehicle } from "./vehicleAction";
 import { fetchReviewByUser } from "./reviewAction";
 
-const baseUrl = "https://5ced-118-96-109-120.ngrok-free.app";
+const baseUrl = "https://apiku.thessarts.site";
 
 // import { baseUrl } from "./categoryAction";
 
@@ -123,6 +123,7 @@ export const addProfileSuccess = () => {
 };
 
 export const addProfile = (value, access_token) => {
+  console.log(value, "ini value");
   return async (dispatch) => {
     dispatch(addProfileRequest());
     try {
@@ -137,15 +138,9 @@ export const addProfile = (value, access_token) => {
       });
 
       dispatch(addProfileSuccess());
-
-//       await dispatch(
-//         fetchProfile({
-//           access_token: access_token,
-//         })
-//       );
-
       return data;
     } catch (error) {
+      console.log(error, "ini add");
       throw error.response.data;
     }
   };
@@ -170,7 +165,7 @@ export const editProfile = (value, access_token) => {
 
       return data;
     } catch (error) {
-      console.log(error.response.data);
+      console.log(error.response.data, "ini edit");
       throw error.response.data;
     }
   };

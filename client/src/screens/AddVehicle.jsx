@@ -1,24 +1,10 @@
-import React, { useCallback, useEffect, useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-  ScrollView,
-  SafeAreaView,
-  Pressable,
-  Image,
-  ActivityIndicator,
-  ImageBackground,
-  KeyboardAvoidingView,
-  TouchableWithoutFeedback,
-  Keyboard,
-} from "react-native";
+import React, { useCallback, useEffect, useState, useRef } from "react";
+import { StyleSheet, Text, TextInput, View, ScrollView, SafeAreaView, Pressable, Image, ActivityIndicator, ImageBackground, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard } from "react-native";
 import { useSelector } from "react-redux";
 import Dropdown from "react-native-input-select";
 import * as ImagePicker from "expo-image-picker";
 import { useDispatch } from "react-redux";
-import { addVehicle } from "../../store/actions";
+import { addVehicle, fetchLocation } from "../../store/actions";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { errorAlert, successAlert } from "../helpers/alert";
 import NavIcon from "../components/NavIcon";
@@ -26,29 +12,35 @@ import bg from "../../assets/image/bg-home.png";
 import { AntDesign, MaterialIcons, Feather } from "@expo/vector-icons";
 import Modal from "react-native-modal";
 import { useFocusEffect } from "@react-navigation/native";
+import SelectDropdown from "react-native-select-dropdown";
 
 function AddVehicle({ navigation }) {
   const [selectedCategory, setSelectedCategory] = useState();
   const [loading, setLoading] = useState(false);
   const { categories } = useSelector((state) => state.categoryReducer);
+  const { location } = useSelector((state) => state.vehicleReducer);
   const [image, setImage] = useState(null);
-  const [specifications, setSpecifications] = useState([
-    { name: "", value: "" },
-  ]);
+  const [specifications, setSpecifications] = useState([{ name: "", value: "" }]);
   const [filledSpecifications, setFilledSpecifications] = useState([]);
   const dispatch = useDispatch();
+  const dropdownRef = useRef(null);
   const [spec, setSpec] = useState(false);
 
   useEffect(() => {
     (async () => {
-      const { status } =
-        await ImagePicker.requestMediaLibraryPermissionsAsync();
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
       if (status !== "granted") {
         errorAlert("Permission to access the camera roll is required!");
       }
     })();
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      dispatch(fetchLocation());
+    }, [])
+  );
   const selectImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -87,7 +79,6 @@ function AddVehicle({ navigation }) {
     };
     setSpecifications(updatedSpecifications);
 
-    // Menyimpan spesifikasi yang sudah diisi
     const updatedFilledSpecifications = [...filledSpecifications];
     updatedFilledSpecifications[index] = {
       name,
@@ -136,9 +127,7 @@ function AddVehicle({ navigation }) {
       formData.append("price", Number(input.price));
       formData.append("location", input.location);
 
-      const areAllSpecificationsFilled = specifications.every(
-        (spec) => spec.name !== "" && spec.value !== ""
-      );
+      const areAllSpecificationsFilled = specifications.every((spec) => spec.name !== "" && spec.value !== "");
 
       if (!areAllSpecificationsFilled) {
         errorAlert("Please fill in all specifications");
@@ -200,9 +189,7 @@ function AddVehicle({ navigation }) {
           margin: 0,
         }}
       >
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-        >
+        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
           <View
             style={{
               backgroundColor: "white",
@@ -214,17 +201,13 @@ function AddVehicle({ navigation }) {
               minHeight: 500, // Sesuaikan kebutuhan
             }}
           >
-            <Text style={{ fontSize: 20, fontWeight: "500", marginBottom: 10 }}>
-              Input Specifications
-            </Text>
+            <Text style={{ fontSize: 20, fontWeight: "500", marginBottom: 10 }}>Input Specifications</Text>
 
             <ScrollView style={{ padding: 10 }}>
               {JSON.parse(findCategory.specifications).map((el, idx) => {
                 return (
                   <View key={idx} style={{ gap: 5, marginVertical: 5 }}>
-                    <Text style={styles.label}>
-                      {el.charAt(0).toUpperCase() + el.slice(1)}
-                    </Text>
+                    <Text style={styles.label}>{el.charAt(0).toUpperCase() + el.slice(1)}</Text>
                     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                       <TextInput
                         style={styles.textInput}
@@ -234,11 +217,7 @@ function AddVehicle({ navigation }) {
                           handleChange(idx, el, text);
                         }}
                         // Set nilai TextInput dari filledSpecifications
-                        value={
-                          filledSpecifications[idx]
-                            ? filledSpecifications[idx].value
-                            : ""
-                        }
+                        value={filledSpecifications[idx] ? filledSpecifications[idx].value : ""}
                       />
                     </TouchableWithoutFeedback>
                   </View>
@@ -260,10 +239,7 @@ function AddVehicle({ navigation }) {
       <NavIcon />
       <SafeAreaView style={{ flex: 1 }}>
         <ImageBackground source={bg} style={{ flex: 1 }}>
-          <ScrollView
-            style={styles.scrollViewContainer}
-            showsVerticalScrollIndicator={false}
-          >
+          <ScrollView style={styles.scrollViewContainer} showsVerticalScrollIndicator={false}>
             <View style={styles.itemContainer}>
               <View style={styles.top}></View>
               <View style={styles.uploadContainer}>
@@ -303,35 +279,41 @@ function AddVehicle({ navigation }) {
                 <View style={styles.form}>
                   <View style={{ gap: 5 }}>
                     <Text style={styles.label}>Name Vehicle</Text>
-                    <TextInput
-                      style={styles.textInput}
-                      value={input.name}
-                      returnKeyType={"done"}
-                      onChangeText={(text) => handleChangeInput("name", text)}
-                      placeholder="Honda Brio"
-                    />
+                    <TextInput style={styles.textInput} value={input.name} returnKeyType={"done"} onChangeText={(text) => handleChangeInput("name", text)} placeholder="Honda Brio" />
                   </View>
-                  <View style={{ gap: 5 }}>
-                    <Text style={styles.label}>City Location</Text>
-                    <TextInput
-                      style={styles.textInput}
-                      value={input.location}
-                      returnKeyType={"done"}
-                      onChangeText={(text) =>
-                        handleChangeInput("location", text)
-                      }
-                      placeholder="Bandung"
-                    />
-                  </View>
+
                   <View style={{ gap: 5, marginBottom: 10 }}>
                     <Text style={styles.label}>Price</Text>
-                    <TextInput
-                      style={styles.textInput}
-                      placeholder="250000"
-                      keyboardType="numeric"
-                      returnKeyType="done"
-                      value={input.price}
-                      onChangeText={(text) => handleChangeInput("price", text)}
+                    <TextInput style={styles.textInput} placeholder="250000" keyboardType="numeric" returnKeyType="done" value={input.price} onChangeText={(text) => handleChangeInput("price", text)} />
+                  </View>
+
+                  <View style={{ gap: 5 }}>
+                    <Text style={styles.label}>City Location</Text>
+                    <SelectDropdown
+                      ref={dropdownRef}
+                      dropdownStyle={{ borderRadius: 8 }}
+                      buttonStyle={{
+                        backgroundColor: "white",
+                        borderWidth: 1,
+                        borderColor: "gray",
+                        borderRadius: 8,
+                        padding: 0,
+                        width: "100%",
+                      }}
+                      buttonTextStyle={{
+                        fontSize: 15,
+                      }}
+                      defaultButtonText="Select Location"
+                      data={location}
+                      onSelect={(selectedItem, index) => {
+                        handleChangeInput("location", selectedItem);
+                      }}
+                      buttonTextAfterSelection={(selectedItem, index) => {
+                        return selectedItem;
+                      }}
+                      rowTextForSelection={(item, index) => {
+                        return item;
+                      }}
                     />
                   </View>
                   {loading && (
@@ -343,9 +325,7 @@ function AddVehicle({ navigation }) {
                       }}
                     >
                       <ActivityIndicator size="large" />
-                      <Text style={{ marginTop: 16, fontSize: 18 }}>
-                        Loading...
-                      </Text>
+                      <Text style={{ marginTop: 16, fontSize: 18 }}>Loading...</Text>
                     </View>
                   )}
                   <View style={{ gap: 5, paddingTop: 10 }}>
@@ -388,9 +368,7 @@ function AddVehicle({ navigation }) {
                           shadowRadius: 3,
                         }}
                       />
-                      {specifications.every(
-                        (spec) => spec.value.trim() !== ""
-                      ) && (
+                      {specifications.every((spec) => spec.value.trim() !== "") && (
                         <Pressable
                           style={{
                             flexDirection: "row",
@@ -431,9 +409,7 @@ function AddVehicle({ navigation }) {
                         }}
                       >
                         <Feather name="edit-3" size={17} color="gray" />
-                        <Text style={{ fontSize: 13, color: "gray" }}>
-                          Edit Photo
-                        </Text>
+                        <Text style={{ fontSize: 13, color: "gray" }}>Edit Photo</Text>
                       </Pressable>
                     </View>
                   ) : (

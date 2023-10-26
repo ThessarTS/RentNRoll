@@ -21,11 +21,9 @@ export default function ConversationList(props) {
     });
   };
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, justifyContent: "center" }}>
       <TalkjsRn.Session appId="tIFEBGyD" me={me}>
-        <TalkjsRn.ConversationList
-          onSelectConversation={onSelectConversation}
-        />
+        <TalkjsRn.ConversationList onSelectConversation={onSelectConversation} style={{ color: "red" }} />
       </TalkjsRn.Session>
     </View>
   );

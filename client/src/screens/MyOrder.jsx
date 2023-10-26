@@ -1,15 +1,5 @@
 import React, { useCallback, useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  SafeAreaView,
-  ImageBackground,
-  ScrollView,
-  View,
-  Image,
-  Pressable,
-  ActivityIndicator,
-} from "react-native";
+import { StyleSheet, Text, SafeAreaView, ImageBackground, ScrollView, View, Image, Pressable, ActivityIndicator } from "react-native";
 import bg from "../../assets/image/bg-home.png";
 import { MaterialIcons } from "@expo/vector-icons";
 import notFound from "../../assets/image/zzz.png";
@@ -20,32 +10,17 @@ import { useFocusEffect } from "@react-navigation/native";
 import { getUser } from "../../store/actions";
 
 function Account({ navigation }) {
-  const { profile, loading } = useSelector((state) => state.userReducer);
+  const { profile } = useSelector((state) => state.userReducer);
   const [selectedStatus, setSelectedStatus] = useState("All");
-  const status = [
-    { status: "All" },
-    { status: "Pending" },
-    { status: "Ongoing" },
-    { status: "Returned" },
-  ];
+  const status = [{ status: "All" }, { status: "Pending" }, { status: "Ongoing" }, { status: "Returned" }];
   const dispatch = useDispatch();
   const filterOrderByStatus = (status) => {
     setSelectedStatus(status.toLowerCase() === null ? "All" : status);
   };
-  const filteredOrders =
-    profile && profile.Orders
-      ? selectedStatus === "All"
-        ? profile.Orders
-        : profile.Orders.filter(
-            (order) =>
-              order.status.toLowerCase() === selectedStatus.toLowerCase()
-          )
-      : [];
+  const filteredOrders = profile && profile.Orders ? (selectedStatus === "All" ? profile.Orders : profile.Orders.filter((order) => order.status.toLowerCase() === selectedStatus.toLowerCase())) : [];
 
   const ButtonStatus = ({ status }) => {
-    const isSelected =
-      status.status === selectedStatus ||
-      (selectedStatus === null && status.status === "all");
+    const isSelected = status.status === selectedStatus || (selectedStatus === null && status.status === "all");
 
     return (
       <Pressable
@@ -113,11 +88,7 @@ function Account({ navigation }) {
                         borderRadius: "50%",
                       }}
                     >
-                      <MaterialIcons
-                        name="car-rental"
-                        size={25}
-                        color="white"
-                      />
+                      <MaterialIcons name="car-rental" size={25} color="white" />
                     </View>
                     <View>
                       <Text>The collection of orders you have made</Text>
@@ -140,13 +111,7 @@ function Account({ navigation }) {
                   <ScrollView>
                     <View>
                       {filteredOrders.length !== 0 ? (
-                        filteredOrders.map((order) => (
-                          <CardOrder
-                            navigation={navigation}
-                            order={order}
-                            key={order.id}
-                          />
-                        ))
+                        filteredOrders.map((order) => <CardOrder navigation={navigation} order={order} key={order.id} />)
                       ) : (
                         <View
                           style={{
@@ -155,11 +120,7 @@ function Account({ navigation }) {
                             justifyContent: "center",
                           }}
                         >
-                          <Image
-                            source={notFound}
-                            style={{ width: 200, height: 200 }}
-                            resizeMode="contain"
-                          />
+                          <Image source={notFound} style={{ width: 200, height: 200 }} resizeMode="contain" />
                           <Text
                             style={{
                               textAlign: "center",
@@ -178,33 +139,10 @@ function Account({ navigation }) {
             </View>
           </ImageBackground>
         ) : (
-          <View
-            style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
-          >
-            <Image
-              source={notFound}
-              style={{ width: 200, height: 200 }}
-              resizeMode="contain"
-            />
-            <Text
-              style={{
-                textAlign: "center",
-                fontSize: 15,
-                fontWeight: 500,
-              }}
-            >
-              Looks like you've never order before
-            </Text>
-            <Pressable
-              style={{
-                backgroundColor: "#17799A",
-                padding: 10,
-                paddingHorizontal: 20,
-                borderRadius: 10,
-                marginTop: 10,
-              }}
-              onPress={() => navigation.navigate("Rent Now")}
-            >
+          <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+            <Image source={notFound} style={{ width: 200, height: 200 }} resizeMode="contain" />
+            <Text style={{ textAlign: "center", fontSize: 15, fontWeight: 500 }}>Looks like you've never order before</Text>
+            <Pressable style={{ backgroundColor: "#17799A", padding: 10, paddingHorizontal: 20, borderRadius: 10, marginTop: 10 }} onPress={() => navigation.navigate("Rent Now")}>
               <Text style={{ color: "white" }}>Rent Now</Text>
             </Pressable>
           </View>
